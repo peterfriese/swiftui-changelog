@@ -1,4 +1,4 @@
-// Xcode 13.0b3
+// Xcode 13.0b4
 
 import Accessibility
 import Combine
@@ -205,31 +205,108 @@ public struct AccessibilityChildBehavior : Hashable {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension AccessibilityChildBehavior {
 
-    /// Ignore child accessibility elements.
+    /// Any child accessibility elements become hidden.
     ///
-    /// Use this behavior when you always want to create a  new accessibility element.
+    /// Use this behavior when you want a view represented by
+    /// a single accessibility element. The new accessibility element
+    /// has no initial properties. So you will need to use other
+    /// accessibility modifiers, such as ``View/accessibilityLabel(_:)-5f0zj``,
+    /// to begin making it accessible.
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             Button("Previous Page", action: goBack)
+    ///             Text("\(pageNumber)")
+    ///             Button("Next Page", action: goForward)
+    ///         }
+    ///         .accessibilityElement(children: .ignore)
+    ///         .accessibilityValue("Page \(pageNumber) of \(pages.count)")
+    ///         .accessibilityAdjustableAction { action in
+    ///             if action == .increment {
+    ///                 goForward()
+    ///             } else {
+    ///                 goBack()
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// Before using the  ``AccessibilityChildBehavior/ignore``behavior, consider
+    /// using the ``AccessibilityChildBehavior/combine`` behavior.
+    ///
+    /// - Note: A new accessibility element is always created.
     public static let ignore: AccessibilityChildBehavior
 
     /// Any child accessibility elements become children of the new
     /// accessibility element.
     ///
-    /// A new accessibility element is created when: a) the view contains multiple
-    /// accessibility elements or a single accessibility element with no children;
-    /// or b) the view contains no accessibility elements
+    /// Use this behavior when you want a view to be an accessibility
+    /// container. An accessibility container groups child accessibility
+    /// elements which improves navigation. For example, all children
+    /// of an accessibility container are navigated in order before
+    /// navigating through the next accessibility container.
     ///
-    /// If an accessibility element is not created, the `AccessibilityChildBehavior`
-    /// of the existing accessibility element is modified.
+    ///     var body: some View {
+    ///         ScrollView {
+    ///             VStack {
+    ///                 HStack {
+    ///                     ForEach(users) { user in
+    ///                         UserCell(user)
+    ///                     }
+    ///                 }
+    ///                 .accessibilityElement(children: .contain)
+    ///                 .accessibilityLabel("Users")
+    ///
+    ///                 VStack {
+    ///                     ForEach(messages) { message in
+    ///                         MessageCell(message)
+    ///                     }
+    ///                 }
+    ///                 .accessibilityElement(children: .contain)
+    ///                 .accessibilityLabel("Messages")
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// A new accessibility element is created when:
+    /// * The view contains multiple or zero accessibility elements
+    /// * The view contains a single accessibility element with no children
+    ///
+    /// - Note: If an accessibility element is not created, the
+    ///         ``AccessibilityChildBehavior`` of the existing
+    ///         accessibility element is modified.
     public static let contain: AccessibilityChildBehavior
 
-    /// Combine any child accessibility element's properties for the
-    /// new accessibility element.
+    /// Any child accessibility element's properties are merged
+    /// into the new accessibility element.
     ///
-    /// A new accessibility is created when: a) the view contains multiple
-    /// accessibility elements; or b) the view wraps a
-    /// UIViewRepresentable/NSViewRepresentable.
+    /// Use this behavior when you want a view represented by
+    /// a single accessibility element. The new accessibility element
+    /// merges properties from all non-hidden children. Some
+    /// properties may be transformed or ignored to achieve the
+    /// ideal combined result. For example, not all of ``AccessibilityTraits``
+    /// are merged and a ``AccessibilityActionKind/default`` action
+    /// may become a named action (``AccessibilityActionKind/init(named:)``).
     ///
-    /// If an accessibility element is not created, the `AccessibilityChildBehavior`
-    /// of the existing accessibility element is modified.
+    ///     struct UserCell: View {
+    ///         var user: User
+    ///
+    ///         var body: some View {
+    ///             VStack {
+    ///                 Image(user.image)
+    ///                 Text(user.name)
+    ///                 Button("Options", action: showOptions)
+    ///             }
+    ///             .accessibilityElement(children: .combine)
+    ///         }
+    ///     }
+    ///
+    /// A new accessibility element is created when:
+    /// * The view contains multiple or zero accessibility elements
+    /// * The view wraps a ``UIViewRepresentable``/``NSViewRepresentable``.
+    ///
+    /// - Note: If an accessibility element is not created, the
+    ///         ``AccessibilityChildBehavior`` of the existing
+    ///         accessibility element is modified.
     public static let combine: AccessibilityChildBehavior
 }
 
@@ -3821,7 +3898,7 @@ public struct BorderedButtonStyle : PrimitiveButtonStyle {
     public typealias Body = some View
 }
 
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+@available(*, deprecated, message: "Use View.buttonBorderShape(_:) instead.")
 extension BorderedButtonStyle {
 
     /// A type that describes the shape of a bordered button.
@@ -3844,6 +3921,29 @@ extension BorderedButtonStyle {
     ///
     /// - Parameter shape: a shape used to draw the button's border.
     public init(shape: BorderedButtonStyle.BorderShape)
+}
+
+/// A button style that applies standard border prominent artwork based
+/// on the button's context.
+///
+/// You can also use ``ButtonStyle/borderedProminent`` to construct this style.
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+public struct BorderedProminentButtonStyle : PrimitiveButtonStyle {
+
+    /// Creates a bordered prominent button style.
+    public init()
+
+    /// Creates a view that represents the body of a button.
+    ///
+    /// The system calls this method for each ``Button`` instance in a view
+    /// hierarchy where this style is the current button style.
+    ///
+    /// - Parameter configuration : The properties of the button.
+    public func makeBody(configuration: BorderedProminentButtonStyle.Configuration) -> some View
+
+
+    /// A view that represents the body of a button.
+    public typealias Body = some View
 }
 
 /// A menu style that displays a borderless button that toggles the display of
@@ -4149,6 +4249,40 @@ extension Button where Label == Text {
     ///     `nil` means that the button doesn't have an assigned role.
     ///   - action: The action to perform when the user interacts with the button.
     public init<S>(_ title: S, role: ButtonRole?, action: @escaping () -> Void) where S : StringProtocol
+}
+
+/// A shape that is used to draw a button's border.
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+public struct ButtonBorderShape : Equatable {
+
+    /// A shape that defers to the system to determine an appropriate shape
+    /// for the given context and platform.
+    public static let automatic: ButtonBorderShape
+
+    /// A capsule shape.
+    @available(tvOS, unavailable)
+    @available(macOS, unavailable)
+    public static let capsule: ButtonBorderShape
+
+    /// A rounded rectangle shape.
+    public static let roundedRectangle: ButtonBorderShape
+
+    /// A rounded rectangle shape.
+    ///
+    /// - Parameter radius: the corner radius of the rectangle.
+    @available(tvOS, unavailable)
+    @available(macOS, unavailable)
+    public static func roundedRectangle(radius: CGFloat) -> ButtonBorderShape
+
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    public static func == (a: ButtonBorderShape, b: ButtonBorderShape) -> Bool
 }
 
 /// A value that describes the purpose of a button.
@@ -9375,39 +9509,45 @@ extension EnvironmentValues {
     ///     }
     ///
     ///     struct MyList: View {
-    ///         @State private var result: SearchResult? = nil
+    ///         @State private var isPresented = false
+    ///         @Environment(\.isSearching) private var isSearching
     ///
     ///         var body: some View {
-    ///             MainList()
+    ///             Text("Main List")
+    ///                 .frame(maxWidth: .infinity, maxHeight: .infinity)
     ///                 .overlay {
-    ///                     ResultList(results) { result in
+    ///                     if isSearching {
     ///                         Button {
-    ///                             self.result = result
+    ///                             isPresented = true
     ///                         } label: {
-    ///                             ResultLabel(result)
+    ///                             Text("Present")
+    ///                                 .frame(
+    ///                                     maxWidth: .infinity,
+    ///                                     maxHeight: .infinity
+    ///                                 )
+    ///                                 .background()
     ///                         }
-    ///                     }
-    ///                     .sheet(item: $result) { result in
-    ///                         NavigationView {
-    ///                              DetailView(result: result)
+    ///                         .sheet(isPresented: $isPresented) {
+    ///                             NavigationView {
+    ///                                 DetailView()
+    ///                             }
+    ///                         }
     ///                     }
     ///                 }
     ///         }
     ///     }
     ///
     ///     struct DetailView: View {
-    ///         var searchResult: SearchResult
-    ///
     ///         @Environment(\.dismiss) private var dismiss
     ///         @Environment(\.dismissSearch) private var dismissSearch
     ///
     ///         var body: some View {
-    ///             DetailContent()
+    ///             Text("Detail Content")
     ///                 .toolbar {
     ///                     Button("Add") {
-    ///                         add(result: searchResult)
     ///                         dismiss()
     ///                         dismissSearch()
+    ///                     }
     ///                 }
     ///         }
     ///     }
@@ -10477,6 +10617,7 @@ public struct FocusedValues {
     public subscript<Key>(key: Key.Type) -> Key.Value? where Key : FocusedValueKey
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension FocusedValues : Equatable {
 
     /// Returns a Boolean value indicating whether two values are equal.
@@ -16089,7 +16230,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, RowContent>(_ data: Data, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, HStack<RowContent>>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+    public init<Data, RowContent>(_ data: Data, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, RowContent>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
     /// Creates a hierarchical list that computes its rows on demand from an
     /// underlying collection of identifiable data, optionally allowing users to
@@ -16116,7 +16257,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, HStack<RowContent>>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
+    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, RowContent>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
     /// Creates a hierarchical list that identifies its rows based on a key path
     /// to the identifier of the underlying data, optionally allowing users to
@@ -16164,7 +16305,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, RowContent>(_ data: Data, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, HStack<RowContent>>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+    public init<Data, RowContent>(_ data: Data, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, RowContent>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
     /// Creates a hierarchical list that computes its rows on demand from an
     /// underlying collection of identifiable data, optionally allowing users to
@@ -16197,7 +16338,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, HStack<RowContent>>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
+    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, RowContent>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
     /// Creates a hierarchical list that identifies its rows based on a key path
     /// to the identifier of the underlying data, optionally allowing users to
@@ -16233,7 +16374,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<RowContent>(_ data: Range<Int>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, HStack<RowContent>>, RowContent : View
+    public init<RowContent>(_ data: Range<Int>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, RowContent>, RowContent : View
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -16251,7 +16392,7 @@ extension List where SelectionValue == Never {
     ///   - data: A collection of identifiable data for computing the list.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
-    public init<Data, RowContent>(_ data: Data, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, HStack<RowContent>>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+    public init<Data, RowContent>(_ data: Data, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, RowContent>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
     /// Creates a hierarchical list that computes its rows on demand from an
     /// underlying collection of identifiable data.
@@ -16279,7 +16420,7 @@ extension List where SelectionValue == Never {
     ///   - id: The key path to the data model's identifier.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
-    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, HStack<RowContent>>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
+    public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, RowContent>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
     /// Creates a hierarchical list that identifies its rows based on a key path
     /// to the identifier of the underlying data.
@@ -16310,7 +16451,7 @@ extension List where SelectionValue == Never {
     ///   - data: A constant range of data to populate the list.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
-    public init<RowContent>(_ data: Range<Int>, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, HStack<RowContent>>, RowContent : View
+    public init<RowContent>(_ data: Range<Int>, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, RowContent>, RowContent : View
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -16326,7 +16467,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, RowContent>(_ data: Binding<Data>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
+    public init<Data, RowContent>(_ data: Binding<Data>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
 
     /// Creates a list that identifies its rows based on a key path to the
     /// identifier of the underlying data, optionally allowing users to select
@@ -16339,7 +16480,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
 
     /// Creates a list that computes its rows on demand from an underlying
     /// collection of identifiable data, optionally allowing users to select a
@@ -16351,7 +16492,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, RowContent>(_ data: Binding<Data>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
+    public init<Data, RowContent>(_ data: Binding<Data>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
 
     /// Creates a list that identifies its rows based on a key path to the
     /// identifier of the underlying data, optionally allowing users to select a
@@ -16364,7 +16505,7 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @available(watchOS, unavailable)
-    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -16377,7 +16518,7 @@ extension List where SelectionValue == Never {
     ///   - data: A collection of identifiable data for computing the list.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
-    public init<Data, RowContent>(_ data: Binding<Data>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
+    public init<Data, RowContent>(_ data: Binding<Data>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, Data.Element.ID)>, Data.Element.ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
 
     /// Creates a list that identifies its rows based on a key path to the
     /// identifier of the underlying data.
@@ -16387,7 +16528,7 @@ extension List where SelectionValue == Never {
     ///   - id: The key path to the data model's identifier.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
-    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, HStack<RowContent>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
 }
 
 /// The configuration of a tint effect applied to content within a List.
@@ -20317,22 +20458,6 @@ extension PreviewProvider {
     public static var platform: PreviewPlatform? { get }
 }
 
-/// A shape style that maps to the first level of the current content style.
-///
-/// Do not use this type directly. Instead, use ``ShapeStyle/primary``.
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.primary instead")
-@frozen public struct PrimaryContentStyle : ShapeStyle {
-
-    /// Creates a primary content style instance.
-    @inlinable public init()
-}
-
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.primary instead")
-extension PrimaryContentStyle : Sendable {
-}
-
 /// A type that applies custom interaction behavior and a custom appearance to
 /// all buttons within a view hierarchy.
 ///
@@ -20357,6 +20482,17 @@ public protocol PrimitiveButtonStyle {
 
     /// The properties of a button.
     typealias Configuration = PrimitiveButtonStyleConfiguration
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension PrimitiveButtonStyle where Self == BorderedProminentButtonStyle {
+
+    /// A button style that applies standard border prominent artwork based on
+    /// the button's context.
+    ///
+    /// To apply this style to a button, or to a view that contains buttons, use
+    /// the ``View/buttonStyle(_:)-66fbx`` modifier.
+    public static var borderedProminent: BorderedProminentButtonStyle { get }
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -20958,22 +21094,6 @@ extension Prominence : Equatable {
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension Prominence : Hashable {
-}
-
-/// A shape style that maps to the fourth level of the current content style.
-///
-/// Do not use this type directly. Instead, use ``ShapeStyle/quaternary``.
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.quaternary instead")
-@frozen public struct QuaternaryContentStyle : ShapeStyle {
-
-    /// Creates a quaternary content style instance.
-    @inlinable public init()
-}
-
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.quaternary instead")
-extension QuaternaryContentStyle : Sendable {
 }
 
 /// A radial gradient.
@@ -22510,22 +22630,6 @@ extension SearchFieldPlacement {
     }
 }
 
-/// A shape style that maps to the second level of the current content style.
-///
-/// Do not use this type directly. Instead, use ``ShapeStyle/secondary``.
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.secondary instead")
-@frozen public struct SecondaryContentStyle : ShapeStyle {
-
-    /// Creates a secondary content style instance.
-    @inlinable public init()
-}
-
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.secondary instead")
-extension SecondaryContentStyle : Sendable {
-}
-
 /// A container view that you can use to add hierarchy to certain collection views.
 ///
 /// Use `Section` instances in views like ``List``, ``Picker``, and
@@ -22544,8 +22648,6 @@ extension Section : View where Parent : View, Content : View, Footer : View {
     /// When you create a custom view, Swift infers this type from your
     /// implementation of the required ``View/body-swift.property`` property.
     public typealias Body = Never
-
-    public var internalBody: some View { get }
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -26472,22 +26574,6 @@ public struct TapGesture : Gesture {
     public typealias Value = ()
 }
 
-/// A shape style that maps to the third level of the current content style.
-///
-/// Do not use this type directly. Instead, use ``ShapeStyle/tertiary``.
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.tertiary instead")
-@frozen public struct TertiaryContentStyle : ShapeStyle {
-
-    /// Creates a tertiary content style instance.
-    @inlinable public init()
-}
-
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@available(*, deprecated, message: "use ShapeStyle.tertiary instead")
-extension TertiaryContentStyle : Sendable {
-}
-
 /// A view that displays one or more lines of read-only text.
 ///
 /// A text view draws a string in your app's user interface using a
@@ -26984,6 +27070,95 @@ extension Text {
     }
 }
 
+extension Text {
+
+    /// Description of the style used to draw the line for `StrikethroughStyleAttribute`
+    /// and `UnderlineStyleAttribute`.
+    ///
+    /// Use this type to specify `underlineStyle` and `strikethroughStyle`
+    /// SwiftUI attributes of an `AttributedString`.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public struct LineStyle : Hashable {
+
+        /// Creates a line style.
+        ///
+        /// - Parameters:
+        ///   - pattern: The pattern of the line.
+        ///   - color: The color of the line. If not provided, the foreground
+        ///     color of text is used.
+        public init(pattern: Text.LineStyle.Pattern = .solid, color: Color? = nil)
+
+        /// The pattern, that the line has.
+        public struct Pattern {
+
+            /// Draw a solid line.
+            public static let solid: Text.LineStyle.Pattern
+
+            /// Draw a line of dots.
+            public static let dot: Text.LineStyle.Pattern
+
+            /// Draw a line of dashes.
+            public static let dash: Text.LineStyle.Pattern
+
+            public static let dashDot: Text.LineStyle.Pattern
+
+            /// Draw a line of alternating dashes and two dots.
+            public static let dashDotDot: Text.LineStyle.Pattern
+        }
+
+        /// Draw a single solid line.
+        public static let single: Text.LineStyle
+
+        /// Creates a ``Text.LineStyle`` from ``NSUnderlineStyle``.
+        ///
+        /// > Note: Use this initializer only if you need to convert an existing
+        /// ``NSUnderlineStyle`` to a SwiftUI ``Text.LineStyle``.
+        /// Otherwise, create a ``Text.LineStyle`` using an
+        /// initializer like ``init(pattern:color:)``.
+        ///
+        /// - Parameter nsUnderlineStyle: A value of ``NSUnderlineStyle``
+        /// to wrap with ``Text.LineStyle``.
+        ///
+        /// - Returns: A new ``Text.LineStyle`` or `nil` when
+        /// `nsUnderlineStyle` contains styles not supported by ``Text.LineStyle``.
+        public init?(nsUnderlineStyle: NSUnderlineStyle)
+
+        /// Hashes the essential components of this value by feeding them into the
+        /// given hasher.
+        ///
+        /// Implement this method to conform to the `Hashable` protocol. The
+        /// components used for hashing must be the same as the components compared
+        /// in your type's `==` operator implementation. Call `hasher.combine(_:)`
+        /// with each of these components.
+        ///
+        /// - Important: Never call `finalize()` on `hasher`. Doing so may become a
+        ///   compile-time error in the future.
+        ///
+        /// - Parameter hasher: The hasher to use when combining the components
+        ///   of this instance.
+        public func hash(into hasher: inout Hasher)
+
+        /// Returns a Boolean value indicating whether two values are equal.
+        ///
+        /// Equality is the inverse of inequality. For any values `a` and `b`,
+        /// `a == b` implies that `a != b` is `false`.
+        ///
+        /// - Parameters:
+        ///   - lhs: A value to compare.
+        ///   - rhs: Another value to compare.
+        public static func == (a: Text.LineStyle, b: Text.LineStyle) -> Bool
+
+        /// The hash value.
+        ///
+        /// Hash values are not guaranteed to be equal across different executions of
+        /// your program. Do not save hash values to use during a future execution.
+        ///
+        /// - Important: `hashValue` is deprecated as a `Hashable` requirement. To
+        ///   conform to `Hashable`, implement the `hash(into:)` requirement instead.
+        public var hashValue: Int { get }
+    }
+}
+
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Text : View {
 
@@ -27321,6 +27496,10 @@ extension Text {
     /// - Parameters:
     ///   - attributedContent: The content to be displayed,
     ///     styled according to its attributes.
+    ///
+    /// Text is styled based on attributes in SwiftUI scope or their equivalent attributes
+    /// in UIKit/AppKit scopes. SwiftUI attributes take precedence over their
+    /// equivalents in other scopes.
     public init(_ attributedContent: AttributedString)
 }
 
@@ -28114,6 +28293,39 @@ public struct TextFormattingCommands : Commands {
     /// implementation of the required ``SwiftUI/Commands/body-swift.property``
     /// property.
     public typealias Body = some Commands
+}
+
+/// The kind of autocapitalization behavior applied during text input.
+///
+/// Pass an instance of `TextInputAutocapitalization` to the
+/// ``textInputAutocapitalization(_:)`` view modifier.
+@available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(macOS, unavailable)
+public struct TextInputAutocapitalization {
+
+    /// Defines an autocapitalizing behavior that will not capitalize anything.
+    public static var never: TextInputAutocapitalization { get }
+
+    /// Defines an autocapitalizing behavior that will capitalize the first
+    /// letter of every word.
+    public static var words: TextInputAutocapitalization { get }
+
+    /// Defines an autocapitalizing behavior that will capitalize the first
+    /// letter in every sentence.
+    public static var sentences: TextInputAutocapitalization { get }
+
+    /// Defines an autocapitalizing behavior that will capitalize every letter.
+    public static var characters: TextInputAutocapitalization { get }
+}
+
+extension TextInputAutocapitalization {
+
+    /// Creates a new ``TextInputAutocapitalization`` struct from a
+    /// `UITextAutocapitalizationType` enum.
+    @available(iOS 15.0, tvOS 15.0, *)
+    @available(macOS, unavailable)
+    @available(watchOS, unavailable)
+    public init?(_ type: UITextAutocapitalizationType)
 }
 
 /// A type that describes the ability to select text.
@@ -29491,6 +29703,12 @@ extension UIApplicationDelegateAdaptor where DelegateType : ObservableObject {
     public var projectedValue: ObservedObject<DelegateType>.Wrapper { get }
 }
 
+@available(iOS 14.0, tvOS 14.0, *)
+@available(macOS, unavailable)
+@available(watchOS, unavailable)
+extension UIApplicationDelegateAdaptor : Sendable {
+}
+
 /// A UIKit view controller that manages a SwiftUI view hierarchy.
 ///
 /// Create a `UIHostingController` object when you want to integrate SwiftUI
@@ -29798,6 +30016,12 @@ public struct UIViewControllerRepresentableContext<Representable> where Represen
     public var environment: EnvironmentValues { get }
 }
 
+@available(iOS 13.0, tvOS 13.0, *)
+@available(macOS, unavailable)
+@available(watchOS, unavailable)
+extension UIViewControllerRepresentableContext : Sendable {
+}
+
 /// A wrapper for a UIKit view that you use to integrate that view into your
 /// SwiftUI view hierarchy.
 ///
@@ -29977,6 +30201,12 @@ public struct UIViewRepresentableContext<Representable> where Representable : UI
     /// Use the environment values to configure the state of your view when
     /// creating or updating it.
     public var environment: EnvironmentValues { get }
+}
+
+@available(iOS 13.0, tvOS 13.0, *)
+@available(macOS, unavailable)
+@available(watchOS, unavailable)
+extension UIViewRepresentableContext : Sendable {
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -33219,6 +33449,7 @@ extension View {
     ///         .controlProminence(.increased)
     ///
     /// - Parameter prominence: The prominence to apply.
+    @available(*, deprecated, message: "Use .buttonStyle(.borderedProminent)")
     public func controlProminence(_ prominence: Prominence) -> some View
 
 
@@ -37611,10 +37842,37 @@ extension View {
     /// - Parameter style: One of the autocapitalization modes defined in the
     /// <doc://com.apple.documentation/documentation/UIKit/UITextAutocapitalizationType>
     /// enumeration.
-    @available(iOS 13.0, tvOS 13.0, *)
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "use textInputAutocapitalization(_:)")
     @available(macOS, unavailable)
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "use textInputAutocapitalization(_:)")
     @available(watchOS, unavailable)
     public func autocapitalization(_ style: UITextAutocapitalizationType) -> some View
+
+}
+
+extension View {
+
+    /// Sets how often the shift key in the keyboard is automatically enabled.
+    ///
+    /// Use `textInputAutocapitalization(_:)` when you need to automatically
+    /// capitalize words, sentences, or other text like proper nouns.
+    ///
+    /// In example below, as the user enters text the shift key is
+    /// automatically enabled before every word:
+    ///
+    ///     TextField("Last, First", text: $fullName)
+    ///         .textInputAutocapitalization(.words)
+    ///
+    /// The ``TextInputAutocapitalization`` struct defines the available
+    /// autocapitalizing behavior. Providing `nil` to  this view modifier does
+    /// not change the autocapitalization behavior. The default is
+    /// ``TextInputAutocapitalization.sentences``.
+    ///
+    /// - Parameter autocapitalization: One of the capitalizing behaviors
+    /// defined in the ``TextInputAutocapitalization`` struct or nil.
+    @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+    @available(macOS, unavailable)
+    public func textInputAutocapitalization(_ autocapitalization: TextInputAutocapitalization?) -> some View
 
 }
 
@@ -38775,6 +39033,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Marks this view as searchable, which configures the display of a
@@ -38884,7 +39143,6 @@ extension View {
     ///     containing view hierarchy.
     ///   - prompt: A `Text` representing the prompt of the search field
     ///     which provides users with guidance on what to search for.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: Text? = nil) -> some View
 
 
@@ -38994,7 +39252,6 @@ extension View {
     ///     containing view hierarchy.
     ///   - prompt: The key for the localized prompt of the search field
     ///     which provides users with guidance on what to search for.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: LocalizedStringKey) -> some View
 
 
@@ -39104,7 +39361,6 @@ extension View {
     ///     containing view hierarchy.
     ///   - prompt: A string representing the prompt of the search field
     ///     which provides users with guidance on what to search for.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable<S>(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: S) -> some View where S : StringProtocol
 
 
@@ -39216,7 +39472,6 @@ extension View {
     ///     which provides users with guidance on what to search for.
     ///   - suggestions: A view builder that produces content that
     ///     populates a list of suggestions.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable<S>(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: Text? = nil, @ViewBuilder suggestions: () -> S) -> some View where S : View
 
 
@@ -39328,7 +39583,6 @@ extension View {
     ///     which provides users with guidance on what to search for.
     ///   - suggestions: A view builder that produces content that
     ///     populates a list of suggestions.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable<S>(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: LocalizedStringKey, @ViewBuilder suggestions: () -> S) -> some View where S : View
 
 
@@ -39440,31 +39694,7 @@ extension View {
     ///     which provides users with guidance on what to search for.
     ///   - suggestions: A view builder that produces content that
     ///     populates a list of suggestions.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchable<V, S>(text: Binding<String>, placement: SearchFieldPlacement = .automatic, prompt: S, @ViewBuilder suggestions: () -> V) -> some View where V : View, S : StringProtocol
-
-}
-
-extension View {
-
-    @available(*, deprecated, message: "Specify a prompt with the searchable modifier.")
-    public func searchable(_ titleKey: LocalizedStringKey, text: Binding<String>, placement: SearchFieldPlacement = .automatic) -> some View
-
-
-    @available(*, deprecated, message: "Specify a prompt with the searchable modifier.")
-    public func searchable<S>(_ title: S, text: Binding<String>, placement: SearchFieldPlacement = .automatic) -> some View where S : StringProtocol
-
-
-    @available(*, deprecated, message: "Specify a prompt with the searchable modifier.")
-    public func searchable(_ title: Text, text: Binding<String>, placement: SearchFieldPlacement = .automatic) -> some View
-
-
-    @available(*, deprecated, message: "Specify a prompt with the searchable modifier.")
-    public func searchable<S>(_ titleKey: LocalizedStringKey, text: Binding<String>, placement: SearchFieldPlacement = .automatic, @ViewBuilder suggestions: () -> S) -> some View where S : View
-
-
-    @available(*, deprecated, message: "Specify a prompt with the searchable modifier.")
-    public func searchable<S>(_ title: Text, text: Binding<String>, placement: SearchFieldPlacement = .automatic, @ViewBuilder suggestions: () -> S) -> some View where S : View
 
 }
 
@@ -40210,52 +40440,121 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Adds a task to perform when this view appears.
+    /// Adds an asynchronous task to perform when this view appears.
     ///
-    /// The task will be cancelled when this view disappears.
+    /// Use this modifier to perform an asynchronous task with a lifetime that
+    /// matches that of the modified view. If the task doesn't finish
+    /// before SwiftUI removes the view or the view changes identity, SwiftUI
+    /// cancels the task.
     ///
-    /// The example below shows processing text while a view showing it
-    /// is visible.
+    /// Use the `await` keyword inside the task to
+    /// wait for an asynchronous call to complete, or to wait on the values of
+    /// an <doc://com.apple.documentation/documentation/Swift/AsyncSequence>
+    /// instance. For example, you can modify a ``Text`` view to start a task
+    /// that loads content from a remote resource:
     ///
-    ///     Text(displayValue)
-    ///         .task {
-    ///             var results = TextProcessResults()
-    ///             for try await line in textURL.lines() {
-    ///                 results.accumulateResults(line: line)
+    ///     let url = URL(string: "https://example.com")!
+    ///     @State private var message = "Loading..."
+    ///
+    ///     var body: some View {
+    ///         Text(message)
+    ///             .task {
+    ///                 do {
+    ///                     var receivedLines = [String]()
+    ///                     for try await line in url.lines {
+    ///                         receivedLines.append(line)
+    ///                         message = "Received \(receivedLines.count) lines"
+    ///                     }
+    ///                 } catch {
+    ///                     message = "Failed to load"
+    ///                 }
     ///             }
-    ///             displayValue = results.textSummary()
-    ///         }
+    ///     }
     ///
-    /// - Parameter action: The action to perform.
+    /// This example uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/URL/3767315-lines>
+    /// method to get the content stored at the specified
+    /// <doc://com.apple.documentation/documentation/Foundation/URL> as an
+    /// asynchronous sequence of strings. When each new line arrives, the body
+    /// of the `for`-`await`-`in` loop stores the line in an array of strings
+    /// and updates the content of the text view to report the latest line
+    /// count.
     ///
-    /// - Returns: A view that creates a task to run `action`.
+    /// - Parameter action: A closure that SwiftUI calls as an asynchronous task
+    ///   when the view appears. SwiftUI automatically cancels the task
+    ///   if the view disappears before the action completes.
+    ///
+    /// - Returns: A view that runs the specified action asynchronously when
+    ///   the view appears.
     @inlinable public func task(_ action: @escaping () async -> Void) -> some View
 
 
-    /// Adds a task to perform when this view appears or a specified
-    /// value changes
+    /// Adds a task to perform when this view appears or when a specified
+    /// value changes.
     ///
-    /// The running task will be cancelled either when the value
-    /// changes causing a new task to start or when this view
-    /// disappears.
+    /// This method behaves like ``View/task(_:)``, except that it also cancels
+    /// and recreates the task when a specified value changes. To detect a
+    /// change, the modifier tests whether a new value for the `id` parameter
+    /// equals the previous value. For this to work,
+    /// the value's type must conform to the
+    /// <doc://com.apple.documentation/documentation/Swift/Equatable> protocol.
     ///
-    /// The example below shows listening to notifications to show when
-    /// a user signs in.
+    /// For example, if you define an equatable `Server` type that posts custom
+    /// notifications whenever its state changes --- for example, from _signed
+    /// out_ to _signed in_ --- you can use the task modifier to update
+    /// the contents of a ``Text`` view to reflect the state of the
+    /// currently selected server:
     ///
     ///     Text(status ?? "Signed Out")
     ///         .task(id: server) {
     ///             let sequence = NotificationCenter.default.notifications(
-    ///                 of: . didChangeStatus, on: server)
+    ///                 named: .didChangeStatus,
+    ///                 object: server)
     ///             for try await notification in sequence {
     ///                 status = notification.userInfo["status"] as? String
     ///             }
     ///         }
     ///
-    /// - Parameters:
-    ///   - id: The value to observe for changes.
-    ///   - action: The action to perform.
+    /// This example uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NotificationCenter/3813137-notifications>
+    /// method to wait indefinitely for an asynchronous sequence of
+    /// notifications, given by an
+    /// <doc://com.apple.documentation/documentation/Swift/AsyncSequence>
+    /// instance.
     ///
-    /// - Returns: A view that creates a task to run `action`.
+    /// Elsewhere, the server defines a custom `didUpdateStatus` notification:
+    ///
+    ///     extension NSNotification.Name {
+    ///         static var didUpdateStatus: NSNotification.Name {
+    ///             NSNotification.Name("didUpdateStatus")
+    ///         }
+    ///     }
+    ///
+    /// The server then posts a notification of this type whenever its status
+    /// changes, like after the user signs in:
+    ///
+    ///     let notification = Notification(
+    ///         name: .didUpdateStatus,
+    ///         object: self,
+    ///         userInfo: ["status": "Signed In"])
+    ///     NotificationCenter.default.post(notification)
+    ///
+    /// The task attached to the ``Text`` view gets and displays the status
+    /// value from the notification's user information dictionary. When the user
+    /// chooses a different server, SwiftUI cancels the task and creates a new
+    /// one, which then starts waiting for notifications from the new server.
+    ///
+    /// - Parameters:
+    ///   - id: The value to observe for changes. The value must conform
+    ///     to the <doc://com.apple.documentation/documentation/Swift/Equatable>
+    ///     protocol.
+    ///   - action: A closure that SwiftUI calls as an asynchronous task
+    ///     when the view appears. SwiftUI automatically cancels the task
+    ///     if the view disappears before the action completes. If the
+    ///     `id` value changes, SwiftUI cancels and restarts the task.
+    ///
+    /// - Returns: A view that runs the specified action asynchronously when
+    ///   the view appears, or restarts the task with the `id` value changes.
     @inlinable public func task<T>(id value: T, _ action: @escaping () async -> Void) -> some View where T : Equatable
 
 }
@@ -40765,8 +41064,18 @@ extension View {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension View {
 
-    /// Wraps this view as a new accessibility element, or modifies the
-    /// `AccessibilityChildBehavior` of the existing accessibility element.
+    /// Creates a new accessibility element, or modifies the
+    /// ``AccessibilityChildBehavior`` of the existing accessibility element.
+    ///
+    /// See also:
+    /// - ``AccessibilityChildBehavior/ignore``
+    /// - ``AccessibilityChildBehavior/combine``
+    /// - ``AccessibilityChildBehavior/contain``
+    ///
+    /// - Parameters:
+    ///     -   children: The behavior to use when creating or
+    ///     transforming an accessibility element.
+    ///     The default is ``AccessibilityChildBehavior/ignore``
     public func accessibilityElement(children: AccessibilityChildBehavior = .ignore) -> some View
 
 }
@@ -41762,6 +42071,18 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
+    /// Sets the border shape for buttons in this view.
+    ///
+    /// The border shape is used to draw the platter for a bordered button.
+    ///
+    /// - Parameter shape: the shape to use.
+    @inlinable public func buttonBorderShape(_ shape: ButtonBorderShape) -> some View
+
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension View {
+
     /// Defines an explicit identifier tying an Accessibility element for this
     /// view to an entry in an Accessibility Rotor.
     ///
@@ -42734,11 +43055,8 @@ extension Never {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension Never : Identifiable {
 
-    /// The stable identity of the entity associated with this instance.
     public var id: Never { get }
 
-    /// A type representing the stable identity of the entity associated with
-    /// an instance.
     public typealias ID = Never
 }
 
@@ -42838,6 +43156,18 @@ extension Never : Scene {
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 extension Never : WidgetConfiguration {
+}
+
+extension NSUnderlineStyle {
+
+    /// Creates a ``NSUnderlineStyle`` from ``Text.LineStyle``.
+    ///
+    /// - Parameter lineStyle: A value of ``Text.LineStyle``
+    /// to wrap with ``NSUnderlineStyle``.
+    ///
+    /// - Returns: A new ``NSUnderlineStyle``.
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+    public init(_ lineStyle: Text.LineStyle)
 }
 
 extension Never : ToolbarContent, CustomizableToolbarContent {
@@ -43022,9 +43352,17 @@ extension AttributeScopes {
         public let backgroundColor: AttributeScopes.SwiftUIAttributes.BackgroundColorAttribute
 
         /// A property for accessing a strikethrough color attribute.
+        @available(*, deprecated, message: "Use strikethroughStyle attribute")
         public let strikethroughColor: AttributeScopes.SwiftUIAttributes.StrikethroughColorAttribute
 
+        /// A property for accessing a strikethrough style attribute.
+        public let strikethroughStyle: AttributeScopes.SwiftUIAttributes.StrikethroughStyleAttribute
+
+        /// A property for accessing an underline style attribute.
+        public let underlineStyle: AttributeScopes.SwiftUIAttributes.UnderlineStyleAttribute
+
         /// A property for accessing an underline attribute.
+        @available(*, deprecated, message: "Use underlineStyle attribute")
         public let underlineColor: AttributeScopes.SwiftUIAttributes.UnderlineColorAttribute
 
         /// A property for accessing a kerning attribute.
