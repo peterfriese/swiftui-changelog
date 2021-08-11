@@ -1,4 +1,4 @@
-// Xcode 13.0b4
+// Xcode 13.0b5
 
 import Accessibility
 import Combine
@@ -419,9 +419,9 @@ extension AccessibilityCustomContentKey : Equatable {
 /// focus this binding applies. If you specify no accessibility technologies,
 /// SwiftUI uses an aggregate of any and all active accessibility technologies.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-@propertyWrapper public struct AccessibilityFocusState<Value> : DynamicProperty where Value : Hashable {
+@propertyWrapper @frozen public struct AccessibilityFocusState<Value> : DynamicProperty where Value : Hashable {
 
-    @propertyWrapper public struct Binding {
+    @propertyWrapper @frozen public struct Binding {
 
         /// The underlying value referenced by the bound property.
         public var wrappedValue: Value { get nonmutating set }
@@ -2168,7 +2168,10 @@ extension Animatable where Self.AnimatableData == EmptyAnimatableData {
 }
 
 /// A modifier that can create another modifier with animation.
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+@available(iOS, introduced: 13.0, deprecated: 100000.0, message: "use Animatable directly")
+@available(macOS, introduced: 10.15, deprecated: 100000.0, message: "use Animatable directly")
+@available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "use Animatable directly")
+@available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "use Animatable directly")
 public protocol AnimatableModifier : Animatable, ViewModifier {
 }
 
@@ -2443,8 +2446,8 @@ extension Animation : CustomStringConvertible, CustomDebugStringConvertible, Cus
 /// A pausable schedule of dates updating at a frequency no more quickly than
 /// the provided interval.
 ///
-/// Do not use this type directly. Instead, use
-/// ``TimelineSchedule/animation(minimumInterval:paused:)``.
+/// You can also use ``TimelineSchedule/animation(minimumInterval:paused:)`` to
+/// construct this schedule.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct AnimationTimelineSchedule : TimelineSchedule {
 
@@ -2455,10 +2458,6 @@ public struct AnimationTimelineSchedule : TimelineSchedule {
     ///     - minimumInterval: The minimum interval to update the schedule at.
     ///     Pass nil to let the system pick an appropriate update interval.
     ///     - paused: If the schedule should stop generating updates.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.animation(minimumInterval:paused:)` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.animation(minimumInterval:paused:)` instead.")
-    @available(tvOS, introduced: 15.0, deprecated: 15.0, message: "Use `.animation(minimumInterval:paused:)` instead.")
-    @available(watchOS, introduced: 8.0, deprecated: 8.0, message: "Use `.animation(minimumInterval:paused:)` instead.")
     public init(minimumInterval: Double? = nil, paused: Bool = false)
 
     /// Returns entries at the frequency of the animation schedule.
@@ -3239,7 +3238,7 @@ public enum AsyncImagePhase {
 
 /// The default control group style.
 ///
-/// Do not use this type directly. Instead, use ``ControlGroupStyle/automatic``.
+/// You can also use ``ControlGroupStyle/automatic`` to construct this style.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -3431,7 +3430,7 @@ extension Axis.Set : Sendable {
 
 /// The background style in the current context.
 ///
-/// Do not use this type directly. Instead, use ``ShapeStyle/background``.
+/// You can also use ``ShapeStyle/background`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 @frozen public struct BackgroundStyle {
 
@@ -3877,8 +3876,7 @@ extension BlendMode : Hashable {
 /// A button style that applies standard border artwork based on the button's
 /// context.
 ///
-/// Do not use this type directly. Instead, use
-/// ``PrimitiveButtonStyle/bordered``.
+/// You can also use ``PrimitiveButtonStyle/bordered`` to construct this style.
 @available(iOS 15.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
 public struct BorderedButtonStyle : PrimitiveButtonStyle {
 
@@ -3898,35 +3896,10 @@ public struct BorderedButtonStyle : PrimitiveButtonStyle {
     public typealias Body = some View
 }
 
-@available(*, deprecated, message: "Use View.buttonBorderShape(_:) instead.")
-extension BorderedButtonStyle {
-
-    /// A type that describes the shape of a bordered button.
-    public struct BorderShape {
-
-        /// A shape that defers to the system to determine an appropriate shape
-        /// for the given context and platform.
-        public static let automatic: BorderedButtonStyle.BorderShape
-
-        /// A capsule shape.
-        @available(tvOS, unavailable)
-        @available(macOS, unavailable)
-        public static let capsule: BorderedButtonStyle.BorderShape
-
-        /// A rounded rectangle shape.
-        public static let roundedRectangle: BorderedButtonStyle.BorderShape
-    }
-
-    /// Creates a bordered button style with a shape.
-    ///
-    /// - Parameter shape: a shape used to draw the button's border.
-    public init(shape: BorderedButtonStyle.BorderShape)
-}
-
 /// A button style that applies standard border prominent artwork based
 /// on the button's context.
 ///
-/// You can also use ``ButtonStyle/borderedProminent`` to construct this style.
+/// You can also use ``borderedProminent`` to construct this style.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct BorderedProminentButtonStyle : PrimitiveButtonStyle {
 
@@ -3949,7 +3922,7 @@ public struct BorderedProminentButtonStyle : PrimitiveButtonStyle {
 /// A menu style that displays a borderless button that toggles the display of
 /// the menu's contents when pressed.
 ///
-/// Do not use this type directly. Instead, use ``MenuStyle/borderlessButton``.
+/// You can also use ``MenuStyle/borderlessButton`` to construct this style.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -3973,8 +3946,8 @@ public struct BorderlessButtonMenuStyle : MenuStyle {
 
 /// A button style that doesn't apply a border.
 ///
-/// Do not use this type directly. Instead, use
-/// ``PrimitiveButtonStyle/borderless``.
+/// You can also use ``PrimitiveButtonStyle/borderless`` to construct this
+/// style.
 @available(iOS 13.0, macOS 10.15, watchOS 8.0, *)
 @available(tvOS, unavailable)
 public struct BorderlessButtonStyle : PrimitiveButtonStyle {
@@ -4410,6 +4383,7 @@ public struct ButtonStyleConfiguration {
     /// Cancel in black, bold letters. The second says Delete in red, regular
     /// weight letters. The third says Continue in black, regular weight
     /// letters.](ButtonStyleConfiguration-role-1)
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public let role: ButtonRole?
 
     /// A view that describes the effect of pressing the button.
@@ -4422,15 +4396,13 @@ public struct ButtonStyleConfiguration {
 
 /// A toggle style that displays as a button with its label as the title.
 ///
-/// Do not use this type directly. Instead, use ``ToggleStyle/button``.
+/// You can also use ``ToggleStyle/button`` to construct this style.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct ButtonToggleStyle : ToggleStyle {
 
     /// Creates a button toggle style.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.button` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.button` instead.")
     public init()
 
     /// Creates a view that represents the body of a toggle.
@@ -4734,7 +4706,7 @@ extension Circle : Sendable {
 
 /// A progress view that visually indicates its progress using a circular gauge.
 ///
-/// Do not use this type directly. Instead, use ``ProgressViewStyle/circular``.
+/// You can also use ``ProgressViewStyle/circular`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct CircularProgressViewStyle : ProgressViewStyle {
 
@@ -5736,7 +5708,7 @@ extension ColorSchemeContrast : Hashable {
 
 /// A navigation view style represented by a series of views in columns.
 ///
-/// Do not use this type directly. Instead, use ``NavigationViewStyle/columns``.
+/// You can also use ``NavigationViewStyle/columns`` to construct this style.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -6098,7 +6070,7 @@ extension CommandsBuilder {
 /// A date picker style that displays the components in a compact, textual
 /// format.
 ///
-/// Do not use this type directly. Instead, use ``DatePickerStyle/compact``.
+/// You can also use ``DatePickerStyle/compact`` to construct this style.
 @available(iOS 14.0, macCatalyst 13.4, macOS 10.15.4, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -6199,6 +6171,88 @@ extension ContainerRelativeShape : Sendable {
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension ContentMode : Sendable {
+}
+
+/// A kind for the content shape of a view.
+///
+/// The kind is used by the system to influence various effects, hit-testing,
+/// and more.
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+public struct ContentShapeKinds : OptionSet {
+
+    /// The corresponding value of the raw type.
+    ///
+    /// A new instance initialized with `rawValue` will be equivalent to this
+    /// instance. For example:
+    ///
+    ///     enum PaperSize: String {
+    ///         case A4, A5, Letter, Legal
+    ///     }
+    ///
+    ///     let selectedSize = PaperSize.Letter
+    ///     print(selectedSize.rawValue)
+    ///     // Prints "Letter"
+    ///
+    ///     print(selectedSize == PaperSize(rawValue: selectedSize.rawValue)!)
+    ///     // Prints "true"
+    public var rawValue: Int
+
+    /// Creates a content shape kind.
+    public init(rawValue: Int)
+
+    /// The kind for hit-testing and accessibility.
+    ///
+    /// Settting a content shape with this kind will cause the view to hit-test
+    /// using the specified shape.
+    public static let interaction: ContentShapeKinds
+
+    /// The kind for drag and drop previews.
+    ///
+    /// When using this kind, only the preview shape is affected. To control the
+    /// shape used to hit-test and start the drag preview, use the `interaction`
+    /// kind.
+    @available(watchOS, unavailable)
+    @available(tvOS, unavailable)
+    public static let dragPreview: ContentShapeKinds
+
+    /// The kind for context menu previews.
+    ///
+    /// When using this kind, only the preview shape will be affected. To
+    /// control the shape used to hit-test and start the context menu
+    /// presentation, use the `.interaction` kind.
+    @available(macOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(tvOS, unavailable)
+    public static let contextMenuPreview: ContentShapeKinds
+
+    /// The kind for hover effects.
+    ///
+    /// When using this kind, only the preview shape is affected. To control
+    /// the shape used to hit-test and start the effect, use the `interaction`
+    /// kind.
+    ///
+    /// This kind does not affect the `onHover` modifier.
+    @available(macOS, unavailable)
+    @available(watchOS, unavailable)
+    @available(tvOS, unavailable)
+    public static let hoverEffect: ContentShapeKinds
+
+    /// The type of the elements of an array literal.
+    public typealias ArrayLiteralElement = ContentShapeKinds
+
+    /// The element type of the option set.
+    ///
+    /// To inherit all the default implementations from the `OptionSet` protocol,
+    /// the `Element` type must be `Self`, the default.
+    public typealias Element = ContentShapeKinds
+
+    /// The raw type that can be used to represent all values of the conforming
+    /// type.
+    ///
+    /// Every distinct value of the conforming type has a corresponding unique
+    /// value of the `RawValue` type, but there may be values of the `RawValue`
+    /// type that don't have a corresponding value of the conforming type.
+    public typealias RawValue = Int
 }
 
 @available(iOS, introduced: 13.0, deprecated: 100000.0, renamed: "DynamicTypeSize")
@@ -7026,8 +7080,7 @@ extension DatePickerStyle where Self == CompactDatePickerStyle {
 
 /// The default button style, based on the button's context.
 ///
-/// Do not use this type directly. Instead, use
-/// ``PrimitiveButtonStyle/automatic``.
+/// You can also use ``PrimitiveButtonStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultButtonStyle : PrimitiveButtonStyle {
 
@@ -7047,36 +7100,9 @@ public struct DefaultButtonStyle : PrimitiveButtonStyle {
     public typealias Body = some View
 }
 
-/// The default control group style.
-///
-/// Do not use this type directly. Instead, use ``ControlGroupStyle/automatic``.
-@available(iOS, deprecated, renamed: "AutomaticControlGroupStyle")
-@available(macOS, introduced: 12.0, deprecated: 12.0, renamed: "AutomaticControlGroupStyle")
-@available(tvOS, unavailable)
-@available(watchOS, unavailable)
-public struct DefaultControlGroupStyle : ControlGroupStyle {
-
-    /// Creates a default control group style.
-    public init()
-
-    /// Creates a view representing the body of a control group.
-    ///
-    /// - Parameter configuration: The properties of the control group instance
-    ///   being created.
-    ///
-    /// This method will be called for each instance of ``ControlGroup`` created
-    /// within a view hierarchy where this style is the current
-    /// `ControlGroupStyle`.
-    public func makeBody(configuration: DefaultControlGroupStyle.Configuration) -> some View
-
-
-    /// A view representing the body of a control group.
-    public typealias Body = some View
-}
-
 /// The default style for date pickers.
 ///
-/// Do not use this type directly. Instead, use ``DatePickerStyle/automatic``.
+/// You can also use ``DatePickerStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -7088,7 +7114,7 @@ public struct DefaultDatePickerStyle : DatePickerStyle {
 
 /// The default style for group box views.
 ///
-/// Do not use this type directly. Instead, use ``GroupBoxStyle/automatic``.
+/// You can also use ``GroupBoxStyle/automatic`` to construct this style.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -7113,11 +7139,11 @@ public struct DefaultGroupBoxStyle : GroupBoxStyle {
 
 /// The default label style in the current context.
 ///
-/// Do not use this type directly. Instead, use ``LabelStyle/automatic``.
+/// You can also use ``LabelStyle/automatic`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct DefaultLabelStyle : LabelStyle {
 
-    /// Creates a default label style.
+    /// Creates an automatic label style.
     public init()
 
     /// Creates a view that represents the body of a label.
@@ -7136,7 +7162,7 @@ public struct DefaultLabelStyle : LabelStyle {
 /// The list style that describes a platform's default behavior and appearance
 /// for a list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/automatic``.
+/// You can also use ``ListStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultListStyle : ListStyle {
 
@@ -7146,7 +7172,7 @@ public struct DefaultListStyle : ListStyle {
 
 /// The default menu style, based on the menu's context.
 ///
-/// Do not use this type directly. Instead, use ``MenuStyle/automatic``.
+/// You can also use ``MenuStyle/automatic`` to construct this style.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -7170,8 +7196,7 @@ public struct DefaultMenuStyle : MenuStyle {
 
 /// The default navigation view style.
 ///
-/// Do not use this type directly. Instead, use
-/// ``NavigationViewStyle/automatic``.
+/// You can also use ``NavigationViewStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
 public struct DefaultNavigationViewStyle : NavigationViewStyle {
 
@@ -7180,7 +7205,7 @@ public struct DefaultNavigationViewStyle : NavigationViewStyle {
 
 /// The default picker style, based on the picker's context.
 ///
-/// Do not use this type directly. Instead, use ``PickerStyle/automatic``.
+/// You can also use ``PickerStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultPickerStyle : PickerStyle {
 
@@ -7191,7 +7216,7 @@ public struct DefaultPickerStyle : PickerStyle {
 /// The default progress view style in the current context of the view being
 /// styled.
 ///
-/// Do not use this type directly. Instead, use ``ProgressViewStyle/automatic``.
+/// You can also use ``ProgressViewStyle/automatic`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct DefaultProgressViewStyle : ProgressViewStyle {
 
@@ -7217,7 +7242,7 @@ public struct DefaultProgressViewStyle : ProgressViewStyle {
 
 /// The default `TabView` style.
 ///
-/// Do not use this type directly. Instead, use ``TabViewStyle/automatic``.
+/// You can also use ``TabViewStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
 public struct DefaultTabViewStyle : TabViewStyle {
 
@@ -7226,7 +7251,7 @@ public struct DefaultTabViewStyle : TabViewStyle {
 
 /// The default text field style, based on the text field's context.
 ///
-/// Do not use this type directly. Instead, use ``TextFieldStyle/automatic``.
+/// You can also use ``TextFieldStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultTextFieldStyle : TextFieldStyle {
 
@@ -7235,7 +7260,7 @@ public struct DefaultTextFieldStyle : TextFieldStyle {
 
 /// The default toggle style.
 ///
-/// Do not use this type directly. Instead, use ``ToggleStyle/automatic``.
+/// You can also use ``ToggleStyle/automatic`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultToggleStyle : ToggleStyle {
 
@@ -8062,12 +8087,12 @@ public enum DynamicTypeSize : Hashable, Comparable, CaseIterable {
     public var hashValue: Int { get }
 }
 
+@available(iOS 15.0, tvOS 15.0, *)
+@available(macOS, unavailable)
+@available(watchOS, unavailable)
 extension DynamicTypeSize {
 
     /// Create a Dynamic Type size from its `UIContentSizeCategory` equivalent.
-    @available(iOS 15.0, tvOS 15.0, *)
-    @available(macOS, unavailable)
-    @available(watchOS, unavailable)
     public init?(_ uiSizeCategory: UIContentSizeCategory)
 }
 
@@ -9292,11 +9317,6 @@ extension EnvironmentValues {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension EnvironmentValues {
 
-    /// The prominence to apply to controls within a view.
-    ///
-    /// The default is ``Prominence/standard``.
-    public var controlProminence: Prominence
-
     /// The prominence to apply to section headers within a view.
     ///
     /// The default is ``Prominence/standard``.
@@ -9447,6 +9467,7 @@ extension EnvironmentValues {
     public var accessibilitySwitchControlEnabled: Bool { get }
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension EnvironmentValues {
 
     /// The current Dynamic Type size.
@@ -9456,7 +9477,6 @@ extension EnvironmentValues {
     ///
     /// On macOS, this value cannot be changed by users and does not affect the
     /// text size.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var dynamicTypeSize: DynamicTypeSize
 }
 
@@ -9469,6 +9489,7 @@ extension EnvironmentValues {
     public var symbolRenderingMode: SymbolRenderingMode?
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension EnvironmentValues {
 
     /// Whether the user is currently interacting with a search field that has
@@ -9494,7 +9515,6 @@ extension EnvironmentValues {
     ///         }
     ///     }
     ///
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var isSearching: Bool { get }
 
     /// Asks the system to dismiss the current search interaction.
@@ -9552,7 +9572,6 @@ extension EnvironmentValues {
     ///         }
     ///     }
     ///
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var dismissSearch: DismissSearchAction { get }
 }
 
@@ -9562,8 +9581,8 @@ extension EnvironmentValues {
     /// A refresh action stored in a view's environment.
     ///
     /// If you design a custom view that can support a refresh operation,
-    /// like a view that displays a collection of model objects stored on a server,
-    /// use the existence of an action in the view's environment
+    /// like a view that displays a collection of model objects stored on a
+    /// server, use the existence of an action in the view's environment
     /// to change the view's appearance and behavior to provide
     /// a way for the user to initiate the refresh action. An action of `nil`
     /// indicates that the view doesn't need to support refresh.
@@ -9576,8 +9595,21 @@ extension EnvironmentValues {
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension EnvironmentValues {
 
-    /// Opens a URL using the appropriate system service.
-    public var openURL: OpenURLAction { get }
+    /// Opens a URL using the ``OpenURLAction`` from the environment.
+    ///
+    /// Set this value to customize URL handling in the view hierarchy.
+    /// This affects URL handling in ``Link`` views and links embedded in
+    /// ``Text`` views through link attributes in ``AttributedString`` or
+    /// Markdown links.
+    ///
+    ///     Text("Visit [Example Co](https://www.example.com) for details.")
+    ///         .environment(\.openURL, OpenURLAction { url in
+    ///             handleURL(url)
+    ///             return .handled
+    ///         })
+    ///
+    /// The default value opens a URL using the appropriate system service.
+    public var openURL: OpenURLAction
 }
 
 @available(iOS 15.0, macOS 12.0, *)
@@ -9638,7 +9670,8 @@ extension EnvironmentValues {
     /// A value that indicates how the layout truncates the last line of text to
     /// fit into the available space.
     ///
-    /// The default value is ``Text/TruncationMode/tail``.
+    /// The default value is ``Text/TruncationMode/tail``. Some controls,
+    /// however, might have a different default if appropriate.
     public var truncationMode: Text.TruncationMode
 
     /// The distance in points between the bottom of one line fragment and the
@@ -9871,8 +9904,8 @@ extension EventModifiers : Sendable {
 
 /// A schedule for updating a timeline view at the start of every minute.
 ///
-/// Do not use this type directly. Instead, use
-/// ``TimelineSchedule/everyMinute``.
+/// You can also use ``TimelineSchedule/everyMinute`` to construct this
+/// schedule.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct EveryMinuteTimelineSchedule : TimelineSchedule {
 
@@ -9927,10 +9960,6 @@ public struct EveryMinuteTimelineSchedule : TimelineSchedule {
     ///
     /// Use the ``EveryMinuteTimelineSchedule/entries(from:mode:)`` method
     /// to get the sequence of dates.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.everyMinute` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.everyMinute` instead.")
-    @available(tvOS, introduced: 15.0, deprecated: 15.0, message: "Use `.everyMinute` instead.")
-    @available(watchOS, introduced: 8.0, deprecated: 8.0, message: "Use `.everyMinute` instead.")
     public init()
 
     /// Provides a sequence of per-minute dates starting from a given date.
@@ -10005,8 +10034,8 @@ extension ExclusiveGesture.Value : Equatable where First.Value : Equatable, Seco
 
 /// A schedule for updating a timeline view at explicit points in time.
 ///
-/// Do not use this type directly. Instead, use
-/// ``TimelineSchedule/explicit(_:)``.
+/// You can also use ``TimelineSchedule/explicit(_:)`` to construct this
+/// schedule.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries : Sequence, Entries.Element == Date {
 
@@ -10018,10 +10047,6 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// - Parameter dates: The sequence of dates at which a timeline view
     ///   updates. Use a monotonically increasing sequence of dates,
     ///   and ensure that at least one is in the future.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.explicit(_:)` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.explicit(_:)` instead.")
-    @available(tvOS, introduced: 15.0, deprecated: 15.0, message: "Use `.explicit(_:)` instead.")
-    @available(watchOS, introduced: 8.0, deprecated: 8.0, message: "Use `.explicit(_:)` instead.")
     public init(_ dates: Entries)
 
     /// Provides the sequence of dates with which you initialized the schedule.
@@ -10044,31 +10069,209 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     public func entries(from startDate: Date, mode: TimelineScheduleMode) -> Entries
 }
 
-/// A property wrapper type that makes fetch requests and retrieves the results
-/// from a Core Data store.
+/// A property wrapper type that retrieves entities from a Core Data persistent
+/// store.
 ///
-/// The fetch request and its results use the managed object context provided by
-/// the environment value ``EnvironmentValues/managedObjectContext``.
+/// Use a `FetchRequest` property wrapper to declare a ``FetchedResults``
+/// property that provides a collection of Core Data managed objects to a
+/// SwiftUI view. The request infers the entity type from the `Result`
+/// placeholder type that you specify. Condition the request with an optional
+/// predicate and sort descriptors. For example, you can create a request to
+/// list all `Quake` managed objects --- representing earthquakes --- sorted by
+/// their `time` property:
+///
+///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
+///     private var quakes: FetchedResults<Quake>
+///
+/// Alternatively, when you need more flexibility, you can initialize the
+/// request with a configured
+/// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
+/// instance:
+///
+///     @FetchRequest(fetchRequest: request)
+///     private var quakes: FetchedResults<Quake>
+///
+/// Always declare properties that have a fetch request wrapper as private.
+/// This lets the compiler help you avoid accidentally setting
+/// the property from the memberwise initializer of the enclosing view.
+///
+/// The fetch request and its results use the managed object context stored
+/// in the environment, which you can access using the
+/// ``EnvironmentValues/managedObjectContext`` environment value. To
+/// support user interface activity, you typically rely on the
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer/1640622-viewContext>
+/// property of a shared
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer>
+/// instance. For example, you can set a context on your top level content
+/// view using a shared container that you define as part of your model:
+///
+///     ContentView()
+///         .environment(
+///             \.managedObjectContext,
+///             QuakesProvider.shared.container.viewContext)
+///
+/// When you need to dynamically change the predicate or sort descriptors,
+/// access the request's ``FetchRequest/Configuration`` structure.
+/// To create a request that groups the fetched results according to a
+/// characteristic that they share, use ``SectionedFetchRequest`` instead.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @propertyWrapper public struct FetchRequest<Result> where Result : NSFetchRequestResult {
 
     /// The fetched results of the fetch request.
     ///
-    /// This property returns an empty array when there are no fetched results.
+    /// SwiftUI returns the value associated with this property
+    /// when you use ``FetchRequest`` as a property wrapper, and then access
+    /// the wrapped property by name. For example, consider the following
+    /// `quakes` property declaration:
+    ///
+    ///     @FetchRequest(fetchRequest: request)
+    ///     private var quakes: FetchedResults<Quake>
+    ///
+    /// You access the request's `wrappedValue`, which contains a
+    /// ``FetchedResults`` instance, by referring to the `quakes` property
+    /// by name:
+    ///
+    ///     Text("Found \(quakes.count) earthquakes")
+    ///
+    /// If you need to separate the request and the result
+    /// entities, you can declare `quakes` in two steps by
+    /// using the request's `wrappedValue` to obtain the results:
+    ///
+    ///     var fetchRequest = FetchRequest<Quake>(fetchRequest: request)
+    ///     var quakes: FetchedResults<Quake> { fetchRequest.wrappedValue }
+    ///
+    /// The `wrappedValue` property returns an empty array when there are no
+    /// fetched results --- for example, because no entities satisfy the
+    /// predicate, or because the data store is empty.
     public var wrappedValue: FetchedResults<Result> { get }
 
     /// The request's configurable properties.
+    ///
+    /// You initialize a ``FetchRequest`` with an optional predicate and
+    /// sort descriptors, either explicitly or using a configured
+    /// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>.
+    /// Later, you can dynamically update the predicate and sort
+    /// parameters using the request's configuration structure.
+    ///
+    /// You access or bind to a request's configuration components through
+    /// properties on the associated ``FetchedResults`` instance.
+    ///
+    /// ### Configure Using a Binding
+    ///
+    /// Get a ``Binding`` to a fetch request's configuration structure
+    /// by accessing the request's ``FetchRequest/projectedValue``, which you
+    /// do by using the dollar sign (`$`) prefix on the associated
+    /// results property. For example, you can create a request for `Quake`
+    /// entities that initially sorts the results by time:
+    ///
+    ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
+    ///     private var quakes: FetchedResults<Quake>
+    ///
+    /// Then you can bind the request's sort descriptors,
+    /// which you access through the `quakes` result, to those
+    /// of a ``Table`` instance:
+    ///
+    ///     Table(quakes, sortOrder: $quakes.sortDescriptors) {
+    ///         TableColumn("Place", value: \.place)
+    ///         TableColumn("Time", value: \.time) { quake in
+    ///             Text(quake.time, style: .time)
+    ///         }
+    ///     }
+    ///
+    /// A user who clicks on a table column header initiates the following
+    /// sequence of events:
+    /// 1. The table updates the sort descriptors through the binding.
+    /// 2. The modified sort descriptors reconfigure the request.
+    /// 3. The reconfigured request fetches new results.
+    /// 4. SwiftUI redraws the table in response to new results.
+    ///
+    /// ### Set Configuration Directly
+    ///
+    /// If you need to access the fetch request's configuration elements
+    /// directly, use the ``FetchedResults/nsPredicate`` and
+    /// ``FetchedResults/sortDescriptors`` or
+    /// ``FetchedResults/nsSortDescriptors`` properties of the
+    /// ``FetchedResults`` instance. Continuing the example above, to
+    /// enable the user to dynamically update the predicate, declare a
+    /// ``State`` property to hold a query string:
+    ///
+    ///     @State private var query = ""
+    ///
+    /// Then add an ``View/onChange(of:perform:)`` modifier to the ``Table``
+    /// that sets a new predicate any time the query changes:
+    ///
+    ///     .onChange(of: query) { value in
+    ///         quakes.nsPredicate = query.isEmpty
+    ///             ? nil
+    ///             : NSPredicate(format: "place CONTAINS %@", value)
+    ///     }
+    ///
+    /// To give the user control over the string, add a ``TextField`` in your
+    /// user interface that's bound to the `query` state:
+    ///
+    ///     TextField("Filter", text: $query)
+    ///
+    /// When the user types into the text field, the predicate updates,
+    /// the request fetches new results, and SwiftUI redraws the table.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public struct Configuration {
 
-        /// The request's sort descriptors.
+        /// The request's sort descriptors, accessed as reference types.
+        ///
+        /// Set this configuration value to cause a ``FetchRequest`` to execute
+        /// a fetch with a new collection of
+        /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+        /// instances. If you want to use
+        /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+        /// instances, set ``FetchRequest/Configuration/sortDescriptors``
+        /// instead.
+        ///
+        /// Access this value of a ``FetchRequest/Configuration`` structure for
+        /// a given request by using the ``FetchedResults/nsSortDescriptors``
+        /// property on the associated ``FetchedResults`` instance, either
+        /// directly or through a ``Binding``.
         public var nsSortDescriptors: [NSSortDescriptor]
 
         /// The request's predicate.
+        ///
+        /// Set this configuration value to cause a ``FetchRequest`` to execute
+        /// a fetch with a new predicate.
+        ///
+        /// Access this value of a ``FetchRequest/Configuration`` structure for
+        /// a given request by using the ``FetchedResults/nsPredicate``
+        /// property on the associated ``FetchedResults`` instance, either
+        /// directly or through a ``Binding``.
         public var nsPredicate: NSPredicate?
     }
 
-    /// A binding to the request's mutable configuration properties
+    /// A binding to the request's mutable configuration properties.
+    ///
+    /// SwiftUI returns the value associated with this property when you use
+    /// ``FetchRequest`` as a property wrapper on a ``FetchedResults`` instance,
+    /// and then access the results with a dollar sign (`$`) prefix. The value
+    /// that SwiftUI returns is a ``Binding`` to the request's
+    /// ``FetchRequest/Configuration`` structure, which dynamically
+    /// configures the request.
+    ///
+    /// For example, consider the following fetch request
+    /// that you sort based on the `time` property:
+    ///
+    ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
+    ///     private var quakes: FetchedResults<Quake>
+    ///
+    /// You can use the projected value to enable a ``Table`` instance to make
+    /// updates:
+    ///
+    ///     Table(quakes, sortOrder: $quakes.sortDescriptors) {
+    ///         TableColumn("Place", value: \.place)
+    ///         TableColumn("Time", value: \.time) { quake in
+    ///             Text(quake.time, style: .time)
+    ///         }
+    ///     }
+    ///
+    /// Because you initialize the table using a binding to the descriptors,
+    /// the table can modify the sort in response to actions that the user
+    /// takes, like clicking a column header.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var projectedValue: Binding<FetchRequest<Result>.Configuration> { get }
 }
@@ -10087,121 +10290,233 @@ extension FetchRequest : DynamicProperty {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension FetchRequest {
 
-    /// Creates an instance by defining a fetch request based on the parameters.
+    /// Creates a fetch request for a specified entity description, based on a
+    /// predicate and sort parameters.
+    ///
+    /// Use this initializer if you need to explicitly specify the entity type
+    /// for the request. If you specify a placeholder `Result` type in the
+    /// request declaration, use the
+    /// ``init(sortDescriptors:predicate:animation:)-4obxy`` initializer to
+    /// let the request infer the entity type. If you need more control over
+    /// the fetch request configuration, use ``init(fetchRequest:animation:)``.
+    ///
     /// - Parameters:
-    ///   - entity: The kind of modeled object to fetch.
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - entity: The description of the Core Data entity to fetch.
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(entity: NSEntityDescription, sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil, animation: Animation? = nil)
 
-    /// Creates an instance from a fetch request.
+    /// Creates a fully configured fetch request that uses the specified
+    /// animation when updating results.
+    ///
+    /// Use this initializer when you want to configure a fetch
+    /// request with more than a predicate and sort descriptors.
+    /// For example, you can vend a request from a `Quake` managed object
+    /// that limits the number of results to `1000` by setting a
+    /// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest/1506622-fetchLimit>
+    /// for the request:
+    ///
+    ///     extension Quake {
+    ///         var request: NSFetchRequest<Quake> {
+    ///             let request = NSFetchRequest<Quake>(entityName: "Quake")
+    ///             request.sortDescriptors = [
+    ///                 NSSortDescriptor(
+    ///                     keyPath: \Quake.time,
+    ///                     ascending: true)]
+    ///             request.fetchLimit = 1000
+    ///             return request
+    ///         }
+    ///     }
+    ///
+    /// Use the request to define a ``FetchedResults`` property:
+    ///
+    ///     @FetchRequest(fetchRequest: Quake.request)
+    ///     private var quakes: FetchedResults<Quake>
+    ///
+    /// If you only need to configure the request's predicate and sort
+    /// descriptors, use ``init(sortDescriptors:predicate:animation:)-462jp``
+    /// instead. If you need to specify a ``Transaction`` rather than an
+    /// optional ``Animation``, use ``init(fetchRequest:transaction:)``.
+    /// 
     /// - Parameters:
-    ///   - fetchRequest: The request used to produce the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
-    ///     results.
+    ///   - fetchRequest: An
+    ///     <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
+    ///     instance that describes the search criteria for retrieving data
+    ///     from the persistent store.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(fetchRequest: NSFetchRequest<Result>, animation: Animation? = nil)
 
-    /// Creates an instance from a fetch request.
+    /// Creates a fully configured fetch request that uses the specified
+    /// transaction when updating results.
+    ///
+    /// Use this initializer if you need a fetch request with updates that
+    /// affect the user interface based on a ``Transaction``. Otherwise, use
+    /// ``init(fetchRequest:animation:)``.
+    ///
     /// - Parameters:
-    ///   - fetchRequest: The request used to produce the fetched results.
-    ///   - transaction: The transaction used for any changes to the fetched
-    ///     results.
+    ///   - fetchRequest: An
+    ///     <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
+    ///     instance that describes the search criteria for retrieving data
+    ///     from the persistent store.
+    ///   - transaction: A transaction to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(fetchRequest: NSFetchRequest<Result>, transaction: Transaction)
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension FetchRequest where Result : NSManagedObject {
 
-    /// Creates an instance by defining a fetch request based on the parameters.
-    /// The fetch request will automatically infer the entity using Result.entity() at fetch-time.
+    /// Creates a fetch request based on a predicate and reference type sort
+    /// parameters.
+    ///
+    /// The request gets the entity type from the `Result` instance by calling
+    /// that managed object's
+    /// <doc://com.apple.documentation/documentation/CoreData/NSManagedObject/1640588-entity>
+    /// type method. If you need to specify the entity type explicitly, use the
+    /// ``init(entity:sortDescriptors:predicate:animation:)`` initializer
+    /// instead. If you need more control over the fetch request configuration,
+    /// use ``init(fetchRequest:animation:)``. For value type sort
+    /// descriptors, use ``init(sortDescriptors:predicate:animation:)-462jp``.
+    ///
     /// - Parameters:
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil, animation: Animation? = nil)
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension FetchRequest where Result : NSManagedObject {
 
-    /// Creates an instance by defining a fetch request based on the parameters.
+    /// Creates a fetch request based on a predicate and value type sort
+    /// parameters.
     ///
-    /// The fetch request will automatically infer the entity using Result.entity() at fetch-time.
+    /// The request gets the entity type from the `Result` instance by calling
+    /// that managed object's
+    /// <doc://com.apple.documentation/documentation/CoreData/NSManagedObject/1640588-entity>
+    /// type method. If you need to specify the entity type explicitly, use the
+    /// ``init(entity:sortDescriptors:predicate:animation:)`` initializer
+    /// instead. If you need more control over the fetch request configuration,
+    /// use ``init(fetchRequest:animation:)``. For reference type sort
+    /// descriptors, use ``init(sortDescriptors:predicate:animation:)-4obxy``.
+    ///
     /// - Parameters:
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(sortDescriptors: [SortDescriptor<Result>], predicate: NSPredicate? = nil, animation: Animation? = nil)
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension FetchRequest.Configuration where Result : NSManagedObject {
 
+    /// The request's sort descriptors, accessed as value types.
+    ///
+    /// Set this configuration value to cause a ``FetchRequest`` to execute a
+    /// fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances. If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances, set ``FetchRequest/Configuration/nsSortDescriptors`` instead.
+    ///
+    /// Access this value of a ``FetchRequest/Configuration`` structure for
+    /// a given request by using the ``FetchedResults/sortDescriptors``
+    /// property on the associated ``FetchedResults`` instance, either
+    /// directly or through a ``Binding``.
     public var sortDescriptors: [SortDescriptor<Result>]
 }
 
-/// The FetchedResults collection type represents the results of performing a
-/// fetch request. Internally, it may use strategies such as batching and
-/// transparent futures to minimize memory use and I/O.
+/// A collection of results retrieved from a Core Data store.
+///
+/// Use a `FetchedResults` instance to show or edit Core Data managed objects in
+/// your app's user interface. You request a particular set of results by
+/// specifying a `Result` type as the entity type, and annotating the fetched
+/// results property declaration with a ``FetchRequest`` property wrapper.
+/// For example, you can create a request to list all `Quake` managed objects
+/// sorted by their `time` property:
+///
+///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
+///     private var quakes: FetchedResults<Quake>
+///
+/// The results instance conforms to
+/// <doc://com.apple.documentation/documentation/Swift/RandomAccessCollection>,
+/// so you access it like any other collection. For example, you can create
+/// a ``List`` that iterates over all the results:
+///
+///     List(quakes) { quake in
+///         NavigationLink(destination: QuakeDetail(quake: quake)) {
+///             QuakeRow(quake: quake)
+///         }
+///     }
+///
+/// When you need to dynamically change the request's predicate or sort
+/// descriptors, set the result instance's ``nsPredicate`` and
+/// ``sortDescriptors`` or ``nsSortDescriptors`` properties, respectively.
+///
+/// The fetch request and its results use the managed object context stored
+/// in the environment, which you can access using the
+/// ``EnvironmentValues/managedObjectContext`` environment value. To
+/// support user interface activity, you typically rely on the
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer/1640622-viewContext>
+/// property of a shared
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer>
+/// instance. For example, you can set a context on your top level content
+/// view using a container that you define as part of your model:
+///
+///     ContentView()
+///         .environment(
+///             \.managedObjectContext,
+///             QuakesProvider.shared.container.viewContext)
+///
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct FetchedResults<Result> : RandomAccessCollection where Result : NSFetchRequestResult {
 
-    /// The request's sort descriptors.
+    /// The request's sort descriptors, accessed as reference types.
+    ///
+    /// Set this value to cause the associated ``FetchRequest`` to execute
+    /// a fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances.
+    /// The order of managed objects stored in the results collection may change
+    /// as a result.
+    ///
+    /// If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances, set ``FetchedResults/sortDescriptors`` instead.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var nsSortDescriptors: [NSSortDescriptor] { get nonmutating set }
 
     /// The request's predicate.
+    ///
+    /// Set this value to cause the associated ``FetchRequest`` to execute a
+    /// fetch with a new predicate, producing an updated collection of results.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public var nsPredicate: NSPredicate? { get nonmutating set }
 
-    /// The position of the first element in a nonempty collection.
-    ///
-    /// If the collection is empty, `startIndex` is equal to `endIndex`.
+    /// The index of the first entity in the results collection.
     public var startIndex: Int { get }
 
-    /// The collection's "past the end" position---that is, the position one
-    /// greater than the last valid subscript argument.
-    ///
-    /// When you need a range that includes the last element of a collection, use
-    /// the half-open range operator (`..<`) with `endIndex`. The `..<` operator
-    /// creates a range that doesn't include the upper bound, so it's always
-    /// safe to use with `endIndex`. For example:
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     if let index = numbers.firstIndex(of: 30) {
-    ///         print(numbers[index ..< numbers.endIndex])
-    ///     }
-    ///     // Prints "[30, 40, 50]"
-    ///
-    /// If the collection is empty, `endIndex` is equal to `startIndex`.
+    /// The index that's one greater than the last valid subscript argument.
     public var endIndex: Int { get }
 
-    /// Accesses the element at the specified position.
-    ///
-    /// The following example accesses an element of an array through its
-    /// subscript to print its value:
-    ///
-    ///     var streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-    ///     print(streets[1])
-    ///     // Prints "Bryant"
-    ///
-    /// You can subscript a collection with any valid index other than the
-    /// collection's end index. The end index refers to the position one past
-    /// the last element of a collection, so it doesn't correspond with an
-    /// element.
-    ///
-    /// - Parameter position: The position of the element to access. `position`
-    ///   must be a valid index of the collection that is not equal to the
-    ///   `endIndex` property.
-    ///
-    /// - Complexity: O(1)
+    /// Gets the entity at the specified index.
     public subscript(position: Int) -> Result { get }
 
     /// A type representing the sequence's elements.
@@ -10238,6 +10553,18 @@ public struct FetchedResults<Result> : RandomAccessCollection where Result : NSF
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension FetchedResults where Result : NSManagedObject {
 
+    /// The request's sort descriptors, accessed as value types.
+    ///
+    /// Set this value to cause the associated ``FetchRequest`` to execute a
+    /// fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances.
+    /// The order of entities stored in the results collection may change
+    /// as a result.
+    ///
+    /// If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances, set ``FetchedResults/nsSortDescriptors`` instead.
     public var sortDescriptors: [SortDescriptor<Result>] { get nonmutating set }
 }
 
@@ -10492,7 +10819,7 @@ extension FillStyle : Sendable {
 
     /// A property wrapper type that can read and write a value that indicates
     /// the current focus location.
-    @propertyWrapper public struct Binding {
+    @frozen @propertyWrapper public struct Binding {
 
         /// The underlying value referenced by the bound property.
         public var wrappedValue: Value { get nonmutating set }
@@ -11139,25 +11466,6 @@ extension ForEach : AccessibilityRotorContent where Content : AccessibilityRotor
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-extension ForEach where ID == Data.Element.ID, Content : AccessibilityRotorContent, Data.Element : Identifiable {
-
-    /// Creates an instance that generates Rotor content by combining, in order,
-    /// individual Rotor content for each element in the data given to this
-    /// `ForEach`.
-    ///
-    /// It's important that the `id` of a data element doesn't change unless you
-    /// replace the data element with a new data element that has a new
-    /// identity.
-    ///
-    /// - Parameters:
-    ///   - data: The identified data that the ``ForEach`` instance uses to
-    ///     create views dynamically.
-    ///   - content: The result builder that generates Rotor content for each
-    ///     data element.
-    public init(_ data: Data, @AccessibilityRotorContentBuilder content: @escaping (Data.Element) -> Content)
-}
-
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension ForEach where Content : AccessibilityRotorContent {
 
     /// Creates an instance that generates Rotor content by combining, in order,
@@ -11273,7 +11581,7 @@ extension ForEach where Data == Range<Int>, ID == Int, Content : View {
 
 /// The foreground style in the current context.
 ///
-/// Do not use this type directly. Instead, use ``ShapeStyle/foreground``.
+/// You can also use ``ShapeStyle/foreground`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct ForegroundStyle : ShapeStyle {
 
@@ -11853,7 +12161,7 @@ extension GestureState where Value : ExpressibleByNilLiteral {
 
 /// A date picker style that displays an interactive calendar or clock.
 ///
-/// Do not use this type directly. Instead, use ``DatePickerStyle/graphical``.
+/// You can also use ``DatePickerStyle/graphical`` to construct this style.
 @available(iOS 14.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -13257,7 +13565,7 @@ public struct GraphicalDatePickerStyle : DatePickerStyle {
         public func lastBaseline(in size: CGSize) -> CGFloat
     }
 
-    /// Gest a version of a text view that's fixed with the current values of
+    /// Gets a version of a text view that's fixed with the current values of
     /// the graphics context's environment.
     ///
     /// You can measure the resolved text by calling its
@@ -13842,7 +14150,7 @@ public struct GroupBoxStyleConfiguration {
 
 /// The list style that describes the behavior and appearance of a grouped list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/grouped``.
+/// You can also use ``ListStyle/grouped`` to construct this style.
 @available(iOS 13.0, tvOS 13.0, *)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
@@ -13902,6 +14210,22 @@ public struct GroupedListStyle : ListStyle {
 /// A shape style that maps to one of the numbered content styles.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 @frozen public struct HierarchicalShapeStyle : ShapeStyle {
+
+    /// A shape style that maps to the first level of the current
+    /// content style.
+    public static let primary: HierarchicalShapeStyle
+
+    /// A shape style that maps to the second level of the current
+    /// content style.
+    public static let secondary: HierarchicalShapeStyle
+
+    /// A shape style that maps to the third level of the current
+    /// content style.
+    public static let tertiary: HierarchicalShapeStyle
+
+    /// A shape style that maps to the fourth level of the current
+    /// content style.
+    public static let quaternary: HierarchicalShapeStyle
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
@@ -14123,7 +14447,7 @@ public struct HoverEffect {
 
 /// A label style that only displays the icon of the label.
 ///
-/// Do not use this type directly. Instead, use ``LabelStyle/iconOnly``.
+/// You can also use ``LabelStyle/iconOnly`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct IconOnlyLabelStyle : LabelStyle {
 
@@ -14788,8 +15112,8 @@ extension Image.ResizingMode : Hashable {
 
 /// A shape style that fills a shape by repeating a region of an image.
 ///
-/// Do not use this type directly. Use ``ShapeStyle/image(_:sourceRect:scale:)``
-/// instead.
+/// You can also use ``ShapeStyle/image(_:sourceRect:scale:)`` to construct this
+/// style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct ImagePaint : ShapeStyle {
 
@@ -14843,7 +15167,7 @@ extension IndexViewStyle where Self == PageIndexViewStyle {
 /// A `PickerStyle` where each option is displayed inline with other views in
 /// the current container.
 ///
-/// Do not use this type directly. Instead, use ``PickerStyle/inline``.
+/// You can also use ``PickerStyle/inline`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct InlinePickerStyle : PickerStyle {
 
@@ -14854,7 +15178,7 @@ public struct InlinePickerStyle : PickerStyle {
 /// The list style that describes the behavior and appearance of an inset
 /// grouped list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/insetGrouped``.
+/// You can also use ``ListStyle/insetGrouped`` to construct this style.
 @available(iOS 14.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
@@ -14867,7 +15191,7 @@ public struct InsetGroupedListStyle : ListStyle {
 
 /// The list style that describes the behavior and appearance of an inset list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/inset``.
+/// You can also use ``ListStyle/inset`` to construct this style.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -15802,7 +16126,7 @@ extension LegibilityWeight {
 
 /// A progress view that visually indicates its progress using a horizontal bar.
 ///
-/// Do not use this type directly. Instead, use ``ProgressViewStyle/linear``.
+/// You can also use ``ProgressViewStyle/linear`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct LinearProgressViewStyle : ProgressViewStyle {
 
@@ -16238,6 +16562,12 @@ extension List {
     ///
     /// - Parameters:
     ///   - data: The identifiable data for computing the list.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
     ///   - selection: A binding to a set that identifies selected rows.
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
@@ -16285,7 +16615,7 @@ extension List {
     ///
     /// This instance only reads the initial value of `data` and doesn't need to
     /// identify views across updates. To compute views on demand over a dynamic
-    /// range, use ``List/init(_:id:selection:rowContent:)-8ef64``.
+    /// range, use ``List/init(_:id:selection:rowContent:)-9a28m``.
     ///
     /// - Parameters:
     ///   - data: A constant range of data to populate the list.
@@ -16366,7 +16696,7 @@ extension List {
     ///
     /// This instance only reads the initial value of `data` and doesn't need to
     /// identify views across updates. To compute views on demand over a dynamic
-    /// range, use ``List/init(_:id:selection:rowContent:)-9r2hz``.
+    /// range, use ``List/init(_:id:selection:rowContent:)-2r2u9``.
     ///
     /// - Parameters:
     ///   - data: A constant range of data to populate the list.
@@ -16445,7 +16775,7 @@ extension List where SelectionValue == Never {
     ///
     /// This instance only reads the initial value of `data` and doesn't need to
     /// identify views across updates. To compute views on demand over a dynamic
-    /// range, use ``List/init(_:id:rowContent:)``.
+    /// range, use ``List/init(_:id:rowContent:)-4s0aj``.
     ///
     /// - Parameters:
     ///   - data: A constant range of data to populate the list.
@@ -16529,6 +16859,119 @@ extension List where SelectionValue == Never {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<LazyMapSequence<Data.Indices, (Data.Index, ID)>, ID, RowContent>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
+}
+
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension List {
+
+    /// Creates a hierarchical list that computes its rows on demand from a
+    /// binding to an underlying collection of identifiable data, optionally
+    /// allowing users to select multiple rows.
+    ///
+    /// - Parameters:
+    ///   - data: The identifiable data for computing the list.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
+    ///   - selection: A binding to a set that identifies selected rows.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, RowContent>(_ data: Binding<Data>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+
+    /// Creates a hierarchical list that identifies its rows based on a key path
+    /// to the identifier of the underlying data, optionally allowing users to
+    /// select multiple rows.
+    ///
+    /// - Parameters:
+    ///   - data: The data for populating the list.
+    ///   - id: The key path to the data model's identifier.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes a node capable
+    ///     of having children that is currently childless, such as an empty
+    ///     directory in a file system. On the other hand, if the property at the
+    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
+    ///     like a regular file in a file system.
+    ///   - selection: A binding to a set that identifies selected rows.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View
+
+    /// Creates a hierarchical list that computes its rows on demand from a
+    /// binding to an underlying collection of identifiable data, optionally
+    /// allowing users to select a single row.
+    ///
+    /// - Parameters:
+    ///   - data: The identifiable data for computing the list.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes a node capable
+    ///     of having children that is currently childless, such as an empty
+    ///     directory in a file system. On the other hand, if the property at the
+    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
+    ///     like a regular file in a file system.
+    ///   - selection: A binding to a selected value.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, RowContent>(_ data: Binding<Data>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+
+    /// Creates a hierarchical list that identifies its rows based on a key path
+    /// to the identifier of the underlying data, optionally allowing users to
+    /// select a single row.
+    ///
+    /// - Parameters:
+    ///   - data: The data for populating the list.
+    ///   - id: The key path to the data model's identifier.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes a node capable
+    ///     of having children that is currently childless, such as an empty
+    ///     directory in a file system. On the other hand, if the property at the
+    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
+    ///     like a regular file in a file system.
+    ///   - selection: A binding to a selected value.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<SelectionValue?>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View
+}
+
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension List where SelectionValue == Never {
+
+    /// Creates a hierarchical list that computes its rows on demand from a
+    /// binding to an underlying collection of identifiable data.
+    ///
+    /// - Parameters:
+    ///   - data: A collection of identifiable data for computing the list.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes a node capable
+    ///     of having children that is currently childless, such as an empty
+    ///     directory in a file system. On the other hand, if the property at the
+    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
+    ///     like a regular file in a file system.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, RowContent>(_ data: Binding<Data>, children: WritableKeyPath<Data.Element, Data?>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
+
+    /// Creates a hierarchical list that identifies its rows based on a key path
+    /// to the identifier of the underlying data.
+    ///
+    /// - Parameters:
+    ///   - data: The data for populating the list.
+    ///   - id: The key path to the data model's identifier.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes a node capable
+    ///     of having children that is currently childless, such as an empty
+    ///     directory in a file system. On the other hand, if the property at the
+    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
+    ///     like a regular file in a file system.
+    ///   - rowContent: A view builder that creates the view for a single row of
+    ///     the list.
+    public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, children: WritableKeyPath<Data.Element, Data?>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 }
 
 /// The configuration of a tint effect applied to content within a List.
@@ -17437,7 +17880,7 @@ extension Menu where Label == MenuStyleConfiguration.Label, Content == MenuStyle
 /// A picker style that presents the options as a menu when the user presses a
 /// button, or as a submenu when nested within a larger menu.
 ///
-/// Do not use this type directly. Instead, use ``PickerStyle/menu``.
+/// You can also use ``PickerStyle/menu`` to construct this style.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -18367,16 +18810,13 @@ extension NavigationBarItem.TitleDisplayMode : Hashable {
 
 /// The navigation control group style.
 ///
-/// Do not use this type directly. Instead, use
-/// ``ControlGroupStyle/navigation``.
+/// You can also use ``ControlGroupStyle/navigation`` to construct this style.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct NavigationControlGroupStyle : ControlGroupStyle {
 
     /// Creates a navigation control group style.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.navigation` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.navigation` instead.")
     public init()
 
     /// Creates a view representing the body of a control group.
@@ -18996,6 +19436,38 @@ extension OffsetShape : InsettableShape where Content : InsettableShape {
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct OpenURLAction {
 
+    /// The result of a custom ``OpenURLAction``.
+    ///
+    /// Use this type to indicate if the URL was handled, discarded or if
+    /// it should be handled by the system instead.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public struct Result {
+
+        /// The URL was handled.
+        ///
+        /// The completion handler for this action is invoked with `true`.
+        public static let handled: OpenURLAction.Result
+
+        /// The URL was discarded.
+        ///
+        /// The completion handler for this action is invoked with `false`.
+        public static let discarded: OpenURLAction.Result
+
+        /// The original URL should be handled by the system.
+        public static let systemAction: OpenURLAction.Result
+
+        /// The URL should be handled by the system.
+        ///
+        /// - Parameter url: The URL to forward to the system action to handle.
+        public static func systemAction(_ url: URL) -> OpenURLAction.Result
+    }
+
+    /// Creates an action that provides functionality for opening a URL.
+    ///
+    /// - Parameter handler: The action to run for the given URL.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public init(handler: @escaping (URL) -> OpenURLAction.Result)
+
     /// Opens a URL, following system conventions.
     ///
     /// Use this method to attempt to open a URL. This function handles the
@@ -19236,6 +19708,123 @@ extension OutlineGroup : View where Parent : View, Leaf : View, Subgroup : View 
     public typealias Body = some View
 }
 
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension OutlineGroup where ID == Data.Element.ID, Parent : View, Parent == Leaf, Subgroup == DisclosureGroup<Parent, OutlineSubgroupChildren>, Data.Element : Identifiable {
+
+    /// Creates an outline group from a binding to a root data element and a key
+    /// path to its children.
+    ///
+    /// This initializer creates an instance that uniquely identifies views
+    /// across updates based on the identity of the underlying data element.
+    ///
+    /// All generated disclosure groups begin in the collapsed state.
+    ///
+    /// Make sure that the identifier of a data element only changes if you
+    /// mean to replace that element with a new element, one with a new
+    /// identity. If the ID of an element changes, then the content view
+    /// generated from that element will lose any current state and animations.
+    ///
+    /// - Parameters:
+    ///   - root: The root of a collection of tree-structured, identified
+    ///     data.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
+    ///   - content: A view builder that produces a content view based on an
+    ///    element in `data`.
+    public init<C, E>(_ root: Binding<E>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, ID == E.ID, C : MutableCollection, C : RandomAccessCollection, E : Identifiable, E == C.Element
+
+    /// Creates an outline group from a binding to a collection of root data
+    /// elements and a key path to its children.
+    ///
+    /// This initializer creates an instance that uniquely identifies views
+    /// across updates based on the identity of the underlying data element.
+    ///
+    /// All generated disclosure groups begin in the collapsed state.
+    ///
+    /// Make sure that the identifier of a data element only changes if you
+    /// mean to replace that element with a new element, one with a new
+    /// identity. If the ID of an element changes, then the content view
+    /// generated from that element will lose any current state and animations.
+    ///
+    /// - Parameters:
+    ///   - data: A collection of tree-structured, identified data.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
+    ///   - content: A view builder that produces a content view based on an
+    ///    element in `data`.
+    public init<C, E>(_ data: Binding<C>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, ID == E.ID, C : MutableCollection, C : RandomAccessCollection, E : Identifiable, E == C.Element
+}
+
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension OutlineGroup where Parent : View, Parent == Leaf, Subgroup == DisclosureGroup<Parent, OutlineSubgroupChildren> {
+
+    /// Creates an outline group from a binding to a root data element, the key
+    /// path to its identifier, and a key path to its children.
+    ///
+    /// This initializer creates an instance that uniquely identifies views
+    /// across updates based on the identity of the underlying data element.
+    ///
+    /// All generated disclosure groups begin in the collapsed state.
+    ///
+    /// Make sure that the identifier of a data element only changes if you
+    /// mean to replace that element with a new element, one with a new
+    /// identity. If the ID of an element changes, then the content view
+    /// generated from that element will lose any current state and animations.
+    ///
+    /// - Parameters:
+    ///   - root: The root of a collection of tree-structured, identified
+    ///     data.
+    ///   - id: The key path to a data element's identifier.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
+    ///   - content: A view builder that produces a content view based on an
+    ///    element in `data`.
+    public init<C, E>(_ root: Binding<E>, id: KeyPath<E, ID>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, C : MutableCollection, C : RandomAccessCollection, E == C.Element
+
+    /// Creates an outline group from a binding to a collection of root data
+    /// elements, the key path to a data element's identifier, and a key path to
+    /// its children.
+    ///
+    /// This initializer creates an instance that uniquely identifies views
+    /// across updates based on the identity of the underlying data element.
+    ///
+    /// All generated disclosure groups begin in the collapsed state.
+    ///
+    /// Make sure that the identifier of a data element only changes if you
+    /// mean to replace that element with a new element, one with a new
+    /// identity. If the ID of an element changes, then the content view
+    /// generated from that element will lose any current state and animations.
+    ///
+    /// - Parameters:
+    ///   - data: A collection of tree-structured, identified data.
+    ///   - id: The key path to a data element's identifier.
+    ///   - children: A key path to a property whose non-`nil` value gives the
+    ///     children of `data`. A non-`nil` but empty value denotes an element
+    ///     capable of having children that's currently childless, such as an
+    ///     empty directory in a file system. On the other hand, if the property
+    ///     at the key path is `nil`, then the outline group treats `data` as a
+    ///     leaf in the tree, like a regular file in a file system.
+    ///   - content: A view builder that produces a content view based on an
+    ///    element in `data`.
+    public init<C, E>(_ data: Binding<C>, id: KeyPath<E, ID>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, C : MutableCollection, C : RandomAccessCollection, E == C.Element
+}
+
 /// A type-erased view representing the children in an outline subgroup.
 ///
 /// ``OutlineGroup`` uses this type as a generic constraint for the `Content`
@@ -19254,7 +19843,7 @@ public struct OutlineSubgroupChildren : View {
 
 /// An index view style that places a page index view over its content.
 ///
-/// Do not use this type directly. Instead, use ``IndexViewStyle/page``.
+/// You can also use ``IndexViewStyle/page`` to construct this style.
 @available(iOS 14.0, tvOS 14.0, watchOS 8.0, *)
 @available(macOS, unavailable)
 public struct PageIndexViewStyle : IndexViewStyle {
@@ -19286,7 +19875,8 @@ public struct PageIndexViewStyle : IndexViewStyle {
 
 /// A `TabViewStyle` that implements a paged scrolling `TabView`.
 ///
-/// Do not use this type directly. Instead, use ``TabViewStyle/page``.
+/// You can also use ``TabViewStyle/page`` or
+/// ``TabViewStyle/page(indexDisplayMode:)`` to construct this style.
 @available(iOS 14.0, tvOS 14.0, watchOS 7.0, *)
 @available(macOS, unavailable)
 public struct PageTabViewStyle : TabViewStyle {
@@ -19516,8 +20106,8 @@ extension Path.Element : Sendable {
 
 /// A schedule for updating a timeline view at regular intervals.
 ///
-/// Do not use this type directly. Instead, use
-/// ``TimelineSchedule/periodic(from:by:)``.
+/// You can also use ``TimelineSchedule/periodic(from:by:)`` to construct this
+/// schedule.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct PeriodicTimelineSchedule : TimelineSchedule {
 
@@ -19576,10 +20166,6 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
     /// - Parameters:
     ///   - startDate: The date on which to start the sequence.
     ///   - interval: The time interval between successive sequence entries.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.periodic(from:by:)` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.periodic(from:by:)` instead.")
-    @available(tvOS, introduced: 15.0, deprecated: 15.0, message: "Use `.periodic(from:by:)` instead.")
-    @available(watchOS, introduced: 8.0, deprecated: 8.0, message: "Use `.periodic(from:by:)` instead.")
     public init(from startDate: Date, by interval: TimeInterval)
 
     /// Provides a sequence of periodic dates starting from around a given date.
@@ -19968,7 +20554,7 @@ public struct PinnedScrollableViews : OptionSet {
 /// may apply a visual effect to indicate the pressed, focused, or enabled state
 /// of the button.
 ///
-/// Do not use this type directly. Instead, use ``PrimitiveButtonStyle/plain``.
+/// You can also use ``PrimitiveButtonStyle/plain`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct PlainButtonStyle : PrimitiveButtonStyle {
 
@@ -19990,7 +20576,7 @@ public struct PlainButtonStyle : PrimitiveButtonStyle {
 
 /// The list style that describes the behavior and appearance of a plain list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/plain``.
+/// You can also use ``ListStyle/plain`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct PlainListStyle : ListStyle {
 
@@ -20000,7 +20586,7 @@ public struct PlainListStyle : ListStyle {
 
 /// A text field style with no decoration.
 ///
-/// Do not use this type directly. Instead, use ``TextFieldStyle/plain``.
+/// You can also use ``TextFieldStyle/plain`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct PlainTextFieldStyle : TextFieldStyle {
 
@@ -20597,6 +21183,7 @@ public struct PrimitiveButtonStyleConfiguration {
     /// Cancel in black, bold letters. The second says Delete in red, regular
     /// weight letters. The third says Continue in black, regular weight
     /// letters.](PrimitiveButtonStyleConfiguration-role-1)
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public let role: ButtonRole?
 
     /// A view that describes the effect of calling the button's action.
@@ -21328,7 +21915,8 @@ public struct RefreshAction {
     ///
     /// This async function is stored in the environment
     /// ``EnvironmentValues/refresh`` and can be set with the modifier
-    /// ``View/refreshable(action:)``. Call this function to initiate a refresh action.
+    /// ``View/refreshable(action:)``. Call this function to initiate a
+    /// refresh action.
     public func callAsFunction() async
 }
 
@@ -21435,7 +22023,7 @@ public struct RotationGesture : Gesture {
 
 /// A text field style with a system-defined rounded border.
 ///
-/// Do not use this type directly. Instead, use ``TextFieldStyle/roundedBorder``.
+/// You can also use ``TextFieldStyle/roundedBorder`` to construct this style.
 @available(iOS 13.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -22610,6 +23198,7 @@ public struct SearchFieldPlacement {
     public static func navigationBarDrawer(displayMode: SearchFieldPlacement.NavigationBarDrawerDisplayMode) -> SearchFieldPlacement
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension SearchFieldPlacement {
 
     /// A structure that defines the display behavior of a search field
@@ -23232,7 +23821,7 @@ extension SecureField where Label == Text {
 
 /// A picker style that presents the options in a segmented control.
 ///
-/// Do not use this type directly. Instead, use ``PickerStyle/segmented``.
+/// You can also use ``PickerStyle/segmented`` to construct this style.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
 @available(watchOS, unavailable)
 public struct SegmentedPickerStyle : PickerStyle {
@@ -23244,15 +23833,14 @@ public struct SegmentedPickerStyle : PickerStyle {
 /// A style used to visually indicate selection following platform conventional
 /// colors and behaviors.
 ///
-/// Do not use this type directly. Instead, use ``ShapeStyle/selection``.
+/// You can also use ``ShapeStyle/selection`` to construct this style.
 @available(iOS 15.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct SelectionShapeStyle : ShapeStyle {
 
     /// Creates a selection shape style.
-    @available(iOS, introduced: 15.0, deprecated: 15.0, message: "Use `.selection` instead.")
-    @available(macOS, introduced: 12.0, deprecated: 12.0, message: "Use `.selection` instead.")
+    @available(macOS 12.0, *)
     public init()
 }
 
@@ -23698,7 +24286,8 @@ extension ShapeRole : Hashable {
 /// the concrete styles that SwiftUI defines. To indicate a specific color
 /// or pattern, you can use ``Color`` or the style returned by
 /// ``ShapeStyle/image(_:sourceRect:scale:)``, or one of the gradient
-/// types, like the one returned by ``ShapeStyle/radial(_:center:startRadius:endRadius:)``.
+/// types, like the one returned by
+/// ``ShapeStyle/radialGradient(_:center:startRadius:endRadius:)``.
 /// To set a color that's appropriate for a given context on a given
 /// platform, use one of the semantic styles, like ``ShapeStyle/background`` or
 /// ``ShapeStyle/primary``.
@@ -24336,7 +24925,7 @@ public struct SidebarCommands : Commands {
 /// The list style that describes the behavior and appearance of a
 /// sidebar list.
 ///
-/// Do not use this type directly. Instead, use ``ListStyle/sidebar``.
+/// You can also use ``ListStyle/sidebar`` to construct this style.
 @available(iOS 14.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -24902,7 +25491,7 @@ extension Spacer : Sendable {
 /// A navigation view style represented by a view stack that only shows a
 /// single top view at a time.
 ///
-/// Do not use this type directly. Instead, use ``NavigationViewStyle/stack``.
+/// You can also use ``NavigationViewStyle/stack`` to construct this style.
 @available(iOS 13.0, tvOS 13.0, watchOS 7.0, *)
 @available(macOS, unavailable)
 public struct StackNavigationViewStyle : NavigationViewStyle {
@@ -26032,7 +26621,7 @@ public struct SubmitTriggers : OptionSet {
 
 /// A toggle style that displays a leading label and a trailing switch.
 ///
-/// Do not use this type directly. Instead, use ``ToggleStyle/switch``.
+/// You can also use ``ToggleStyle/switch`` to construct this style.
 @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
 @available(tvOS, unavailable)
 public struct SwitchToggleStyle : ToggleStyle {
@@ -26444,9 +27033,9 @@ public struct SymbolVariants : Hashable {
 ///
 /// To create a user interface with tabs, place views in a `TabView` and apply
 /// the ``View/tabItem(_:)`` modifier to the contents of each tab. On iOS, you
-/// can also use the ``View/badge(_:)`` modifier to assign a badge to each of
-/// the tabs. The following creates a tab view with three tabs, the first of
-/// which has a badge:
+/// can also use one of the badge modifiers, like ``View/badge(_:)-84e43``, to
+/// assign a badge to each of the tabs. The following creates a tab view with
+/// three tabs, the first of which has a badge:
 ///
 ///     TabView {
 ///         Text("The First Tab")
@@ -26598,6 +27187,24 @@ public struct TapGesture : Gesture {
 ///
 /// ![A text view showing by William Shakespeare in a 12 point, light, italic,
 /// serif font.](SwiftUI-Text-font.png)
+///
+/// To apply styling within specific portions of the text, you can create
+/// the text view from an
+/// <doc://com.apple.documentation/documentation/Foundation/AttributedString>,
+/// which in turn allows you to use Markdown to style runs of text. You can
+/// mix string attributes and SwiftUI modifiers, with the string attributes
+/// taking priority.
+///
+///     let attributedString = try! AttributedString(
+///         markdown: "_Hamlet_ by William Shakespeare")
+///
+///     var body: some View {
+///         Text(attributedString)
+///             .font(.system(size: 12, weight: .light, design: .serif))
+///     }
+///
+/// ![A text view showing Hamlet by William Shakespeare in a 12 point, light,
+/// serif font, with the title Hamlet in italics.](SwiftUI-Text-attributed.png)
 ///
 /// A text view always uses exactly the amount of space it needs to display its
 /// rendered contents, but you can affect the view's layout. For example, you
@@ -26863,6 +27470,36 @@ extension Text {
     /// If you have a string literal that you don't want to localize, use the
     /// ``Text/init(verbatim:)`` initializer instead.
     ///
+    /// ### Styling Localized Strings with Markdown
+    ///
+    /// If the localized string or the fallback key contains Markdown, the
+    /// view displays the text with appropriate styling. For example, consider
+    /// an app with the following entry in its Spanish localization file:
+    ///
+    ///     "_Please visit our [website](https://www.example.com)._" = "_Visita nuestro [sitio web](https://www.example.com)._";
+    ///
+    /// You can create a `Text` view with the Markdown-formatted base language
+    /// version of the string as the localization key, like this:
+    ///
+    ///     Text("_Please visit our [website](https://www.example.com)._")
+    ///
+    /// When viewed in a Spanish locale, the view uses the Spanish text from the
+    /// strings file, applying the Markdown styling.
+    ///
+    /// ![A text view that says Visita nuestro sitio web, with all text
+    /// displayed in italics. The words sitio web are colored blue to indicate
+    /// they are a link.](SwiftUI-Text-init-localized.png)
+    ///
+    /// > Important: `Text` doesn't render all styling possible in Markdown. It
+    /// doesn't support line breaks, soft breaks, or any style of paragraph- or
+    /// block-based formatting like lists, block quotes, code blocks, or tables.
+    /// It also doesn't support the
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes/3796122-imageURL>
+    /// attribute. Parsing with SwiftUI treats any whitespace in the Markdown
+    /// string as described by the
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributedString/MarkdownParsingOptions/InterpretedSyntax/inlineOnlyPreservingWhitespace>
+    /// parsing option.
+    ///
     /// - Parameters:
     ///   - key: The key for a string in the table identified by `tableName`.
     ///   - tableName: The name of the string table to search. If `nil`, use the
@@ -27070,6 +27707,7 @@ extension Text {
     }
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension Text {
 
     /// Description of the style used to draw the line for `StrikethroughStyleAttribute`
@@ -27077,7 +27715,6 @@ extension Text {
     ///
     /// Use this type to specify `underlineStyle` and `strikethroughStyle`
     /// SwiftUI attributes of an `AttributedString`.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public struct LineStyle : Hashable {
 
         /// Creates a line style.
@@ -27475,9 +28112,12 @@ extension Text {
 
     /// Creates a text view that displays styled attributed content.
     ///
-    /// Use this initializer to style text according to its attributes,
-    /// which take precedence over styles added by view modifiers.
-    /// For example, the attributed text in the following example appears in blue:
+    /// Use this initializer to style text according to attributes found in the specified
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributedString>.
+    /// Attributes in the attributed string take precedence over styles added by
+    /// view modifiers. For example, the attributed text in the following
+    /// example appears in blue, despite the use of the ``View/foregroundColor(_:)``
+    /// modifier to use red throughout the enclosing ``VStack``:
     ///
     ///     var content: AttributedString {
     ///         var attributedString = AttributedString("Blue text")
@@ -27493,13 +28133,97 @@ extension Text {
     ///         .foregroundColor(.red)
     ///     }
     ///
-    /// - Parameters:
-    ///   - attributedContent: The content to be displayed,
-    ///     styled according to its attributes.
+    /// ![A vertical stack of two text views, the top labeled Blue Text with a
+    /// blue font color, and the bottom labeled Red Text with a red font
+    /// color.](SwiftUI-Text-init-attributed.png)
     ///
-    /// Text is styled based on attributes in SwiftUI scope or their equivalent attributes
-    /// in UIKit/AppKit scopes. SwiftUI attributes take precedence over their
-    /// equivalents in other scopes.
+    /// SwiftUI combines text attributes with SwiftUI modifiers whenever
+    /// possible. For example, the following listing creates text that is
+    /// both bold and red:
+    ///
+    ///     var content: AttributedString {
+    ///         var content = AttributedString("Some text")
+    ///         content.inlinePresentationIntent = .stronglyEmphasized
+    ///         return content
+    ///     }
+    ///
+    ///     var body: some View {
+    ///         Text(content).foregroundColor(Color.red)
+    ///     }
+    ///
+    /// A SwiftUI ``Text`` view renders most of the styles defined by the
+    /// Foundation attribute
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes/3796123-inlinePresentationIntent>, like the
+    /// <doc://com.apple.documentation/documentation/Foundation/InlinePresentationIntent/3746899-stronglyEmphasized>
+    /// value, which SwiftUI presents as bold text.
+    ///
+    /// > Important: ``Text`` uses only a subset of the attributes defined in
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes>.
+    /// `Text` renders all
+    /// <doc://com.apple.documentation/documentation/Foundation/InlinePresentationIntent>
+    /// attributes except for
+    /// <doc://com.apple.documentation/documentation/Foundation/InlinePresentationIntent/3787563-lineBreak> and
+    /// <doc://com.apple.documentation/documentation/Foundation/InlinePresentationIntent/3787564-softBreak>.
+    /// It also renders the
+    /// <doc://com.apple.documentation/Foundation/AttributeScopes/FoundationAttributes/3764633-link>
+    /// attribute as a clickable link. `Text` ignores any other
+    /// Foundation-defined attributes in an attributed string.
+    ///
+    /// SwiftUI also defines additional attributes in the attribute scope
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/SwiftUIAttributes>
+    /// which you can access from an attributed string's
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/3788543-swiftUI>
+    /// property. SwiftUI attributes take precedence over equivalent attributes
+    /// from other frameworks, such as
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/UIKitAttributes> and
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/AppKitAttributes>.
+    ///
+    ///
+    /// You can create an `AttributedString` with Markdown syntax, which allows
+    /// you to style distinct runs within a `Text` view:
+    ///
+    ///     let content = try! AttributedString(
+    ///         markdown: "**Thank You!** Please visit our [website](http://example.com).")
+    ///
+    ///     var body: some View {
+    ///         Text(content)
+    ///     }
+    ///
+    /// The `**` syntax around "Thank You!" applies an
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes/3796123-inlinePresentationIntent>
+    /// attribute with the value
+    /// <doc://com.apple.documentation/documentation/Foundation/InlinePresentationIntent/3746899-stronglyEmphasized>.
+    /// SwiftUI renders this as
+    /// bold text, as described earlier. The link syntax around "website"
+    /// creates a
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes/3764633-link>
+    /// attribute, which `Text` styles to indicate it's a link; clicking or
+    /// tapping the link opens the linked URL in the user's default browser.
+    ///
+    /// ![A text view that says Thank you. Please visit our website. The text
+    /// The view displays the words Thank you in a bold font, and the word
+    /// website styled to indicate it is a
+    /// link.](SwiftUI-Text-init-markdown.png)
+    ///
+    /// You can also use Markdown syntax in localized string keys, which means
+    /// you can write the above example without needing to explicitly create
+    /// an `AttributedString`:
+    ///
+    ///     var body: some View {
+    ///         Text("**Thank You!** Please visit our [website](https://example.com).")
+    ///     }
+    ///
+    /// In your app's strings files, use Markdown syntax to apply styling
+    /// to the app's localized strings. You also use this approach when you want
+    /// to perform automatic grammar agreement on localized strings, with
+    /// the `^[text](inflect:true)` syntax.
+    ///
+    /// For details about Markdown syntax support in SwiftUI, see
+    /// ``Text/init(_:tableName:bundle:comment:)``.
+    ///
+    /// - Parameters:
+    ///   - attributedContent: An attributed string to style and display,
+    ///   in accordance with its attributes.
     public init(_ attributedContent: AttributedString)
 }
 
@@ -28126,7 +28850,7 @@ extension TextField {
 
 extension TextField where Label == Text {
 
-    /// Create an instance which binds over an arbitrary type, `T`.
+    /// Create an instance which binds over an arbitrary type, `V`.
     ///
     /// You can associate an action to be invoked upon submission of this
     /// text field by using an `View.onSubmit(of:_)` modifier.
@@ -28136,16 +28860,16 @@ extension TextField where Label == Text {
     ///     describing its purpose.
     ///   - value: The underlying value to be edited.
     ///   - formatter: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type `T`.
+    ///     string the user edits and the underlying value of type `V`.
     ///     In the event that `formatter` is unable to perform the conversion,
     ///     `binding.value` isn't modified.
     ///   - prompt: A `Text` representing the prompt of the text field
     ///     which provides users with guidance on what to type into the text
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<T>(_ titleKey: LocalizedStringKey, value: Binding<T>, formatter: Formatter, prompt: Text? = nil)
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text? = nil)
 
-    /// Create an instance which binds over an arbitrary type, `T`.
+    /// Create an instance which binds over an arbitrary type, `V`.
     ///
     /// You can associate an action to be invoked upon submission of this
     /// text field by using an `View.onSubmit(of:_)` modifier.
@@ -28154,19 +28878,19 @@ extension TextField where Label == Text {
     ///   - title: The title of the text field, describing its purpose.
     ///   - value: The underlying value to be edited.
     ///   - formatter: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type `T`.
+    ///     string the user edits and the underlying value of type `V`.
     ///     In the event that `formatter` is unable to perform the conversion,
     ///     `binding.value` isn't modified.
     ///   - prompt: A `Text` representing the prompt of the text field
     ///     which provides users with guidance on what to type into the text
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<S, T>(_ title: S, value: Binding<T>, formatter: Formatter, prompt: Text? = nil) where S : StringProtocol
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text? = nil) where S : StringProtocol
 }
 
 extension TextField {
 
-    /// Create an instance which binds over an arbitrary type, `T`.
+    /// Create an instance which binds over an arbitrary type, `V`.
     ///
     /// You can associate an action to be invoked upon submission of this
     /// text field by using an `View.onSubmit(of:_)` modifier.
@@ -28174,7 +28898,7 @@ extension TextField {
     /// - Parameters:
     ///   - value: The underlying value to be edited.
     ///   - formatter: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type `T`.
+    ///     string the user edits and the underlying value of type `V`.
     ///     In the event that `formatter` is unable to perform the conversion,
     ///     `binding.value` isn't modified.
     ///   - prompt: A `Text` representing the prompt of the text field
@@ -28182,19 +28906,19 @@ extension TextField {
     ///     field.
     ///   - label: A view that describes the purpose of the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<T>(value: Binding<T>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label)
+    public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label)
 }
 
 extension TextField where Label == Text {
 
-    /// Create an instance which binds over an arbitrary type, `T`.
+    /// Create an instance which binds over an arbitrary type, `V`.
     ///
     /// - Parameters:
     ///   - titleKey: The key for the localized title of the text field,
     ///     describing its purpose.
     ///   - value: The underlying value to be edited.
     ///   - formatter: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type `T`.
+    ///     string the user edits and the underlying value of type `V`.
     ///     In the event that `formatter` is unable to perform the conversion,
     ///     `binding.value` isn't modified.
     ///   - onEditingChanged: The action to perform when the user
@@ -28209,15 +28933,15 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init<T>(_ titleKey: LocalizedStringKey, value: Binding<T>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {})
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {})
 
-    /// Create an instance which binds over an arbitrary type, `T`.
+    /// Create an instance which binds over an arbitrary type, `V`.
     ///
     /// - Parameters:
     ///   - title: The title of the text field, describing its purpose.
     ///   - value: The underlying value to be edited.
     ///   - formatter: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type `T`.
+    ///     string the user edits and the underlying value of type `V`.
     ///     In the event that `formatter` is unable to perform the conversion,
     ///     `binding.value` isn't modified.
     ///   - onEditingChanged: The action to perform when the user
@@ -28232,7 +28956,7 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init<S, T>(_ title: S, value: Binding<T>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) where S : StringProtocol
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) where S : StringProtocol
 }
 
 /// A specification for the appearance and interaction of a text field.
@@ -28318,13 +29042,13 @@ public struct TextInputAutocapitalization {
     public static var characters: TextInputAutocapitalization { get }
 }
 
+@available(iOS 15.0, tvOS 15.0, *)
+@available(macOS, unavailable)
+@available(watchOS, unavailable)
 extension TextInputAutocapitalization {
 
     /// Creates a new ``TextInputAutocapitalization`` struct from a
     /// `UITextAutocapitalizationType` enum.
-    @available(iOS 15.0, tvOS 15.0, *)
-    @available(macOS, unavailable)
-    @available(watchOS, unavailable)
     public init?(_ type: UITextAutocapitalizationType)
 }
 
@@ -28828,16 +29552,18 @@ extension TimelineView.Context.Cadence : Hashable {
 /// You can set the tint color with the ``View/tint(_:)`` modifier. If no
 /// explicit tint is set, the tint is derived from the app's accent color.
 ///
-/// Do not use this type directly. Instead, use ``ShapeStyle/tint`` to construct
-/// a tint shape style.
+/// You can also use ``ShapeStyle/tint`` to construct this style.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct TintShapeStyle : ShapeStyle {
+
+    /// Creates a tint shape style.
+    public init()
 }
 
 /// A label style that shows both the title and icon of the label using a
 /// system-standard layout.
 ///
-/// Do not use this type directly. Instead, use ``LabelStyle/titleAndIcon``.
+/// You can also use ``LabelStyle/titleAndIcon`` to construct this style.
 @available(iOS 14.5, macOS 11.3, tvOS 14.5, watchOS 7.4, *)
 public struct TitleAndIconLabelStyle : LabelStyle {
 
@@ -28860,7 +29586,7 @@ public struct TitleAndIconLabelStyle : LabelStyle {
 
 /// A label style that only displays the title of the label.
 ///
-/// Do not use this type directly. Instead, use ``LabelStyle/titleOnly``.
+/// You can also use ``LabelStyle/titleOnly`` to construct this style.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct TitleOnlyLabelStyle : LabelStyle {
 
@@ -31005,6 +31731,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Marks the view as containing sensitive, private user data.
@@ -31023,7 +31750,6 @@ extension View {
     ///             }
     ///         }
     ///     }
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func privacySensitive(_ sensitive: Bool = true) -> some View
 
 }
@@ -31153,6 +31879,12 @@ extension View {
     @available(watchOS, unavailable)
     public func onDrag(_ data: @escaping () -> NSItemProvider) -> some View
 
+}
+
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension View {
 
     /// Activates this view as the source of a drag and drop operation.
     ///
@@ -31169,9 +31901,6 @@ extension View {
     ///
     /// - Returns: A view that activates this view as the source of a drag and
     ///   drop operation, beginning with user gesture input.
-    @available(iOS 15.0, macOS 12.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
     public func onDrag<V>(_ data: @escaping () -> NSItemProvider, @ViewBuilder preview: () -> V) -> some View where V : View
 
 }
@@ -33439,20 +34168,6 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Sets the control prominence for this view.
-    ///
-    /// In the following example, the button appears with increased prominence:
-    ///
-    ///     Button("Button") {}
-    ///         .buttonStyle(.bordered)
-    ///         .tint(.blue)
-    ///         .controlProminence(.increased)
-    ///
-    /// - Parameter prominence: The prominence to apply.
-    @available(*, deprecated, message: "Use .buttonStyle(.borderedProminent)")
-    public func controlProminence(_ prominence: Prominence) -> some View
-
-
     /// Sets the header prominence for this view.
     ///
     /// In the following example, the section header appears with increased
@@ -33599,6 +34314,10 @@ extension View {
     /// - Returns: A view that pads this view by the amount you specify.
     @inlinable public func padding(_ length: CGFloat) -> some View
 
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension View {
 
     /// A view that pads this view inside the specified edge insets with a
     /// system-calculated amount of padding relative to the application's
@@ -33625,7 +34344,6 @@ extension View {
     ///     default the system-calculated amount is applied to all edges.
     ///
     /// - Returns: A view that pads this view using the specified edge insets.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func scenePadding(_ edges: Edge.Set = .all) -> some View
 
 }
@@ -34864,6 +35582,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Associates a fully formed string with the value of this view.
@@ -34886,7 +35605,6 @@ extension View {
     ///
     /// - Parameters:
     ///   - text: A string to use as the view’s completion.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func searchCompletion(_ completion: String) -> some View
 
 }
@@ -37633,6 +38351,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Adds a descriptor to a View that represents a chart to make
@@ -37676,7 +38395,6 @@ extension View {
     ///
     ///    SomeChartView()
     ///        .accessibilityChartDescriptor(MyChartDescriptorRepresentable())
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func accessibilityChartDescriptor<R>(_ representable: R) -> some View where R : AXChartDescriptorRepresentable
 
 }
@@ -37850,6 +38568,8 @@ extension View {
 
 }
 
+@available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(macOS, unavailable)
 extension View {
 
     /// Sets how often the shift key in the keyboard is automatically enabled.
@@ -37870,12 +38590,11 @@ extension View {
     ///
     /// - Parameter autocapitalization: One of the capitalizing behaviors
     /// defined in the ``TextInputAutocapitalization`` struct or nil.
-    @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
-    @available(macOS, unavailable)
     public func textInputAutocapitalization(_ autocapitalization: TextInputAutocapitalization?) -> some View
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Sets the Dynamic Type size within the view to the given value.
@@ -37898,7 +38617,6 @@ extension View {
     ///
     /// - Returns: A view that sets the Dynamic Type size to the specified
     ///   `size`.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func dynamicTypeSize(_ size: DynamicTypeSize) -> some View
 
 
@@ -37927,7 +38645,6 @@ extension View {
     ///
     /// - Returns: A view that constrains the Dynamic Type size of this view
     ///   within the specified `range`.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func dynamicTypeSize<T>(_ range: T) -> some View where T : RangeExpression, T.Bound == DynamicTypeSize
 
 }
@@ -37976,6 +38693,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Adds an action to perform when the user submits a value to this view.
@@ -38033,7 +38751,6 @@ extension View {
     /// - Parameters:
     ///   - triggers: The triggers that should invoke the provided action.
     ///   - action: The action to perform on submission of a value.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func onSubmit(of triggers: SubmitTriggers = .text, _ action: @escaping (() -> Void)) -> some View
 
 
@@ -38061,7 +38778,6 @@ extension View {
     /// - Parameter isBlocking: A Boolean that indicates whether this scope is
     ///   actively blocking submission triggers from reaching higher submission
     ///   actions.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func submitScope(_ isBlocking: Bool = true) -> some View
 
 }
@@ -38186,7 +38902,7 @@ extension View {
     ///   modified view displays. Use an `await` expression
     ///   inside the action. SwiftUI shows a refresh indicator, which stays
     ///   visible for the duration of the awaited operation.
-    public func refreshable(action: @escaping () async -> Void) -> some View
+    public func refreshable(action: @escaping @Sendable () async -> Void) -> some View
 
 }
 
@@ -38511,6 +39227,30 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension View {
+
+    /// Sets the content shape for this view.
+    ///
+    /// The content shape has a variety of uses. You can control the kind of the
+    /// content shape by specifying one in `kind`. For example, the
+    /// following example only sets the focus ring shape of the view, without
+    /// affecting its shape for hit-testing:
+    ///
+    ///     MyFocusableView()
+    ///         .contentShape(.focusEffect, Circle())
+    ///
+    /// - Parameters:
+    ///   - kind: The kinds to apply to this content shape.
+    ///   - shape: The shape to use.
+    ///   - eoFill: A Boolean that indicates whether the shape is interpreted
+    ///     with the even-odd winding number rule.
+    ///
+    /// - Returns: A view that uses the given shape for the specified kind.
+    @inlinable public func contentShape<S>(_ kind: ContentShapeKinds, _ shape: S, eoFill: Bool = false) -> some View where S : Shape
+
+}
+
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -38547,6 +39287,30 @@ extension View {
     /// The default localization configuration is set to ``KeyboardShortcut/Localization-swift.struct/automatic``.
     public func keyboardShortcut(_ key: KeyEquivalent, modifiers: EventModifiers = .command) -> some View
 
+
+    /// Assigns a keyboard shortcut to the modified control.
+    ///
+    /// Pressing the control's shortcut while the control is anywhere in the
+    /// frontmost window or scene, or anywhere in the macOS main menu, is
+    /// equivalent to direct interaction with the control to perform its primary
+    /// action.
+    ///
+    /// The target of a keyboard shortcut is resolved in a leading-to-trailing
+    /// traversal of one or more view hierarchies. On macOS, the system looks in
+    /// the key window first, then the main window, and then the command groups;
+    /// on other platforms, the system looks in the active scene, and then the
+    /// command groups.
+    ///
+    /// If multiple controls are associated with the same shortcut, the first
+    /// one found is used.
+    public func keyboardShortcut(_ shortcut: KeyboardShortcut) -> some View
+
+}
+
+@available(iOS 15.0, macOS 12.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+extension View {
 
     /// Defines a keyboard shortcut and assigns it to the modified control.
     ///
@@ -38604,114 +39368,7 @@ extension View {
     /// disables
     /// the automatic localization for this shortcut to tell the system that
     /// internationalization is taken care of in a different way.
-    @available(iOS 15.0, macOS 12.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
     public func keyboardShortcut(_ key: KeyEquivalent, modifiers: EventModifiers = .command, localization: KeyboardShortcut.Localization) -> some View
-
-
-    /// Assigns a keyboard shortcut to the modified control.
-    ///
-    /// Pressing the control's shortcut while the control is anywhere in the
-    /// frontmost window or scene, or anywhere in the macOS main menu, is
-    /// equivalent to direct interaction with the control to perform its primary
-    /// action.
-    ///
-    /// The target of a keyboard shortcut is resolved in a leading-to-trailing
-    /// traversal of one or more view hierarchies. On macOS, the system looks in
-    /// the key window first, then the main window, and then the command groups;
-    /// on other platforms, the system looks in the active scene, and then the
-    /// command groups.
-    ///
-    /// If multiple controls are associated with the same shortcut, the first
-    /// one found is used.
-    public func keyboardShortcut(_ shortcut: KeyboardShortcut) -> some View
-
-}
-
-@available(iOS, introduced: 15.0, deprecated: 15.0, message: "onFocus(_:) will be removed from a future seed. Use FocusState<T> and View.focused(_:equals:) to update view state as focus changes. Use View.onChange(_:) to perform focus-related side-effects.")
-@available(macOS, introduced: 12.0, deprecated: 12.0, message: "onFocus(_:) will be removed from a future seed. Use FocusState<T> and View.focused(_:equals:) to update view state as focus changes. Use View.onChange(_:) to perform focus-related side-effects.")
-@available(tvOS, introduced: 15.0, deprecated: 15.0, message: "onFocus(_:) will be removed from a future seed. Use FocusState<T> and View.focused(_:equals:) to update view state as focus changes. Use View.onChange(_:) to perform focus-related side-effects.")
-@available(watchOS, introduced: 8.0, deprecated: 8.0, message: "onFocus(_:) will be removed from a future seed. Use FocusState<T> and View.focused(_:equals:) to update view state as focus changes. Use View.onChange(_:) to perform focus-related side-effects.")
-extension View {
-
-    /// Adds an action to perform whenever the modified view hierarchy gains or
-    /// loses focus.
-    ///
-    /// Use this method to detect when any arbitrary focusable view has focus.
-    /// The action receives a Boolean value that indicates whether the view,
-    /// or any of its children, now has focus.
-    ///
-    /// The following example shows a ``TextField`` for entering an email
-    /// address and a ``SecureField`` for a password. When the password field
-    /// receives a focus change, the action specified by the `onFocus(_:)`
-    /// modifier shows or hides a toggle.
-    ///
-    ///     Form {
-    ///         TextField("Email", text: $email)
-    ///             .keyboardType(.emailAddress)
-    ///             .autocapitalization(.none)
-    ///         SecureField("Password", text: $password)
-    ///             .onFocus { isFocused in
-    ///                 withAnimation {
-    ///                     showToggle = isFocused
-    ///                 }
-    ///             }
-    ///         if showToggle {
-    ///             Toggle("Save credentials", isOn: $saveCredentials)
-    ///         }
-    ///         Button("Submit") {
-    ///             submitCredentials()
-    ///         }
-    ///     }
-    ///
-    /// You can also apply `onFocus(_:)` to views with multiple focusable
-    /// descendants. In this case, SwiftUI performs the action for changes
-    /// where any descendant gains focus and previously none had it. It also
-    /// performs the action for changes where none of the focusable descendants
-    /// have focus and previously one did. However, SwiftUI does not perform
-    /// the action when focus moves from one descendant to another. In the
-    /// following example on tvOS, where buttons are inherently focusable, the
-    /// action prints a message when either button gains focus, or when all
-    /// buttons lose focus. However, it does not print a message when focus
-    /// moves from one button to the other.
-    ///
-    ///     Form {
-    ///         Button("Button 1") { handleButton1() }
-    ///         Button("Button 2") { handleButton2() }
-    ///     }
-    ///     .onFocus { isFocused in
-    ///         if isFocused {
-    ///             print("One of the form buttons now has focus.")
-    ///         } else {
-    ///             print("None of the form buttons now have focus.")
-    ///         }
-    ///     }
-    ///
-    /// Applications of `onFocus(_:)` are cumulative, so when a parent and a
-    /// child both have the modifier and the child gains or loses focus, SwiftUI
-    /// performs both actions. In the following example, SwiftUI prints both
-    /// messages every time the text field's focus state changes.
-    ///
-    ///     VStack {
-    ///         TextField("Search", text: $searchText)
-    ///             .onFocus { _ in print("Text field's focus state changed.") }
-    ///     }
-    ///     .onFocus { _ in print("Stack's focus state changed.") }
-    ///
-    /// This modifier has no effect on the focusability of the modified view or
-    /// its descendants. If nothing in the modified view hierarchy is focusable,
-    /// then the action block never executes.
-    ///
-    /// - Parameter action: The action to perform when focus either enters or
-    ///   exits the modified view hierarchy. If focus is in the modified view
-    ///   hierarchy, the `action` closure passes `true`; otherwise, `false`.
-    ///   The action does not execute for focus changes *within* the modified
-    ///   view hierarchy.
-    ///
-    /// - Returns: A view that triggers `action` when the view gains or loses
-    ///   focus.
-    public func onFocus(_ action: @escaping (_ isFocused: Bool) -> Void) -> some View
 
 }
 
@@ -38728,6 +39385,10 @@ extension View {
     @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
     public func focusedValue<Value>(_ keyPath: WritableKeyPath<FocusedValues, Value?>, _ value: Value) -> some View
 
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension View {
 
     /// Modifies this view by injecting a value that you provide for use by
     /// other views whose state depends on the focused scene.
@@ -38782,7 +39443,6 @@ extension View {
     ///     it to the existing table of published focus values.
     ///   - value: The focus value to publish.
     /// - Returns: A modified representation of this view.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func focusedSceneValue<T>(_ keyPath: WritableKeyPath<FocusedValues, T?>, _ value: T) -> some View
 
 }
@@ -39016,6 +39676,7 @@ extension View {
 
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
     /// Sets the submit label for this view.
@@ -39028,7 +39689,6 @@ extension View {
     ///     }
     ///
     /// - Parameter submitLabel: One of the cases specified in ``SubmitLabel``.
-    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func submitLabel(_ submitLabel: SubmitLabel) -> some View
 
 }
@@ -40480,21 +41140,26 @@ extension View {
     /// and updates the content of the text view to report the latest line
     /// count.
     ///
-    /// - Parameter action: A closure that SwiftUI calls as an asynchronous task
-    ///   when the view appears. SwiftUI automatically cancels the task
-    ///   if the view disappears before the action completes.
+    /// - Parameters:
+    ///   - priority: The task priority to use when creating the asynchronous
+    ///     task. The default priority is
+    ///     <doc://com.apple.documentation/documentation/Swift/TaskPriority/3851283-userInitiated>.
+    ///   - action: A closure that SwiftUI calls as an asynchronous task
+    ///     when the view appears. SwiftUI automatically cancels the task
+    ///     if the view disappears before the action completes.
+    ///
     ///
     /// - Returns: A view that runs the specified action asynchronously when
     ///   the view appears.
-    @inlinable public func task(_ action: @escaping () async -> Void) -> some View
+    @inlinable public func task(priority: TaskPriority = .userInitiated, _ action: @escaping @Sendable () async -> Void) -> some View
 
 
     /// Adds a task to perform when this view appears or when a specified
     /// value changes.
     ///
-    /// This method behaves like ``View/task(_:)``, except that it also cancels
-    /// and recreates the task when a specified value changes. To detect a
-    /// change, the modifier tests whether a new value for the `id` parameter
+    /// This method behaves like ``View/task(priority:_:)``, except that it also
+    /// cancels and recreates the task when a specified value changes. To detect
+    /// a change, the modifier tests whether a new value for the `id` parameter
     /// equals the previous value. For this to work,
     /// the value's type must conform to the
     /// <doc://com.apple.documentation/documentation/Swift/Equatable> protocol.
@@ -40548,6 +41213,9 @@ extension View {
     ///   - id: The value to observe for changes. The value must conform
     ///     to the <doc://com.apple.documentation/documentation/Swift/Equatable>
     ///     protocol.
+    ///   - priority: The task priority to use when creating the asynchronous
+    ///     task. The default priority is
+    ///     <doc://com.apple.documentation/documentation/Swift/TaskPriority/3851283-userInitiated>.
     ///   - action: A closure that SwiftUI calls as an asynchronous task
     ///     when the view appears. SwiftUI automatically cancels the task
     ///     if the view disappears before the action completes. If the
@@ -40555,7 +41223,7 @@ extension View {
     ///
     /// - Returns: A view that runs the specified action asynchronously when
     ///   the view appears, or restarts the task with the `id` value changes.
-    @inlinable public func task<T>(id value: T, _ action: @escaping () async -> Void) -> some View where T : Equatable
+    @inlinable public func task<T>(id value: T, priority: TaskPriority = .userInitiated, _ action: @escaping @Sendable () async -> Void) -> some View where T : Equatable
 
 }
 
@@ -42076,6 +42744,9 @@ extension View {
     /// The border shape is used to draw the platter for a bordered button.
     ///
     /// - Parameter shape: the shape to use.
+    /// - Note: This will only reflect on explicitly-set `.bordered` or
+    ///   `borderedProminent` styles. Setting a shape without
+    ///   explicitly setting the above styles will have no effect.
     @inlinable public func buttonBorderShape(_ shape: ButtonBorderShape) -> some View
 
 }
@@ -42400,8 +43071,8 @@ extension ViewDimensions : Equatable {
 ///         }
 ///     }
 ///
-/// You can apply ``modifier(_:)`` directly to a view, but a more common and
-/// idiomatic approach uses ``modifier(_:)`` to define an extension to
+/// You can apply ``View/modifier(_:)`` directly to a view, but a more common
+/// and idiomatic approach uses ``View/modifier(_:)`` to define an extension to
 /// ``View`` itself that incorporates the view modifier:
 ///
 ///     extension View {
@@ -42555,7 +43226,7 @@ extension Visibility : Sendable {
 /// A date picker style that displays each component as columns in a scrollable
 /// wheel.
 ///
-/// Do not use this type directly. Instead, use ``DatePickerStyle/wheel``.
+/// You can also use ``DatePickerStyle/wheel`` to construct this style.
 @available(iOS 13.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
@@ -42569,7 +43240,7 @@ public struct WheelDatePickerStyle : DatePickerStyle {
 /// A picker style that presents the options in a scrollable wheel that shows
 /// the selected option and a few neighboring options.
 ///
-/// Do not use this type directly. Instead, use ``PickerStyle/wheel``.
+/// You can also use ``PickerStyle/wheel`` to construct this style.
 @available(iOS 13.0, watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
@@ -43052,14 +43723,6 @@ extension Never {
     public var body: Never { get }
 }
 
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-extension Never : Identifiable {
-
-    public var id: Never { get }
-
-    public typealias ID = Never
-}
-
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension CGPoint {
 
@@ -43158,6 +43821,7 @@ extension Never : Scene {
 extension Never : WidgetConfiguration {
 }
 
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension NSUnderlineStyle {
 
     /// Creates a ``NSUnderlineStyle`` from ``Text.LineStyle``.
@@ -43166,7 +43830,6 @@ extension NSUnderlineStyle {
     /// to wrap with ``NSUnderlineStyle``.
     ///
     /// - Returns: A new ``NSUnderlineStyle``.
-    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public init(_ lineStyle: Text.LineStyle)
 }
 
@@ -43234,10 +43897,6 @@ extension UIContentSizeCategory {
     @available(watchOS, unavailable)
     public init(_ sizeCategory: ContentSizeCategory?)
 
-    /// Create a size category from its `DynamicTypeSize` equivalent.
-    ///
-    /// If a `nil` size is passed, an `.unspecified` content size category will
-    /// be created.
     @available(iOS 15.0, tvOS 15.0, *)
     @available(macOS, unavailable)
     @available(watchOS, unavailable)
@@ -43335,11 +43994,11 @@ extension CGFloat : VectorArithmetic {
 extension AttributeScopes {
 
     /// A property for accessing the attribute scopes defined by SwiftUI.
-    @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public var swiftUI: AttributeScopes.SwiftUIAttributes.Type { get }
 
     /// Attribute scopes defined by SwiftUI.
-    @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public struct SwiftUIAttributes : AttributeScope {
 
         /// A property for accessing a font attribute.
@@ -43351,19 +44010,11 @@ extension AttributeScopes {
         /// A property for accessing a background color attribute.
         public let backgroundColor: AttributeScopes.SwiftUIAttributes.BackgroundColorAttribute
 
-        /// A property for accessing a strikethrough color attribute.
-        @available(*, deprecated, message: "Use strikethroughStyle attribute")
-        public let strikethroughColor: AttributeScopes.SwiftUIAttributes.StrikethroughColorAttribute
-
         /// A property for accessing a strikethrough style attribute.
         public let strikethroughStyle: AttributeScopes.SwiftUIAttributes.StrikethroughStyleAttribute
 
         /// A property for accessing an underline style attribute.
         public let underlineStyle: AttributeScopes.SwiftUIAttributes.UnderlineStyleAttribute
-
-        /// A property for accessing an underline attribute.
-        @available(*, deprecated, message: "Use underlineStyle attribute")
-        public let underlineColor: AttributeScopes.SwiftUIAttributes.UnderlineColorAttribute
 
         /// A property for accessing a kerning attribute.
         public let kern: AttributeScopes.SwiftUIAttributes.KerningAttribute
@@ -43386,7 +44037,7 @@ extension AttributeScopes {
     }
 }
 
-@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension AttributeDynamicLookup {
 
     public subscript<T>(dynamicMember keyPath: KeyPath<AttributeScopes.SwiftUIAttributes, T>) -> T where T : AttributedStringKey { get }
