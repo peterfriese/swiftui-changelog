@@ -1,4 +1,4 @@
-// Xcode 13.0b5
+// Xcode 13.0
 
 import Accessibility
 import Combine
@@ -10343,7 +10343,7 @@ extension FetchRequest {
     /// descriptors, use ``init(sortDescriptors:predicate:animation:)-462jp``
     /// instead. If you need to specify a ``Transaction`` rather than an
     /// optional ``Animation``, use ``init(fetchRequest:transaction:)``.
-    /// 
+    ///
     /// - Parameters:
     ///   - fetchRequest: An
     ///     <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
@@ -11463,6 +11463,25 @@ extension ForEach : AccessibilityRotorContent where Content : AccessibilityRotor
 
     /// The internal content of this `AccessibilityRotorContent`.
     public var body: Never { get }
+}
+
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+extension ForEach where ID == Data.Element.ID, Content : AccessibilityRotorContent, Data.Element : Identifiable {
+
+    /// Creates an instance that generates Rotor content by combining, in order,
+    /// individual Rotor content for each element in the data given to this
+    /// `ForEach`.
+    ///
+    /// It's important that the `id` of a data element doesn't change unless you
+    /// replace the data element with a new data element that has a new
+    /// identity.
+    ///
+    /// - Parameters:
+    ///   - data: The identified data that the ``ForEach`` instance uses to
+    ///     create views dynamically.
+    ///   - content: The result builder that generates Rotor content for each
+    ///     data element.
+    public init(_ data: Data, @AccessibilityRotorContentBuilder content: @escaping (Data.Element) -> Content)
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
@@ -33136,7 +33155,7 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Sets the container shape that to use for any container relative shape
+    /// Sets the container shape to use for any container relative shape
     /// within this view.
     ///
     /// The example below defines a view that shows its content with a rounded
