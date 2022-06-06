@@ -1,4 +1,4 @@
-// Xcode 13.0
+// Xcode 13.1
 
 import Accessibility
 import Combine
@@ -1249,7 +1249,7 @@ public struct AccessibilityTechnologies : SetAlgebra {
     ///   comparison or some other means.
     ///
     ///   For sets where the set type and element type are the same, like
-    ///   `OptionSet` types, this method returns any intersection between the 
+    ///   `OptionSet` types, this method returns any intersection between the
     ///   set and `[newMember]`, or `nil` if the intersection is empty.
     public mutating func update(with newMember: AccessibilityTechnologies) -> AccessibilityTechnologies?
 
@@ -1598,7 +1598,7 @@ public struct AccessibilityTraits : SetAlgebra {
     ///   comparison or some other means.
     ///
     ///   For sets where the set type and element type are the same, like
-    ///   `OptionSet` types, this method returns any intersection between the 
+    ///   `OptionSet` types, this method returns any intersection between the
     ///   set and `[newMember]`, or `nil` if the intersection is empty.
     public mutating func update(with newMember: AccessibilityTraits) -> AccessibilityTraits?
 
@@ -17194,14 +17194,14 @@ extension ListStyle where Self == PlainListStyle {
     public struct StringInterpolation : StringInterpolationProtocol {
 
         /// Creates an empty instance ready to be filled with string literal content.
-        /// 
+        ///
         /// Don't call this initializer directly. Instead, initialize a variable or
         /// constant using a string literal with interpolated expressions.
-        /// 
+        ///
         /// Swift passes this initializer a pair of arguments specifying the size of
         /// the literal segments and the number of interpolated segments. Use this
         /// information to estimate the amount of storage you will need.
-        /// 
+        ///
         /// - Parameter literalCapacity: The approximate size of all literal segments
         ///   combined. This is meant to be passed to `String.reserveCapacity(_:)`;
         ///   it may be slightly larger or smaller than the sum of the counts of each
