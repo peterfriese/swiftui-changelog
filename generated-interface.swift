@@ -1,4 +1,4 @@
-// Xcode 13.1
+// Xcode 13.2
 
 import Accessibility
 import Combine
@@ -3171,7 +3171,7 @@ public struct AsyncImage<Content> : View where Content : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -4091,7 +4091,7 @@ public struct Button<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -4396,26 +4396,50 @@ public struct ButtonStyleConfiguration {
 
 /// A toggle style that displays as a button with its label as the title.
 ///
-/// You can also use ``ToggleStyle/button`` to construct this style.
+/// Use the ``ToggleStyle/button`` static variable to create this style:
+///
+///     Toggle(isOn: $isFlagged) {
+///         Label("Flag", systemImage: "flag.fill")
+///     }
+///     .toggleStyle(.button)
+///
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct ButtonToggleStyle : ToggleStyle {
 
     /// Creates a button toggle style.
+    ///
+    /// Don't call this initializer directly. Instead, use the
+    /// ``ToggleStyle/button`` static variable to create this style:
+    ///
+    ///     Toggle(isOn: $isFlagged) {
+    ///         Label("Flag", systemImage: "flag.fill")
+    ///     }
+    ///     .toggleStyle(.button)
+    ///
     public init()
 
-    /// Creates a view that represents the body of a toggle.
+    /// Creates a view that represents the body of a toggle button.
     ///
-    /// The system calls this method for each ``Toggle`` instance in a view
-    /// hierarchy where this style is the current toggle style.
+    /// SwiftUI implements this required method of the ``ToggleStyle``
+    /// protocol to define the behavior and appearance of the
+    /// ``ToggleStyle/button`` toggle style. Don't call this method
+    /// directly; the system calls this method for each
+    /// ``Toggle`` instance in a view hierarchy that's styled as
+    /// a button.
     ///
-    /// - Parameter configuration: The properties of the toggle, such as its
-    ///   label and its “on” state.
+    /// - Parameter configuration: The properties of the toggle, including a
+    ///   label and a binding to the toggle's state.
+    /// - Returns: A view that acts as a button that controls a Boolean state.
     public func makeBody(configuration: ButtonToggleStyle.Configuration) -> some View
 
 
     /// A view that represents the appearance and interaction of a toggle.
+    ///
+    /// SwiftUI infers this type automatically based on the ``View``
+    /// instance that you return from your implementation of the
+    /// ``makeBody(configuration:)`` method.
     public typealias Body = some View
 }
 
@@ -5395,7 +5419,7 @@ public struct ColorPicker<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -5742,7 +5766,7 @@ public struct CommandGroup<Content> : Commands where Content : View {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -5936,7 +5960,7 @@ public struct CommandMenu<Content> : Commands where Content : View {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -5966,7 +5990,7 @@ public protocol Commands {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     @CommandsBuilder var body: Self.Body { get }
 }
@@ -6202,7 +6226,7 @@ public struct ContentShapeKinds : OptionSet {
 
     /// The kind for hit-testing and accessibility.
     ///
-    /// Settting a content shape with this kind will cause the view to hit-test
+    /// Setting a content shape with this kind causes the view to hit-test
     /// using the specified shape.
     public static let interaction: ContentShapeKinds
 
@@ -6433,7 +6457,7 @@ public struct ControlGroup<Content> : View where Content : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -6783,7 +6807,7 @@ public struct DatePicker<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -7260,38 +7284,62 @@ public struct DefaultTextFieldStyle : TextFieldStyle {
 
 /// The default toggle style.
 ///
-/// You can also use ``ToggleStyle/automatic`` to construct this style.
+/// Use the ``ToggleStyle/automatic`` static variable to create this style:
+///
+///     Toggle("Enhance Sound", isOn: $isEnhanced)
+///         .toggleStyle(.automatic)
+///
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct DefaultToggleStyle : ToggleStyle {
 
     /// Creates a default toggle style.
+    ///
+    /// Don't call this initializer directly. Instead, use the
+    /// ``ToggleStyle/automatic`` static variable to create this style:
+    ///
+    ///     Toggle("Enhance Sound", isOn: $isEnhanced)
+    ///         .toggleStyle(.automatic)
+    ///
     public init()
 
     /// Creates a view that represents the body of a toggle.
     ///
-    /// The system calls this method for each ``Toggle`` instance in a view
-    /// hierarchy where this style is the current toggle style.
+    /// SwiftUI implements this required method of the ``ToggleStyle``
+    /// protocol to define the behavior and appearance of the
+    /// ``ToggleStyle/automatic`` toggle style. Don't call this method
+    /// directly. Rather, the system calls this method for each
+    /// ``Toggle`` instance in a view hierarchy that needs the default
+    /// style.
     ///
-    /// - Parameter configuration: The properties of the toggle.
+    /// - Parameter configuration: The properties of the toggle, including a
+    ///   label and a binding to the toggle's state.
+    /// - Returns: A view that acts as a toggle.
     public func makeBody(configuration: DefaultToggleStyle.Configuration) -> some View
 
 
     /// A view that represents the appearance and interaction of a toggle.
+    ///
+    /// SwiftUI infers this type automatically based on the ``View``
+    /// instance that you return from your implementation of the
+    /// ``makeBody(configuration:)`` method.
     public typealias Body = some View
 }
 
-/// Disables text selection by the user.
+/// A selectability type that disables text selection by the person using your app.
 ///
-/// Do not use this type directly. Instead, use ``TextSelectability/disabled``.
+/// Don't use this type directly. Instead, use ``TextSelectability/disabled``.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct DisabledTextSelectability : TextSelectability {
 
-    /// Whether text allows selection or not.
+    /// A Boolean value that indicates whether the selectability type allows
+    /// selection.
     ///
-    /// This should produce a constant value that is not affected by global
-    /// state.
+    /// Conforming types, such as ``EnabledTextSelectability`` and
+    /// ``DisabledTextSelectability``, return `true` or `false` for this
+    /// property as appropriate. SwiftUI expects this value for a given
+    /// selectability type to be constant, unaffected by global state.
     public static let allowsSelection: Bool
 }
 
@@ -7351,7 +7399,7 @@ public struct DisclosureGroup<Label, Content> : View where Label : View, Content
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -7539,7 +7587,7 @@ public struct DocumentGroup<Document, Content> : Scene where Content : View {
     ///
     /// For any scene that you create, provide a computed `body` property that
     /// defines the scene as a composition of other scenes. You can assemble a
-    /// scene from primitive scenes that SwiftUI provides, as well as other
+    /// scene from built-in scenes that SwiftUI provides, as well as other
     /// scenes that you've defined.
     ///
     /// Swift infers the scene's ``SwiftUI/Scene/Body-swift.associatedtype``
@@ -8442,7 +8490,7 @@ public struct EditButton : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -8887,18 +8935,21 @@ extension EmptyView : Sendable {
 extension EmptyWidgetConfiguration : Sendable {
 }
 
-/// Enables text selection by the user.
+/// A selectability type that enables text selection by the person using your app.
 ///
-/// Do not use this type directly. Instead, use ``TextSelectability/enabled``.
+/// Don't use this type directly. Instead, use ``TextSelectability/enabled``.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct EnabledTextSelectability : TextSelectability {
 
-    /// Whether text allows selection or not.
+    /// A Boolean value that indicates whether the selectability type allows
+    /// selection.
     ///
-    /// This should produce a constant value that is not affected by global
-    /// state.
+    /// Conforming types, such as ``EnabledTextSelectability`` and
+    /// ``DisabledTextSelectability``, return `true` or `false` for this
+    /// property as appropriate. SwiftUI expects this value for a given
+    /// selectability type to be constant, unaffected by global state.
     public static let allowsSelection: Bool
 }
 
@@ -9030,7 +9081,7 @@ public struct EnabledTextSelectability : TextSelectability {
 ///         @Environment(\.myCustomValue) var customValue: String
 ///
 ///         var body: some View {
-///             Text(customValue) // Displays "Another value".
+///             Text(customValue) // Displays "Another string".
 ///         }
 ///     }
 ///
@@ -9475,6 +9526,10 @@ extension EnvironmentValues {
     /// This value changes as the user's chosen Dynamic Type size changes. The
     /// default value is device-dependent.
     ///
+    /// When limiting the Dynamic Type size, consider if adding a
+    /// large content view with ``View/accessibilityShowsLargeContentViewer()``
+    /// would be appropriate.
+    ///
     /// On macOS, this value cannot be changed by users and does not affect the
     /// text size.
     public var dynamicTypeSize: DynamicTypeSize
@@ -9709,7 +9764,7 @@ extension EnvironmentValues {
     ///     }
     ///
     /// ![A screenshot showing the effects of setting the minimumScaleFactor on
-    ///   the text in a view](SwiftUI-view-minimumScaleFactor.png)
+    ///   the text in a view](SwiftUI-View-minimumScaleFactor.png)
     ///
     /// You can set the minimum scale factor to any value greater than `0` and
     /// less than or equal to `1`. The default value is `1`.
@@ -9752,6 +9807,23 @@ extension EnvironmentValues {
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
     public var controlSize: ControlSize
+}
+
+extension EnvironmentValues {
+
+    /// Whether the Large Content Viewer is enabled.
+    ///
+    /// The system can automatically provide a large content view
+    /// with ``View/accessibilityShowsLargeContentViewer()``
+    /// or you can provide your own with ``View/accessibilityShowsLargeContentViewer(_:)``.
+    ///
+    /// While it is not necessary to check this value before adding
+    /// a large content view, it may be helpful if you need to
+    /// adjust the behavior of a gesture. For example, a button with
+    /// a long press handler might increase its long press duration
+    /// so the user can read the text in the large content viewer first.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public var accessibilityLargeContentViewerEnabled: Bool { get }
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -10077,11 +10149,13 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
 /// SwiftUI view. The request infers the entity type from the `Result`
 /// placeholder type that you specify. Condition the request with an optional
 /// predicate and sort descriptors. For example, you can create a request to
-/// list all `Quake` managed objects --- representing earthquakes --- sorted by
-/// their `time` property:
+/// list all `Quake` managed objects that the
+/// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+/// sample code project defines to store earthquake data, sorted by their
+/// `time` property:
 ///
 ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
-///     private var quakes: FetchedResults<Quake>
+///     private var quakes: FetchedResults<Quake> // Define Quake in your model.
 ///
 /// Alternatively, when you need more flexibility, you can initialize the
 /// request with a configured
@@ -10122,7 +10196,9 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// SwiftUI returns the value associated with this property
     /// when you use ``FetchRequest`` as a property wrapper, and then access
     /// the wrapped property by name. For example, consider the following
-    /// `quakes` property declaration:
+    /// `quakes` property declaration that fetches a `Quake` type that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines:
     ///
     ///     @FetchRequest(fetchRequest: request)
     ///     private var quakes: FetchedResults<Quake>
@@ -10162,7 +10238,9 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// by accessing the request's ``FetchRequest/projectedValue``, which you
     /// do by using the dollar sign (`$`) prefix on the associated
     /// results property. For example, you can create a request for `Quake`
-    /// entities that initially sorts the results by time:
+    /// entities --- a managed object type that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines --- that initially sorts the results by time:
     ///
     ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
     ///     private var quakes: FetchedResults<Quake>
@@ -10253,8 +10331,10 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// ``FetchRequest/Configuration`` structure, which dynamically
     /// configures the request.
     ///
-    /// For example, consider the following fetch request
-    /// that you sort based on the `time` property:
+    /// For example, consider the following fetch request for a type that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines to store earthquake data, sorted based on
+    /// the `time` property:
     ///
     ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
     ///     private var quakes: FetchedResults<Quake>
@@ -10318,7 +10398,10 @@ extension FetchRequest {
     /// Use this initializer when you want to configure a fetch
     /// request with more than a predicate and sort descriptors.
     /// For example, you can vend a request from a `Quake` managed object
-    /// that limits the number of results to `1000` by setting a
+    /// that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines to store earthquake data.
+    /// Limit the number of results to `1000` by setting a
     /// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest/1506622-fetchLimit>
     /// for the request:
     ///
@@ -10450,7 +10533,10 @@ extension FetchRequest.Configuration where Result : NSManagedObject {
 /// specifying a `Result` type as the entity type, and annotating the fetched
 /// results property declaration with a ``FetchRequest`` property wrapper.
 /// For example, you can create a request to list all `Quake` managed objects
-/// sorted by their `time` property:
+/// that the
+/// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+/// sample code project defines to store earthquake data, sorted by their
+/// `time` property:
 ///
 ///     @FetchRequest(sortDescriptors: [SortDescriptor(\.time, order: .reverse)])
 ///     private var quakes: FetchedResults<Quake>
@@ -10928,7 +11014,7 @@ extension FillStyle : Sendable {
 /// A protocol for identifier types used when publishing and observing focused
 /// values.
 ///
-/// Unlike `EnvironmentKey`, `FocusedValuesHostKey` has no default value
+/// Unlike ``EnvironmentKey``, `FocusedValueKey` has no default value
 /// requirement, because the default value for a key is always `nil`.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public protocol FocusedValueKey {
@@ -11712,7 +11798,7 @@ public struct Form<Content> : View where Content : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -13244,7 +13330,7 @@ public struct GraphicalDatePickerStyle : DatePickerStyle {
         ///
         /// Styles with geometry defined in a unit coordinate space
         /// map that space to the rectangle associated with the drawn
-        /// object. You can adjust that using the ``ShapeStyle/in`(_:)``
+        /// object. You can adjust that using the ``ShapeStyle/in(_:)``
         /// method. The shape style might affect the blend mode and opacity
         /// of the drawn object.
         ///
@@ -14011,7 +14097,7 @@ public struct GroupBox<Label, Content> : View where Label : View, Content : View
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -15631,7 +15717,7 @@ public struct Label<Title, Icon> : View where Title : View, Icon : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -16213,7 +16299,7 @@ public struct Link<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -17270,12 +17356,27 @@ extension ListStyle where Self == PlainListStyle {
         ///     representation.
         public mutating func appendInterpolation<Subject>(_ subject: Subject, formatter: Formatter? = nil) where Subject : NSObject
 
-        /// Appends the interpolation of `F.FormatInput` using a `FormatStyle`.
+        /// Appends the formatted representation  of a nonstring type
+        /// supported by a corresponding format style.
+        ///
+        /// Don't call this method directly; it's used by the compiler when
+        /// interpreting string interpolations.
+        ///
+        /// The following example shows how to use a string interpolation to
+        /// format a
+        /// <doc://com.apple.documentation/documentation/Foundation/Date>
+        /// with a
+        /// <doc://com.apple.documentation/documentation/Foundation/Date/FormatStyle> and
+        /// append it to static text. The resulting interpolation implicitly
+        /// creates a ``LocalizedStringKey``, which a ``Text`` uses to provide
+        /// its content.
+        ///
+        ///     Text("The time is \(myDate, format: Date.FormatStyle(date: .omitted, time:.complete))")
         ///
         /// - Parameters:
-        ///   - input: The input to provide to the format style.
-        ///   - format: The specific `FormatStyle` to use to convert the input
-        ///   into a string.
+        ///   - input: The instance to format and append.
+        ///   - format: A format style to use when converting `input` into a string
+        ///   representation.
         @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
         public mutating func appendInterpolation<F>(_ input: F.FormatInput, format: F) where F : FormatStyle, F.FormatInput : Equatable, F.FormatOutput == String
 
@@ -17480,7 +17581,7 @@ public struct LongPressGesture : Gesture {
 ///
 ///     struct MagnificationGestureView: View {
 ///
-///         @GestureState var magnifyBy = CGFloat(1.0)
+///         @GestureState var magnifyBy = 1.0
 ///
 ///         var magnification: some Gesture {
 ///             MagnificationGesture()
@@ -17491,9 +17592,8 @@ public struct LongPressGesture : Gesture {
 ///
 ///         var body: some View {
 ///             Circle()
-///                 .frame(width: 100 * magnifyBy,
-///                        height: 100 * magnifyBy,
-///                        alignment: .center)
+///                 .frame(width: 100, height: 100)
+///                 .scaleEffect(magnifyBy)
 ///                 .gesture(magnification)
 ///         }
 ///     }
@@ -17781,7 +17881,7 @@ public struct Menu<Label, Content> : View where Label : View, Content : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -18139,7 +18239,7 @@ extension ModifiedContent : View where Content : View, Modifier : ViewModifier {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -18348,7 +18448,7 @@ extension ModifiedContent : Scene where Content : Scene, Modifier : _SceneModifi
     ///
     /// For any scene that you create, provide a computed `body` property that
     /// defines the scene as a composition of other scenes. You can assemble a
-    /// scene from primitive scenes that SwiftUI provides, as well as other
+    /// scene from built-in scenes that SwiftUI provides, as well as other
     /// scenes that you've defined.
     ///
     /// Swift infers the scene's ``SwiftUI/Scene/Body-swift.associatedtype``
@@ -18959,7 +19059,7 @@ public struct NavigationLink<Label, Destination> : View where Label : View, Dest
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -19604,13 +19704,14 @@ extension OutlineGroup where ID == Data.Element.ID, Parent : View, Parent == Lea
     ///   - root: The root of a collection of tree-structured, identified
     ///     data.
     ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes an element
-    ///     capable of having children that's currently childless, such as an
-    ///     empty directory in a file system. On the other hand, if the property
-    ///     at the key path is `nil`, then the outline group treats `data` as a
-    ///     leaf in the tree, like a regular file in a file system.
-    ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     children of a data element. A non-`nil` but empty value denotes an
+    ///     element capable of having children that's currently childless, such
+    ///     as an empty directory in a file system. On the other hand, if the
+    ///     property at the key path is `nil`, then the outline group treats the
+    ///     data element as a leaf in the tree, like a regular file in a file
+    ///     system.
+    ///   - content: A view builder that produces a content view based on a
+    ///     data element.
     public init<DataElement>(_ root: DataElement, children: KeyPath<DataElement, Data?>, @ViewBuilder content: @escaping (DataElement) -> Leaf) where ID == DataElement.ID, DataElement : Identifiable, DataElement == Data.Element
 
     /// Creates an outline group from a collection of root data elements and
@@ -19635,7 +19736,7 @@ extension OutlineGroup where ID == Data.Element.ID, Parent : View, Parent == Lea
     ///     at the key path is `nil`, then the outline group treats `data` as a
     ///     leaf in the tree, like a regular file in a file system.
     ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     element in `data`.
     public init<DataElement>(_ data: Data, children: KeyPath<DataElement, Data?>, @ViewBuilder content: @escaping (DataElement) -> Leaf) where ID == DataElement.ID, DataElement : Identifiable, DataElement == Data.Element
 }
 
@@ -19662,13 +19763,14 @@ extension OutlineGroup where Parent : View, Parent == Leaf, Subgroup == Disclosu
     ///     data.
     ///   - id: The key path to a data element's identifier.
     ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes an element
-    ///     capable of having children that's currently childless, such as an
-    ///     empty directory in a file system. On the other hand, if the property
-    ///     at the key path is `nil`, then the outline group treats `data` as a
-    ///     leaf in the tree, like a regular file in a file system.
-    ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     children of a data element. A non-`nil` but empty value denotes an
+    ///     element capable of having children that's currently childless, such
+    ///     as an empty directory in a file system. On the other hand, if the
+    ///     property at the key path is `nil`, then the outline group treats the
+    ///     data element as a leaf in the tree, like a regular file in a file
+    ///     system.
+    ///   - content: A view builder that produces a content view based on a
+    ///     data element.
     public init<DataElement>(_ root: DataElement, id: KeyPath<DataElement, ID>, children: KeyPath<DataElement, Data?>, @ViewBuilder content: @escaping (DataElement) -> Leaf) where DataElement == Data.Element
 
     /// Creates an outline group from a collection of root data elements, the
@@ -19694,7 +19796,7 @@ extension OutlineGroup where Parent : View, Parent == Leaf, Subgroup == Disclosu
     ///     at the key path is `nil`, then the outline group treats `data` as a
     ///     leaf in the tree, like a regular file in a file system.
     ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     element in `data`.
     public init<DataElement>(_ data: Data, id: KeyPath<DataElement, ID>, children: KeyPath<DataElement, Data?>, @ViewBuilder content: @escaping (DataElement) -> Leaf) where DataElement == Data.Element
 }
 
@@ -19707,7 +19809,7 @@ extension OutlineGroup : View where Parent : View, Leaf : View, Subgroup : View 
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -19749,13 +19851,14 @@ extension OutlineGroup where ID == Data.Element.ID, Parent : View, Parent == Lea
     ///   - root: The root of a collection of tree-structured, identified
     ///     data.
     ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes an element
-    ///     capable of having children that's currently childless, such as an
-    ///     empty directory in a file system. On the other hand, if the property
-    ///     at the key path is `nil`, then the outline group treats `data` as a
-    ///     leaf in the tree, like a regular file in a file system.
-    ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     children of a data element. A non-`nil` but empty value denotes an
+    ///     element capable of having children that's currently childless, such
+    ///     as an empty directory in a file system. On the other hand, if the
+    ///     property at the key path is `nil`, then the outline group treats the
+    ///     data element as a leaf in the tree, like a regular file in a file
+    ///     system.
+    ///   - content: A view builder that produces a content view based on a
+    ///     data element.
     public init<C, E>(_ root: Binding<E>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, ID == E.ID, C : MutableCollection, C : RandomAccessCollection, E : Identifiable, E == C.Element
 
     /// Creates an outline group from a binding to a collection of root data
@@ -19780,7 +19883,7 @@ extension OutlineGroup where ID == Data.Element.ID, Parent : View, Parent == Lea
     ///     at the key path is `nil`, then the outline group treats `data` as a
     ///     leaf in the tree, like a regular file in a file system.
     ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     element in `data`.
     public init<C, E>(_ data: Binding<C>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, ID == E.ID, C : MutableCollection, C : RandomAccessCollection, E : Identifiable, E == C.Element
 }
 
@@ -19807,13 +19910,14 @@ extension OutlineGroup where Parent : View, Parent == Leaf, Subgroup == Disclosu
     ///     data.
     ///   - id: The key path to a data element's identifier.
     ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes an element
-    ///     capable of having children that's currently childless, such as an
-    ///     empty directory in a file system. On the other hand, if the property
-    ///     at the key path is `nil`, then the outline group treats `data` as a
-    ///     leaf in the tree, like a regular file in a file system.
-    ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     children of a data element. A non-`nil` but empty value denotes an
+    ///     element capable of having children that's currently childless, such
+    ///     as an empty directory in a file system. On the other hand, if the
+    ///     property at the key path is `nil`, then the outline group treats the
+    ///     data element as a leaf in the tree, like a regular file in a file
+    ///     system.
+    ///   - content: A view builder that produces a content view based on a
+    ///     data element.
     public init<C, E>(_ root: Binding<E>, id: KeyPath<E, ID>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, C : MutableCollection, C : RandomAccessCollection, E == C.Element
 
     /// Creates an outline group from a binding to a collection of root data
@@ -19840,7 +19944,7 @@ extension OutlineGroup where Parent : View, Parent == Leaf, Subgroup == Disclosu
     ///     at the key path is `nil`, then the outline group treats `data` as a
     ///     leaf in the tree, like a regular file in a file system.
     ///   - content: A view builder that produces a content view based on an
-    ///    element in `data`.
+    ///     element in `data`.
     public init<C, E>(_ data: Binding<C>, id: KeyPath<E, ID>, children: WritableKeyPath<E, C?>, @ViewBuilder content: @escaping (Binding<E>) -> Leaf) where Data == Binding<C>, C : MutableCollection, C : RandomAccessCollection, E == C.Element
 }
 
@@ -20329,7 +20433,7 @@ public struct Picker<Label, SelectionValue, Content> : View where Label : View, 
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -21277,7 +21381,7 @@ public struct ProgressView<Label, CurrentValueLabel> : View where Label : View, 
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -22283,7 +22387,7 @@ extension SafeAreaRegions : Sendable {
 ///
 /// You create an ``SwiftUI/App`` by combining one or more instances
 /// that conform to the `Scene` protocol in the app's
-/// ``SwiftUI/App/body-swift.property``. You can use the primitive scenes that
+/// ``SwiftUI/App/body-swift.property``. You can use the built-in scenes that
 /// SwiftUI provides, like ``SwiftUI/WindowGroup``, along with custom scenes
 /// that you compose from other scenes. To create a custom scene, declare a
 /// type that conforms to the `Scene` protocol. Implement the required
@@ -22353,7 +22457,7 @@ public protocol Scene {
     ///
     /// For any scene that you create, provide a computed `body` property that
     /// defines the scene as a composition of other scenes. You can assemble a
-    /// scene from primitive scenes that SwiftUI provides, as well as other
+    /// scene from built-in scenes that SwiftUI provides, as well as other
     /// scenes that you've defined.
     ///
     /// Swift infers the scene's ``SwiftUI/Scene/Body-swift.associatedtype``
@@ -23119,7 +23223,7 @@ public struct ScrollViewProxy {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -23360,60 +23464,176 @@ extension Section where Parent : View, Content : View, Footer == EmptyView {
     public init(header: Parent, @ViewBuilder content: () -> Content)
 }
 
-/// A property wrapper type that makes sectioned fetch requests and retrieves the results
-/// from a Core Data store.
+/// A property wrapper type that retrieves entities, grouped into sections,
+/// from a Core Data persistent store.
 ///
-/// The fetch request and its results use the managed object context provided by
-/// the environment value ``EnvironmentValues/managedObjectContext``.
-/// The `sectionIdentifier` passed to the initializers is used to split the results into
-/// sections.
+/// Use a `SectionedFetchRequest` property wrapper to declare a
+/// ``SectionedFetchResults`` property that provides a grouped collection of
+/// Core Data managed objects to a SwiftUI view. If you don't need sectioning,
+/// use ``FetchRequest`` instead.
 ///
-/// The sectioned fetch request's wrapped value works with ``ForEach`` to
-/// drive collection views like ``List``:
+/// Configure a sectioned fetch request with an optional predicate and sort
+/// descriptors, and include a `sectionIdentifier` parameter to indicate how
+/// to group the fetched results. Be sure that you choose sorting and sectioning
+/// that work together to avoid discontiguous sections. For example, you can
+/// request a list of earthquakes, composed of `Quake` managed objects that the
+/// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+/// sample code project defines to store earthquake data, sorted by time and
+/// grouped by date:
 ///
-///     struct ContentView: View {
-///         @SectionedFetchRequest<String, CoreDataPerson>(
-///             sectionIdentifier: \.firstLetterOfName,
-///             sortDescriptors: [NSSortDescriptor(keyPath: \Person.name, ascending: true)],
-///             animation: .default
-///         )
-///         private var sectionedPeople
+///     @SectionedFetchRequest<String, Quake>(
+///         sectionIdentifier: \.day,
+///         sortDescriptors: [SortDescriptor(\.time, order: .reverse)]
+///     )
+///     private var quakes: SectionedFetchResults<String, Quake>
 ///
-///         var body: some View {
-///             List {
-///                 ForEach(sectionedPeople) { section in
-///                     Section(header: Text(section.id)) {
-///                         ForEach(section) { person in
-///                             Text(person.name)
-///                         }
-///                     }
-///                 }
-///             }
-///         }
-///     }
+/// Always declare properties that have a sectioned fetch request wrapper as
+/// private. This lets the compiler help you avoid accidentally setting
+/// the property from the memberwise initializer of the enclosing view.
 ///
+/// The request infers the entity type from the `Result` type that you specify,
+/// which is `Quake` in the example above. Indicate a `SectionIdentifier` type
+/// to declare the type found at the fetched object's `sectionIdentifier`
+/// key path. The section identifier type must conform to the
+/// <doc://com.apple.documentation/documentation/Swift/Hashable> protocol.
+///
+/// The example above depends on the `Quake` type having a `day` property that's
+/// either a stored or computed string. Be sure to mark any computed property
+/// with the `@objc` attribute for it to function as a section identifier.
+/// For best performance with large data sets, use stored properties.
+///
+/// The sectioned fetch request and its results use the managed object context
+/// stored in the environment, which you can access using the
+/// ``EnvironmentValues/managedObjectContext`` environment value. To
+/// support user interface activity, you typically rely on the
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer/1640622-viewContext>
+/// property of a shared
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer>
+/// instance. For example, you can set a context on your top-level content
+/// view using a shared container that you define as part of your model:
+///
+///     ContentView()
+///         .environment(
+///             \.managedObjectContext,
+///             QuakesProvider.shared.container.viewContext)
+///
+/// When you need to dynamically change the section identifier, predicate,
+/// or sort descriptors, access the request's
+/// ``SectionedFetchRequest/Configuration`` structure, either directly or with
+/// a binding.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 @propertyWrapper public struct SectionedFetchRequest<SectionIdentifier, Result> where SectionIdentifier : Hashable, Result : NSFetchRequestResult {
 
-    /// The results of the sectioned fetch request.
+    /// The fetched results of the fetch request.
     ///
-    /// This property returns an empty collection when there are no fetched results.
+    /// This property behaves like the ``FetchRequest/wrappedValue`` of a
+    /// ``FetchRequest``. In particular, SwiftUI returns the value associated
+    /// with this property when you use ``SectionedFetchRequest`` as a property
+    /// wrapper and then access the wrapped property by name. For example,
+    /// consider the following `quakes` property declaration that fetches a
+    /// `Quake` type that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines:
+    ///
+    ///     @SectionedFetchRequest<String, Quake>(
+    ///         sectionIdentifier: \.day,
+    ///         sortDescriptors: [SortDescriptor(\.time, order: .reverse)]
+    ///     )
+    ///     private var quakes: SectionedFetchResults<String, Quake>
+    ///
+    /// You access the request's `wrappedValue`, which contains a
+    /// ``SectionedFetchResults`` instance, by referring to the `quakes`
+    /// property by name. That value is a collection
+    /// of sections, each of which contains a group of managed objects:
+    ///
+    ///     Text("Found \(quakes.count) days of earthquakes")
+    ///
+    /// If you need to separate the request and the result
+    /// entities, you can declare `quakes` in two steps by
+    /// using the request's `wrappedValue` to obtain the results:
+    ///
+    ///     var fetchRequest = FetchRequest<String, Quake>(
+    ///         fetchRequest: request,
+    ///         sectionIdentifier: \.day)
+    ///     var quakes: FetchedResults<String, Quake> { fetchRequest.wrappedValue }
+    ///
+    /// The `wrappedValue` property returns an empty array when there are no
+    /// fetched results; for example, because no entities satisfy the
+    /// predicate, or because the data store is empty.
     public var wrappedValue: SectionedFetchResults<SectionIdentifier, Result> { get }
 
     /// The request's configurable properties.
+    ///
+    /// You initialize a ``SectionedFetchRequest`` with a section identifier,
+    /// an optional predicate, and sort descriptors, either explicitly or with
+    /// a configured
+    /// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>.
+    /// Later, you can dynamically update the identifier, predicate, and sort
+    /// parameters using the request's configuration structure.
+    ///
+    /// You access or bind to a request's configuration components through
+    /// properties on the associated ``SectionedFetchResults`` instance,
+    /// just like you do for a ``FetchRequest`` using
+    /// ``FetchRequest/Configuration``.
+    ///
+    /// When configuring a sectioned fetch request, ensure that the
+    /// combination of the section identifier and the primary sort descriptor
+    /// doesn't create discontiguous sections.
     public struct Configuration {
 
-        /// The request's section identifier keypath.
+        /// The request's section identifier key path.
+        ///
+        /// Set this configuration value to cause a ``SectionedFetchRequest``
+        /// to execute a fetch with a new section identifier. You can't change
+        /// the section identifier type without creating a new fetch request.
+        /// Use care to coordinate section and sort updates, as described
+        /// in ``SectionedFetchRequest/Configuration``.
+        ///
+        /// Access this value for a given request by using the
+        /// ``SectionedFetchResults/sectionIdentifier`` property on the
+        /// associated ``SectionedFetchResults`` instance, either directly or
+        /// with a ``Binding``.
         public var sectionIdentifier: KeyPath<Result, SectionIdentifier>
 
-        /// The request's sort descriptors.
+        /// The request's sort descriptors, accessed as reference types.
+        ///
+        /// Set this configuration value to cause a ``SectionedFetchRequest``
+        /// to execute a fetch with a new collection of
+        /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+        /// instances. If you want to use
+        /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+        /// instances, set ``SectionedFetchRequest/Configuration/sortDescriptors``
+        /// instead. Use care to coordinate section and sort updates, as
+        /// described in ``SectionedFetchRequest/Configuration``.
+        ///
+        /// Access this value for a given request by using the
+        /// ``SectionedFetchResults/nsSortDescriptors`` property on the
+        /// associated ``SectionedFetchResults`` instance, either directly or
+        /// with a ``Binding``.
         public var nsSortDescriptors: [NSSortDescriptor]
 
         /// The request's predicate.
+        ///
+        /// Set this configuration value to cause a ``SectionedFetchRequest``
+        /// to execute a fetch with a new predicate.
+        ///
+        /// Access this value for a given request by using the
+        /// ``SectionedFetchResults/nsPredicate`` property on the associated
+        /// ``SectionedFetchResults`` instance, either directly or with a
+        /// ``Binding``.
         public var nsPredicate: NSPredicate?
     }
 
-    /// A binding to the request's mutable configuration properties
+    /// A binding to the request's mutable configuration properties.
+    ///
+    /// This property behaves like the ``FetchRequest/projectedValue``
+    /// of a ``FetchRequest``. In particular,
+    /// SwiftUI returns the value associated with this property when you use
+    /// ``SectionedFetchRequest`` as a property wrapper on a
+    /// ``SectionedFetchResults`` instance and then access the results with
+    /// a dollar sign (`$`) prefix. The value that SwiftUI returns is a
+    /// ``Binding`` to the request's ``SectionedFetchRequest/Configuration``
+    /// structure, which dynamically configures the request.
     public var projectedValue: Binding<SectionedFetchRequest<SectionIdentifier, Result>.Configuration> { get }
 }
 
@@ -23431,124 +23651,307 @@ extension SectionedFetchRequest : DynamicProperty {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension SectionedFetchRequest {
 
-    /// Creates an instance by defining a fetch request based on the parameters.
+    /// Creates a sectioned fetch request for a specified entity description,
+    /// based on a section identifier, a predicate, and sort parameters.
+    ///
+    /// Use this initializer if you need to explicitly specify the entity type
+    /// for the request. If you specify a placeholder `Result` type in the
+    /// request declaration, use the
+    /// ``init(sectionIdentifier:sortDescriptors:predicate:animation:)-5lpfo``
+    /// initializer to let the request infer the entity type. If you need more
+    /// control over the fetch request configuration, use
+    /// ``init(fetchRequest:sectionIdentifier:animation:)``.
+    ///
     /// - Parameters:
-    ///   - entity: The kind of modeled object to fetch.
-    ///   - sectionIdentifier: Keypath on `Result` to a value that identifies
-    ///     each object's section.
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - entity: The description of the Core Data entity to fetch.
+    ///   - sectionIdentifier: A key path that SwiftUI applies to the `Result`
+    ///     type to get an object's section identifier.
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(entity: NSEntityDescription, sectionIdentifier: KeyPath<Result, SectionIdentifier>, sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil, animation: Animation? = nil)
 
-    /// Creates an instance from a fetch request.
+    /// Creates a fully configured sectioned fetch request that uses the
+    /// specified animation when updating results.
+    ///
+    /// Use this initializer when you want to configure a fetch
+    /// request with more than a predicate and sort descriptors.
+    /// For example, you can vend a request from a `Quake` managed object
+    /// that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines to store earthquake data.
+    /// Limit the number of results to `1000` by setting a
+    /// <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest/1506622-fetchLimit>
+    /// for the request:
+    ///
+    ///     extension Quake {
+    ///         var request: NSFetchRequest<Quake> {
+    ///             let request = NSFetchRequest<Quake>(entityName: "Quake")
+    ///             request.sortDescriptors = [
+    ///                 NSSortDescriptor(
+    ///                     keyPath: \Quake.time,
+    ///                     ascending: true)]
+    ///             request.fetchLimit = 1000
+    ///             return request
+    ///         }
+    ///     }
+    ///
+    /// Use the request to define a ``SectionedFetchedResults`` property:
+    ///
+    ///     @SectionedFetchRequest<String, Quake>(
+    ///         fetchRequest: Quake.request,
+    ///         sectionIdentifier: \.day)
+    ///     private var quakes: FetchedResults<String, Quake>
+    ///
+    /// If you only need to configure the request's section identifier,
+    /// predicate, and sort descriptors, use
+    /// ``init(sectionIdentifier:sortDescriptors:predicate:animation:)-5lpfo``
+    /// instead. If you need to specify a ``Transaction`` rather than an
+    /// optional ``Animation``, use
+    /// ``init(fetchRequest:sectionIdentifier:transaction:)``.
+    ///
     /// - Parameters:
-    ///   - fetchRequest: The request used to produce the fetched results.
-    ///   - sectionIdentifier: Keypath on `Result` to a value that identifies
-    ///     each object's section.
-    ///   - animation: The animation used for any changes to the fetched
-    ///     results.
+    ///   - fetchRequest: An
+    ///     <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
+    ///     instance that describes the search criteria for retrieving data
+    ///     from the persistent store.
+    ///   - sectionIdentifier: A key path that SwiftUI applies to the `Result`
+    ///     type to get an object's section identifier.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(fetchRequest: NSFetchRequest<Result>, sectionIdentifier: KeyPath<Result, SectionIdentifier>, animation: Animation? = nil)
 
-    /// Creates an instance from a fetch request.
+    /// Creates a fully configured sectioned fetch request that uses the
+    /// specified transaction when updating results.
+    ///
+    /// Use this initializer if you need a fetch request with updates that
+    /// affect the user interface based on a ``Transaction``. Otherwise, use
+    /// ``init(fetchRequest:sectionIdentifier:animation:)``.
+    ///
     /// - Parameters:
-    ///   - fetchRequest: The request used to produce the fetched results.
-    ///   - sectionIdentifier: Keypath on `Result` to a value that identifies
-    ///     each object's section.
-    ///   - transaction: The transaction used for any changes to the fetched
-    ///     results.
+    ///   - fetchRequest: An
+    ///     <doc://com.apple.documentation/documentation/CoreData/NSFetchRequest>
+    ///     instance that describes the search criteria for retrieving data
+    ///     from the persistent store.
+    ///   - sectionIdentifier: A key path that SwiftUI applies to the `Result`
+    ///     type to get an object's section identifier.
+    ///   - transaction: A transaction to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(fetchRequest: NSFetchRequest<Result>, sectionIdentifier: KeyPath<Result, SectionIdentifier>, transaction: Transaction)
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension SectionedFetchRequest where Result : NSManagedObject {
 
-    /// Creates an instance by defining a fetch request based on the parameters.
-    /// The fetch request will automatically infer the entity using Result.entity() at fetch-time.
+    /// Creates a sectioned fetch request based on a section identifier, a
+    /// predicate, and reference type sort parameters.
+    ///
+    /// The request gets the entity type from the `Result` instance by calling
+    /// that managed object's
+    /// <doc://com.apple.documentation/documentation/CoreData/NSManagedObject/1640588-entity>
+    /// type method. If you need to specify the entity type explicitly, use the
+    /// ``init(entity:sectionIdentifier:sortDescriptors:predicate:animation:)``
+    /// initializer instead. If you need more control over the fetch request
+    /// configuration, use ``init(fetchRequest:sectionIdentifier:animation:)``.
+    /// For value type sort descriptors, use
+    /// ``init(sectionIdentifier:sortDescriptors:predicate:animation:)-5l7hu``.
+    ///
     /// - Parameters:
-    ///   - sectionIdentifier: Keypath on `Result` to a value that identifies
-    ///     each object's section.
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - sectionIdentifier: A key path that SwiftUI applies to the `Result`
+    ///     type to get an object's section identifier.
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(sectionIdentifier: KeyPath<Result, SectionIdentifier>, sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil, animation: Animation? = nil)
 
-    /// Creates an instance by defining a fetch request based on the parameters.
+    /// Creates a sectioned fetch request based on a section identifier,
+    /// a predicate, and value type sort parameters.
     ///
-    /// The fetch request will automatically infer the entity using Result.entity() at fetch-time.
+    /// The request gets the entity type from the `Result` instance by calling
+    /// that managed object's
+    /// <doc://com.apple.documentation/documentation/CoreData/NSManagedObject/1640588-entity>
+    /// type method. If you need to specify the entity type explicitly, use the
+    /// ``init(entity:sectionIdentifier:sortDescriptors:predicate:animation:)``
+    /// initializer instead. If you need more control over the fetch request
+    /// configuration, use ``init(fetchRequest:sectionIdentifier:animation:)``.
+    /// For reference type sort descriptors, use
+    /// ``init(sectionIdentifier:sortDescriptors:predicate:animation:)-5lpfo``.
+    ///
     /// - Parameters:
-    ///   - sectionIdentifier: Keypath on `Result` to a value that identifies
-    ///     each object's section.
-    ///   - sortDescriptors: An array of sort descriptors defines the sort
+    ///   - sectionIdentifier: A key path that SwiftUI applies to the `Result`
+    ///     type to get an object's section identifier.
+    ///   - sortDescriptors: An array of sort descriptors that define the sort
     ///     order of the fetched results.
-    ///   - predicate: An NSPredicate defines a filter for the fetched results.
-    ///   - animation: The animation used for any changes to the fetched
+    ///   - predicate: An
+    ///     <doc://com.apple.documentation/documentation/Foundation/NSPredicate>
+    ///     instance that defines logical conditions used to filter the fetched
     ///     results.
+    ///   - animation: The animation to use for user interface changes that
+    ///     result from changes to the fetched results.
     public init(sectionIdentifier: KeyPath<Result, SectionIdentifier>, sortDescriptors: [SortDescriptor<Result>], predicate: NSPredicate? = nil, animation: Animation? = nil)
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension SectionedFetchRequest.Configuration where Result : NSManagedObject {
 
+    /// The request's sort descriptors, accessed as value types.
+    ///
+    /// Set this configuration value to cause a ``SectionedFetchRequest`` to
+    /// execute a fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances. If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances, set ``SectionedFetchRequest/Configuration/nsSortDescriptors``
+    /// instead. Use care to coordinate section and sort updates, as described
+    /// in ``SectionedFetchRequest/Configuration``.
+    ///
+    /// Access this value for a given request by using the
+    /// ``SectionedFetchResults/sortDescriptors`` property on the associated
+    /// ``SectionedFetchResults`` instance, either directly or with a
+    /// ``Binding``.
     public var sortDescriptors: [SortDescriptor<Result>]
 }
 
-/// The results of a sectioned fetch request, allowing for dynamic configuration
-/// of the request.
+/// A collection of results retrieved from a Core Data persistent store,
+/// grouped into sections.
+///
+/// Use a `SectionedFetchResults` instance to show or edit Core Data managed
+/// objects, grouped into sections, in your app's user interface. If you
+/// don't need sectioning, use ``FetchedResults`` instead.
+///
+/// You request a particular set of results by annotating the fetched results
+/// property declaration with a ``SectionedFetchRequest`` property wrapper.
+/// Indicate the type of the fetched entities with a `Results` type,
+/// and the type of the identifier that distinguishes the sections with
+/// a `SectionIdentifier` type. For example, you can create a request to list
+/// all `Quake` managed objects that the
+/// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+/// sample code project defines to store earthquake data, sorted by their `time`
+/// property and grouped by a string that represents the days when earthquakes
+/// occurred:
+///
+///     @SectionedFetchRequest<String, Quake>(
+///         sectionIdentifier: \.day,
+///         sortDescriptors: [SortDescriptor(\.time, order: .reverse)]
+///     )
+///     private var quakes: SectionedFetchResults<String, Quake>
+///
+/// The `quakes` property acts as a collection of ``Section`` instances, each
+/// containing a collection of `Quake` instances. The example above depends
+/// on the `Quake` model object declaring both `time` and `day`
+/// properties, either stored or computed. For best performance with large
+/// data sets, use stored properties.
+///
+/// The collection of sections, as well as the collection of managed objects in
+/// each section, conforms to the
+/// <doc://com.apple.documentation/documentation/Swift/RandomAccessCollection>
+/// protocol, so you can access them as you would any other collection. For
+/// example, you can create nested ``ForEach`` loops inside a ``List`` to
+/// iterate over the results:
+///
+///     List {
+///         ForEach(quakes) { section in
+///             Section(header: Text(section.id)) {
+///                 ForEach(section) { quake in
+///                     QuakeRow(quake: quake) // Displays information about a quake.
+///                 }
+///             }
+///         }
+///     }
+///
+/// Don't confuse the ``SwiftUI/Section`` view that you use to create a
+/// hierarchical display with the ``SectionedFetchResults/Section``
+/// instances that hold the fetched results.
+///
+/// When you need to dynamically change the request's section identifier,
+/// predicate, or sort descriptors, set the result instance's
+/// ``sectionIdentifier``, ``nsPredicate``, and ``sortDescriptors`` or
+/// ``nsSortDescriptors`` properties, respectively. Be sure that the sorting
+/// and sectioning work together to avoid discontinguous sections.
+///
+/// The fetch request and its results use the managed object context stored
+/// in the environment, which you can access using the
+/// ``EnvironmentValues/managedObjectContext`` environment value. To
+/// support user interface activity, you typically rely on the
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer/1640622-viewContext>
+/// property of a shared
+/// <doc://com.apple.documentation/documentation/CoreData/NSPersistentContainer>
+/// instance. For example, you can set a context on your top-level content
+/// view using a container that you define as part of your model:
+///
+///     ContentView()
+///         .environment(
+///             \.managedObjectContext,
+///             QuakesProvider.shared.container.viewContext)
+///
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct SectionedFetchResults<SectionIdentifier, Result> : RandomAccessCollection where SectionIdentifier : Hashable, Result : NSFetchRequestResult {
 
-    /// A section in a sectioned fetch request is a collection of results, plus the section's identifier.
+    /// A collection of fetched results that share a specified identifier.
+    ///
+    /// Examine a `Section` instance to find the entities that satisfy a
+    /// ``SectionedFetchRequest`` predicate, and that have a particular property
+    /// with the value stored in the section's ``id-swift.property-1h7qm``
+    /// parameter. You specify which property by setting the fetch request's
+    /// `sectionIdentifier` parameter during initialization, or by modifying
+    /// the corresponding ``SectionedFetchResults`` instance's
+    /// ``SectionedFetchResults/sectionIdentifier`` property.
+    ///
+    /// Obtain specific sections by treating the fetch results as a collection.
+    /// For example, consider the following property declaration
+    /// that fetches `Quake` managed objects that the
+    /// <doc://com.apple.documentation/documentation/CoreData/loading_and_displaying_a_large_data_feed>
+    /// sample code project defines to store earthquake data:
+    ///
+    ///     @SectionedFetchRequest<String, Quake>(
+    ///         sectionIdentifier: \.day,
+    ///         sortDescriptors: [SortDescriptor(\.time, order: .reverse)]
+    ///     )
+    ///     private var quakes: SectionedFetchResults<String, Quake>
+    ///
+    /// Get the first section using a subscript:
+    ///
+    ///     let firstSection = quakes[0]
+    ///
+    /// Alternatively, you can loop over the sections to create a list of
+    /// sections.
+    ///
+    ///     ForEach(quakes) { section in
+    ///         Text("Section \(section.id) has \(section.count) elements")
+    ///     }
+    ///
+    /// The sections also act as collections, which means you can use operations
+    /// like the ``Section/count`` method in the example above.
     public struct Section : Identifiable, RandomAccessCollection {
 
-        /// The position of the first element in a nonempty collection.
-        ///
-        /// If the collection is empty, `startIndex` is equal to `endIndex`.
+        /// The index of the first entity in the section.
         public var startIndex: Int { get }
 
-        /// The collection's "past the end" position---that is, the position one
-        /// greater than the last valid subscript argument.
-        ///
-        /// When you need a range that includes the last element of a collection, use
-        /// the half-open range operator (`..<`) with `endIndex`. The `..<` operator
-        /// creates a range that doesn't include the upper bound, so it's always
-        /// safe to use with `endIndex`. For example:
-        ///
-        ///     let numbers = [10, 20, 30, 40, 50]
-        ///     if let index = numbers.firstIndex(of: 30) {
-        ///         print(numbers[index ..< numbers.endIndex])
-        ///     }
-        ///     // Prints "[30, 40, 50]"
-        ///
-        /// If the collection is empty, `endIndex` is equal to `startIndex`.
+        /// The index that's one greater than that of the last entity in the
+        /// section.
         public var endIndex: Int { get }
 
-        /// Accesses the element at the specified position.
-        ///
-        /// The following example accesses an element of an array through its
-        /// subscript to print its value:
-        ///
-        ///     var streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-        ///     print(streets[1])
-        ///     // Prints "Bryant"
-        ///
-        /// You can subscript a collection with any valid index other than the
-        /// collection's end index. The end index refers to the position one past
-        /// the last element of a collection, so it doesn't correspond with an
-        /// element.
-        ///
-        /// - Parameter position: The position of the element to access. `position`
-        ///   must be a valid index of the collection that is not equal to the
-        ///   `endIndex` property.
-        ///
-        /// - Complexity: O(1)
+        /// Gets the entity at the specified index within the section.
         public subscript(position: Int) -> Result { get }
 
-        /// The value identifying the section
+        /// The value that all entities in the section share for a specified
+        /// key path.
+        ///
+        /// Specify the key path that the entities share this value with
+        /// by setting the ``SectionedFetchRequest``
+        /// instance's `sectionIdentifier` parameter during initialization,
+        /// or by modifying the corresponding ``SectionedFetchResults``
+        /// instance's ``SectionedFetchResults/sectionIdentifier`` property.
         public let id: SectionIdentifier
 
         /// A type representing the sequence's elements.
@@ -23586,56 +23989,44 @@ public struct SectionedFetchResults<SectionIdentifier, Result> : RandomAccessCol
         public typealias SubSequence = Slice<SectionedFetchResults<SectionIdentifier, Result>.Section>
     }
 
-    /// The request's sort descriptors.
+    /// The request's sort descriptors, accessed as reference types.
+    ///
+    /// Set this value to cause the associated ``SectionedFetchRequest`` to
+    /// execute a fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances.
+    /// The order of managed objects stored in the results collection may change
+    /// as a result. Use care to coordinate section and sort updates, as
+    /// described in ``SectionedFetchRequest/Configuration``.
+    ///
+    /// If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances, set ``SectionedFetchResults/sortDescriptors`` instead.
     public var nsSortDescriptors: [NSSortDescriptor] { get nonmutating set }
 
     /// The request's predicate.
+    ///
+    /// Set this value to cause the associated ``SectionedFetchRequest`` to
+    /// execute a fetch with a new predicate, producing an updated collection
+    /// of results.
     public var nsPredicate: NSPredicate? { get nonmutating set }
 
-    /// The request's section identifier keypath.
+    /// The key path that the system uses to group fetched results into sections.
+    ///
+    /// Set this value to cause the associated ``SectionedFetchRequest`` to
+    /// execute a fetch with a new section identifier, producing an updated
+    /// collection of results. Changing this value produces a new set of
+    /// sections. Use care to coordinate section and sort updates, as described
+    /// in ``SectionedFetchRequest/Configuration``.
     public var sectionIdentifier: KeyPath<Result, SectionIdentifier> { get nonmutating set }
 
-    /// The position of the first element in a nonempty collection.
-    ///
-    /// If the collection is empty, `startIndex` is equal to `endIndex`.
+    /// The index of the first section in the results collection.
     public var startIndex: Int { get }
 
-    /// The collection's "past the end" position---that is, the position one
-    /// greater than the last valid subscript argument.
-    ///
-    /// When you need a range that includes the last element of a collection, use
-    /// the half-open range operator (`..<`) with `endIndex`. The `..<` operator
-    /// creates a range that doesn't include the upper bound, so it's always
-    /// safe to use with `endIndex`. For example:
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     if let index = numbers.firstIndex(of: 30) {
-    ///         print(numbers[index ..< numbers.endIndex])
-    ///     }
-    ///     // Prints "[30, 40, 50]"
-    ///
-    /// If the collection is empty, `endIndex` is equal to `startIndex`.
+    /// The index that's one greater than that of the last section.
     public var endIndex: Int { get }
 
-    /// Accesses the element at the specified position.
-    ///
-    /// The following example accesses an element of an array through its
-    /// subscript to print its value:
-    ///
-    ///     var streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-    ///     print(streets[1])
-    ///     // Prints "Bryant"
-    ///
-    /// You can subscript a collection with any valid index other than the
-    /// collection's end index. The end index refers to the position one past
-    /// the last element of a collection, so it doesn't correspond with an
-    /// element.
-    ///
-    /// - Parameter position: The position of the element to access. `position`
-    ///   must be a valid index of the collection that is not equal to the
-    ///   `endIndex` property.
-    ///
-    /// - Complexity: O(1)
+    /// Gets the section at the specified index.
     public subscript(position: Int) -> SectionedFetchResults<SectionIdentifier, Result>.Section { get }
 
     /// A type representing the sequence's elements.
@@ -23672,6 +24063,18 @@ public struct SectionedFetchResults<SectionIdentifier, Result> : RandomAccessCol
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension SectionedFetchResults where Result : NSManagedObject {
 
+    /// The request's sort descriptors, accessed as value types.
+    ///
+    /// Set this value to cause the associated ``SectionedFetchRequest`` to
+    /// execute a fetch with a new collection of
+    /// <doc://com.apple.documentation/documentation/Foundation/SortDescriptor>
+    /// instances. The order of entities stored in the results collection may
+    /// change as a result. Use care to coordinate section and sort updates, as
+    /// described in ``SectionedFetchRequest/Configuration``.
+    ///
+    /// If you want to use
+    /// <doc://com.apple.documentation/documentation/Foundation/NSSortDescriptor>
+    /// instances, set ``SectionedFetchResults/nsSortDescriptors`` instead.
     public var sortDescriptors: [SortDescriptor<Result>] { get nonmutating set }
 }
 
@@ -23741,7 +24144,7 @@ public struct SecureField<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -23765,8 +24168,8 @@ extension SecureField where Label == Text {
 
     /// Creates a secure field with a prompt generated from a `Text`.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// secure field by using an `View.onSubmit(of:_)` modifier.
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this secure field.
     ///
     /// - Parameters:
     ///   - titleKey: The key for the localized title of `self`, describing
@@ -23776,12 +24179,12 @@ extension SecureField where Label == Text {
     ///     which provides users with guidance on what to type into the secure
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text? = nil)
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?)
 
     /// Creates a secure field with a prompt generated from a `Text`.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// secure field by using an `View.onSubmit(of:_)` modifier.
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this secure field.
     ///
     /// - Parameters:
     ///   - title: The title of `self`, describing its purpose.
@@ -23790,7 +24193,7 @@ extension SecureField where Label == Text {
     ///     which provides users with guidance on what to type into the secure
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<S>(_ title: S, text: Binding<String>, prompt: Text? = nil) where S : StringProtocol
+    public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol
 }
 
 extension SecureField {
@@ -23805,6 +24208,38 @@ extension SecureField {
     ///   - label: A view that describes the purpose of the secure field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label)
+}
+
+extension SecureField where Label == Text {
+
+    /// Creates a secure field with a prompt generated from a `Text`.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this secure field.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of `self`, describing
+    ///     its purpose.
+    ///   - text: The text to display and edit
+    ///   - prompt: A `Text` representing the prompt of the secure field
+    ///     which provides users with guidance on what to type into the secure
+    ///     field.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>)
+
+    /// Creates a secure field with a prompt generated from a `Text`.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this secure field.
+    ///
+    /// - Parameters:
+    ///   - title: The title of `self`, describing its purpose.
+    ///   - text: The text to display and edit.
+    ///   - prompt: A `Text` representing the prompt of the secure field
+    ///     which provides users with guidance on what to type into the secure
+    ///     field.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -23822,7 +24257,7 @@ extension SecureField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
-    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void = {})
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void)
 
     /// Creates an instance.
     ///
@@ -23835,7 +24270,7 @@ extension SecureField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed SecureField.init(_:text:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter.")
-    public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void = {}) where S : StringProtocol
+    public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol
 }
 
 /// A picker style that presents the options in a segmented control.
@@ -24212,7 +24647,7 @@ extension Shape {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -24929,7 +25364,7 @@ public struct SidebarCommands : Commands {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -25110,7 +25545,7 @@ public struct Slider<Label, ValueLabel> : View where Label : View, ValueLabel : 
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -25864,7 +26299,7 @@ public struct Stepper<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -26640,12 +27075,23 @@ public struct SubmitTriggers : OptionSet {
 
 /// A toggle style that displays a leading label and a trailing switch.
 ///
-/// You can also use ``ToggleStyle/switch`` to construct this style.
+/// Use the ``ToggleStyle/switch`` static variable to create this style:
+///
+///     Toggle("Enhance Sound", isOn: $isEnhanced)
+///         .toggleStyle(.switch)
+///
 @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
 @available(tvOS, unavailable)
 public struct SwitchToggleStyle : ToggleStyle {
 
     /// Creates a switch toggle style.
+    ///
+    /// Don't call this initializer directly. Instead, use the
+    /// ``ToggleStyle/switch`` static variable to create this style:
+    ///
+    ///     Toggle("Enhance Sound", isOn: $isEnhanced)
+    ///         .toggleStyle(.switch)
+    ///
     public init()
 
     /// Creates a switch style with a tint color.
@@ -26655,17 +27101,26 @@ public struct SwitchToggleStyle : ToggleStyle {
     @available(watchOS, introduced: 7.0, deprecated: 100000.0, message: "Use ``View/tint(_)`` instead.")
     public init(tint: Color)
 
-    /// Creates a view representing the body of a toggle.
+    /// Creates a view that represents the body of a toggle switch.
     ///
-    /// The system calls this method for each ``Toggle`` instance in a view
-    /// hierarchy where this style is the current toggle style.
+    /// SwiftUI implements this required method of the ``ToggleStyle``
+    /// protocol to define the behavior and appearance of the
+    /// ``ToggleStyle/switch`` toggle style. Don't call this method
+    /// directly. Rather, the system calls this method for each
+    /// ``Toggle`` instance in a view hierarchy that's styled as
+    /// a switch.
     ///
-    /// - Parameter configuration: The properties of the toggle, such as its
-    ///   label and its “on” state.
+    /// - Parameter configuration: The properties of the toggle, including a
+    ///   label and a binding to the toggle's state.
+    /// - Returns: A view that represents a switch.
     public func makeBody(configuration: SwitchToggleStyle.Configuration) -> some View
 
 
     /// A view that represents the appearance and interaction of a toggle.
+    ///
+    /// SwiftUI infers this type automatically based on the ``View``
+    /// instance that you return from your implementation of the
+    /// ``makeBody(configuration:)`` method.
     public typealias Body = some View
 }
 
@@ -27090,7 +27545,7 @@ public struct TabView<SelectionValue, Content> : View where SelectionValue : Has
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -27351,33 +27806,68 @@ extension Text {
 extension Text {
 
     /// Creates a text view that displays the formatted representation
-    /// of a value.
+    /// of a reference-convertible value.
     ///
-    /// Use this initializer to create a text view that will format `subject`
+    /// Use this initializer to create a text view that formats `subject`
     /// using `formatter`.
+    /// - Parameters:
+    ///   - subject: A
+    ///   <doc://com.apple.documentation/documentation/Foundation/ReferenceConvertible>
+    ///   instance compatible with `formatter`.
+    ///   - formatter: A
+    ///   <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    ///   capable of converting `subject` into a string representation.
     public init<Subject>(_ subject: Subject, formatter: Formatter) where Subject : ReferenceConvertible
 
     /// Creates a text view that displays the formatted representation
-    /// of a value.
+    /// of a Foundation object.
     ///
-    /// Use this initializer to create a text view that will format `subject`
+    /// Use this initializer to create a text view that formats `subject`
     /// using `formatter`.
+    /// - Parameters:
+    ///   - subject: An
+    ///   <doc://com.apple.documentation/documentation/ObjectiveC/NSObject>
+    ///   instance compatible with `formatter`.
+    ///   - formatter: A
+    ///   <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    ///   capable of converting `subject` into a string representation.
     public init<Subject>(_ subject: Subject, formatter: Formatter) where Subject : NSObject
 }
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension Text {
 
-    /// Creates a text view that displays the formatted representation of a
-    /// value.
+    /// Creates a text view that displays the formatted representation
+    /// of a nonstring type supported by a corresponding format style.
     ///
-    /// Use this initializer to create a text view that will format `input`
-    /// using `format`.
+    /// Use this initializer to create a text view backed by a nonstring
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/FormatStyle>
+    /// to convert the type to a string representation. Any changes to the value
+    /// update the string displayed by the text view.
+    ///
+    /// In the following example, three ``Text`` views present a date with
+    /// different combinations of date and time fields, by using different
+    /// <doc://com.apple.documentation/documentation/Foundation/Date/FormatStyle>
+    /// options.
+    ///
+    ///     @State private var myDate = Date()
+    ///     var body: some View {
+    ///         VStack {
+    ///             Text(myDate, format: Date.FormatStyle(date: .numeric, time: .omitted))
+    ///             Text(myDate, format: Date.FormatStyle(date: .complete, time: .complete))
+    ///             Text(myDate, format: Date.FormatStyle().hour(.defaultDigitsNoAMPM).minute())
+    ///         }
+    ///     }
+    ///
+    /// ![Three vertically stacked text views showing the date with different
+    /// levels of detail: 4/1/1976; April 1, 1976; Thursday, April 1,
+    /// 1976.](Text-init-format-1)
     ///
     /// - Parameters:
-    ///   - input: The input to provide to the format style.
-    ///   - format: The specific `FormatStyle` to use to convert the input
-    ///   into a string.
+    ///   - input: The underlying value to display.
+    ///   - format: A format style of type `F` to convert the underlying value
+    ///     of type `F.FormatInput` to a string representation.
     public init<F>(_ input: F.FormatInput, format: F) where F : FormatStyle, F.FormatInput : Equatable, F.FormatOutput == String
 }
 
@@ -28374,7 +28864,7 @@ public struct TextEditingCommands : Commands {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -28479,7 +28969,7 @@ public struct TextEditor : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -28507,44 +28997,42 @@ public struct TextEditor : View {
 /// it updates the value when the user commits their edits, such as by pressing
 /// the Return key.
 ///
-/// The text field also allows you to provide two closures that customize its
-/// behavior. The `onEditingChanged` property informs your app when the user
-/// begins or ends editing the text. The `onCommit` property executes when the
-/// user commits their edits.
-///
 /// The following example shows a text field to accept a username, and a
-/// ``Text`` view below it that shadows the continuously-updated value
+/// ``Text`` view below it that shadows the continuously updated value
 /// of `username`. The ``Text`` view changes color as the user begins and ends
-/// editing, and committing the text calls an internal `validate(name:)` method.
+/// editing. When the user submits their completed entry to the text field,
+/// the ``View/onSubmit(of:_:)`` modifer calls an internal `validate(name:)`
+/// method.
 ///
 ///     @State private var username: String = ""
-///     @State private var isEditing = false
+///     @FocusState private var emailFieldIsFocused: Bool = false
 ///
 ///     var body: some View {
 ///         TextField(
 ///             "User name (email address)",
-///              text: $username
-///         ) { isEditing in
-///             self.isEditing = isEditing
-///         } onCommit: {
+///             text: $username
+///         )
+///         .focused($emailFieldIsFocused)
+///         .onSubmit {
 ///             validate(name: username)
 ///         }
-///         .autocapitalization(.none)
+///         .textInputAutocapitalization(.never)
 ///         .disableAutocorrection(true)
-///         .border(Color(UIColor.separator))
+///         .border(.secondary)
+///
 ///         Text(username)
-///             .foregroundColor(isEditing ? .red : .blue)
+///             .foregroundColor(emailFieldIsFocused ? .red : .blue)
 ///     }
 ///
 /// ![A text field showing the typed email mruiz2@icloud.com, with a text
 /// view below it also showing this value.](SwiftUI-TextField-echoText.png)
 ///
 /// The bound value doesn't have to be a string. By using a
-/// <doc://com.apple.documentation/documentation/Foundation/Formatter>,
-/// you can bind the text field to a non-string type, using the formatter
+/// <doc://com.apple.documentation/documentation/Foundation/FormatStyle>,
+/// you can bind the text field to a nonstring type, using the format style
 /// to convert the typed text into an instance of the bound type. The following
 /// example uses a
-/// <doc://com.apple.documentation/documentation/Foundation/PersonNameComponentsFormatter>
+/// <doc://com.apple.documentation/documentation/Foundation/PersonNameComponents/FormatStyle>
 /// to convert the name typed in the text field to a
 /// <doc://com.apple.documentation/documentation/Foundation/PersonNameComponents>
 /// instance. A ``Text`` view below the text field shows the debug description
@@ -28553,16 +29041,16 @@ public struct TextEditor : View {
 ///     @State private var nameComponents = PersonNameComponents()
 ///
 ///     var body: some View {
-///         let nameFormatter = PersonNameComponentsFormatter()
 ///         TextField(
 ///             "Proper name",
-///              value: $nameComponents,
-///              formatter: nameFormatter,
-///              onCommit: {
-///                 validate(components: nameComponents)
-///              })
-///             .disableAutocorrection(true)
-///             .border(Color(UIColor.separator))
+///             value: $nameComponents,
+///             format: .name(style: .medium)
+///         )
+///         .onSubmit {
+///             validate(components: nameComponents)
+///         }
+///         .disableAutocorrection(true)
+///         .border(.secondary)
 ///         Text(nameComponents.debugDescription)
 ///     }
 ///
@@ -28572,22 +29060,33 @@ public struct TextEditor : View {
 ///
 /// ### Text Field Prompts
 ///
-/// A text field may be provided an explicit prompt to guide users on what
+/// You can set an explicit prompt on the text field to guide users on what
 /// text they should provide. Each text field style determines where and
-/// when a prompt and label may be used. For example, a form on macOS will
-/// always place the label alongside the leading edge of the field and will
-/// use a prompt, when available, as placeholder text within the field itself.
-/// In the same context on iOS, the prompt or label will be used as placeholder
-/// text depending on whether a prompt is provided.
+/// when the text field uses a prompt and label. For example, a form on macOS
+/// always places the label at the leading edge of the field and
+/// uses a prompt, when available, as placeholder text within the field itself.
+/// In the same context on iOS, the text field uses either the prompt or label
+/// as placeholder text, depending on whether the initializer provided a prompt.
+///
+/// The following example shows a ``Form`` with two text fields, each of which
+/// provides a prompt to indicate that the field is required, and a view builder
+/// to provide a label:
 ///
 ///     Form {
 ///         TextField(text: $username, prompt: Text("Required")) {
 ///             Text("Username")
 ///         }
-///         SecureField(text: $username, prompt: Text("Required")) {
+///         SecureField(text: $password, prompt: Text("Required")) {
 ///             Text("Password")
-///        }
+///         }
 ///     }
+///
+/// ![A macOS form, showing two text fields, arranged vertically, with labels to
+/// the side that say Username and Password, respectively. Inside each text
+/// field, the prompt text says Required.](TextField-prompt-1)
+///
+/// ![An iOS form, showing two text fields, arranged vertically, with prompt
+/// text that says Required.](TextField-prompt-2)
 ///
 /// ### Styling Text Fields
 ///
@@ -28607,12 +29106,14 @@ public struct TextEditor : View {
 ///         VStack {
 ///             TextField(
 ///                 "Given Name",
-///                  text: $givenName)
-///                 .disableAutocorrection(true)
+///                 text: $givenName
+///             )
+///             .disableAutocorrection(true)
 ///             TextField(
 ///                 "Family Name",
-///                 text: $familyName)
-///                 .disableAutocorrection(true)
+///                 text: $familyName
+///             )
+///             .disableAutocorrection(true)
 ///         }
 ///         .textFieldStyle(.roundedBorder)
 ///     }
@@ -28627,7 +29128,7 @@ public struct TextField<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -28652,8 +29153,8 @@ extension TextField where Label == Text {
     /// Creates a text field with a text label generated from a localized title
     /// string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
     ///
     /// - Parameters:
     ///   - titleKey: The key for the localized title of the text field,
@@ -28663,12 +29164,12 @@ extension TextField where Label == Text {
     ///     which provides users with guidance on what to type into the text
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text? = nil)
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, prompt: Text?)
 
     /// Creates a text field with a text label generated from a title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
     ///
     /// - Parameters:
     ///   - title: The title of the text view, describing its purpose.
@@ -28677,15 +29178,15 @@ extension TextField where Label == Text {
     ///     which provides users with guidance on what to type into the text
     ///     field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<S>(_ title: S, text: Binding<String>, prompt: Text? = nil) where S : StringProtocol
+    public init<S>(_ title: S, text: Binding<String>, prompt: Text?) where S : StringProtocol
 }
 
 extension TextField {
 
     /// Creates a text field with a prompt generated from a `Text`.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
     ///
     /// - Parameters:
     ///   - text: The text to display and edit.
@@ -28695,6 +29196,27 @@ extension TextField {
     ///   - label: A view that describes the purpose of the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init(text: Binding<String>, prompt: Text? = nil, @ViewBuilder label: () -> Label)
+}
+
+extension TextField where Label == Text {
+
+    /// Creates a text field with a text label generated from a localized title
+    /// string.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - text: The text to display and edit.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>)
+
+    /// Creates a text field with a text label generated from a title string.
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text view, describing its purpose.
+    ///   - text: The text to display and edit.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init<S>(_ title: S, text: Binding<String>) where S : StringProtocol
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -28719,7 +29241,41 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {})
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void)
+
+    /// Creates a text field with a text label generated from a localized title
+    /// string.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - text: The text to display and edit.
+    ///   - onEditingChanged: The action to perform when the user
+    ///     begins editing `text` and after the user finishes editing `text`.
+    ///     The closure receives a Boolean value that indicates the editing
+    ///     status: `true` when the user begins editing, `false` when they
+    ///     finish.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void)
+
+    /// Creates a text field with a text label generated from a localized title
+    /// string.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - text: The text to display and edit.
+    ///   - onCommit: An action to perform when the user performs an action
+    ///     (for example, when the user presses the Return key) while the text
+    ///     field has focus.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init(_ titleKey: LocalizedStringKey, text: Binding<String>, onCommit: @escaping () -> Void)
 
     /// Creates a text field with a text label generated from a title string.
     ///
@@ -28738,191 +29294,547 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) where S : StringProtocol
+    public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol
+
+    /// Creates a text field with a text label generated from a title string.
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text view, describing its purpose.
+    ///   - text: The text to display and edit.
+    ///   - onEditingChanged: The action to perform when the user
+    ///     begins editing `text` and after the user finishes editing `text`.
+    ///     The closure receives a Boolean value that indicates the editing
+    ///     status: `true` when the user begins editing, `false` when they
+    ///     finish.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<S>(_ title: S, text: Binding<String>, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol
+
+    /// Creates a text field with a text label generated from a title string.
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text view, describing its purpose.
+    ///   - text: The text to display and edit.
+    ///   - onEditingChanged: The action to perform when the user
+    ///     begins editing `text` and after the user finishes editing `text`.
+    ///     The closure receives a Boolean value that indicates the editing
+    ///     status: `true` when the user begins editing, `false` when they
+    ///     finish.
+    ///   - onCommit: An action to perform when the user performs an action
+    ///     (for example, when the user presses the Return key) while the text
+    ///     field has focus.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:text:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<S>(_ title: S, text: Binding<String>, onCommit: @escaping () -> Void) where S : StringProtocol
 }
 
 extension TextField where Label == Text {
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound optional
+    /// value, with a label generated from a localized title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the text field
+    /// sets the bound value to `nil`.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses an optional
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound currency value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle/Currency>
+    /// instance to convert to and from a representation as U.S. dollars. As
+    /// the user types, a `View.onChange(of:_:)` modifier logs the new value to
+    /// the console. If the user enters an invalid currency value, like letters
+    /// or emoji, the console output is `Optional(nil)`.
+    ///
+    ///     @State private var myMoney: Double? = 300.0
+    ///     var body: some View {
+    ///         TextField(
+    ///             "Currency (USD)",
+    ///             value: $myMoney,
+    ///             format: .currency(code: "USD")
+    ///         )
+    ///         .onChange(of: myMoney) { newValue in
+    ///             print ("myMoney: \(newValue)")
+    ///         }
+    ///     }
     ///
     /// - Parameters:
     ///   - titleKey: The title of the text field, describing its purpose.
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `format` is unable to perform
-    ///     the conversion, `binding.value` is set to `nil`.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field sets `binding.value` to `nil`.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound optional
+    /// value, with a label generated from a title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the text field
+    /// sets the bound value to `nil`.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses an optional
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound currency value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle/Currency>
+    /// instance to convert to and from a representation as U.S. dollars. As
+    /// the user types, a `View.onChange(of:_:)` modifier logs the new value to
+    /// the console. If the user enters an invalid currency value, like letters
+    /// or emoji, the console output is `Optional(nil)`.
+    ///
+    ///     @State private var label = "Currency (USD)"
+    ///     @State private var myMoney: Double? = 300.0
+    ///     var body: some View {
+    ///         TextField(
+    ///             label,
+    ///             value: $myMoney,
+    ///             format: .currency(code: "USD")
+    ///         )
+    ///         .onChange(of: myMoney) { newValue in
+    ///             print ("myMoney: \(newValue)")
+    ///         }
+    ///     }
     ///
     /// - Parameters:
     ///   - title: The title of the text field, describing its purpose.
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `format` is unable to perform
-    ///     the conversion, `binding.value` is set to `nil`.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field sets `binding.value` to `nil`.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<S, F>(_ title: S, value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound
+    /// value, with a label generated from a localized title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle>
+    /// instance to convert to and from a string representation. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 "Double",
+    ///                 value: $myDouble,
+    ///                 format: .number
+    ///             )
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
+    ///
+    /// ![A text field with the string 0.673. Below this, three text views
+    /// showing the number with different styles: 0.673, 0.67300, and 6.73E-1.](TextField-init-format-1)
     ///
     /// - Parameters:
-    ///   - title: The title of the text field, describing its purpose.
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `format` is unable to perform
-    ///     the conversion, `binding.value` is not updated. If the user
-    ///     stops editing the text in an invalid state, the text field will
-    ///     update the field's text to the last known valid value.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///   - titleKey: The title of the text field, describing its purpose.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field leaves `binding.value` unchanged. If the user stops editing
+    ///     the text in an invalid state, the text field updates the field's
+    ///     text to the last known valid value.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<F>(_ titleKey: LocalizedStringKey, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where F : ParseableFormatStyle, F.FormatOutput == String
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound
+    /// value, with a label generated from a title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
     ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle>
+    /// instance to convert to and from a string representation. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var label = "Double"
+    ///     @State private var myDouble: Double = 0.673
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 label,
+    ///                 value: $myDouble,
+    ///                 format: .number
+    ///             )
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
+    ///
+    /// ![A text field with the string 0.673. Below this, three text views
+    /// showing the number with different styles: 0.673, 0.67300, and 6.73E-1.](TextField-init-format-1)
     /// - Parameters:
     ///   - title: The title of the text field, describing its purpose.
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `format` is unable to perform
-    ///     the conversion, `binding.value` is not updated. If the user
-    ///     stops editing the text in an invalid state, the text field will
-    ///     update the field's text to the last known valid value.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field leaves `binding.value` unchanged. If the user stops editing
+    ///     the text in an invalid state, the text field updates the field's
+    ///     text to the last known valid value.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<S, F>(_ title: S, value: Binding<F.FormatInput>, format: F, prompt: Text? = nil) where S : StringProtocol, F : ParseableFormatStyle, F.FormatOutput == String
 }
 
 extension TextField {
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound optional
+    /// value, with a label generated from a view builder.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the text field
+    /// sets the bound value to `nil`.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses an optional
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound currency value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle/Currency>
+    /// instance to convert to and from a representation as U.S. dollars. As
+    /// the user types, a `View.onChange(of:_:)` modifier logs the new value to
+    /// the console. If the user enters an invalid currency value, like letters
+    /// or emoji, the console output is `Optional(nil)`.
+    ///
+    ///     @State private var myMoney: Double? = 300.0
+    ///     var body: some View {
+    ///         TextField(
+    ///             value: $myMoney,
+    ///             format: .currency(code: "USD")
+    ///         ) {
+    ///             Text("Currency (USD)")
+    ///         }
+    ///         .onChange(of: myMoney) { newValue in
+    ///             print ("myMoney: \(newValue)")
+    ///         }
+    ///     }
     ///
     /// - Parameters:
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `format` is unable to perform
-    ///     the conversion, `binding.value` is set to `nil`.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
-    ///   - label: The label of the text field, describing its purpose.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field sets `binding.value` to `nil`.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
+    ///   - label: A view builder that produces a label for the text field,
+    ///     describing its purpose.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<F>(value: Binding<F.FormatInput?>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String
 
-    /// Create an instance which binds over an input to a format style,
-    /// `F.FormatInput`.
+    /// Creates a text field that applies a format style to a bound
+    /// value, with a label generated from a view builder.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/ParseableFormatStyle>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the format style can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/FloatingPointFormatStyle>
+    /// instance to convert to and from a string representation. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 value: $myDouble,
+    ///                 format: .number
+    ///             ) {
+    ///                 Text("Double")
+    ///             }
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
+    ///
+    /// ![A text field with the string 0.673. Below this, three text views
+    /// showing the number with different styles: 0.673, 0.67300, and 6.73E-1.](TextField-init-format-1)
     ///
     /// - Parameters:
-    ///   - value: The underlying value to be edited.
-    ///   - format: A formatter to use when converting between the
-    ///     string the user edits and the underlying value of type
-    ///     `F.FormatInput`. In the event that `formatter` is unable to perform
-    ///     the conversion, `binding.value` is not updated. If the user
-    ///     stops editing the text in an invalid state, the text field will
-    ///     update the field's text to the last known valid value.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
-    ///   - label: The label of the text field, describing its purpose.
+    ///   - value: The underlying value to edit.
+    ///   - format: A format style of type `F` to use when converting between
+    ///     the string the user edits and the underlying value of type
+    ///     `F.FormatInput`. If `format` can't perform the conversion, the text
+    ///     field leaves the value unchanged. If the user stops editing
+    ///     the text in an invalid state, the text field updates the field's
+    ///     text to the last known valid value.
+    ///   - prompt: A `Text` which provides users with guidance on what to type
+    ///     into the text field.
+    ///   - label: A view builder that produces a label for the text field,
+    ///     describing its purpose.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<F>(value: Binding<F.FormatInput>, format: F, prompt: Text? = nil, @ViewBuilder label: () -> Label) where F : ParseableFormatStyle, F.FormatOutput == String
 }
 
 extension TextField where Label == Text {
 
-    /// Create an instance which binds over an arbitrary type, `V`.
+    /// Creates a text field that applies a formatter to a bound
+    /// value, with a label generated from a localized title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the formatter can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter>
+    /// instance to convert to and from a string representation. The formatter
+    /// uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter/Style/decimal>
+    /// style, to allow entering a fractional part. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     @State private var numberFormatter: NumberFormatter = {
+    ///         var nf = NumberFormatter()
+    ///         nf.numberStyle = .decimal
+    ///         return nf
+    ///     }()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 "Double",
+    ///                 value: $myDouble,
+    ///                 formatter: numberFormatter
+    ///             )
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
     ///
     /// - Parameters:
     ///   - titleKey: The key for the localized title of the text field,
     ///     describing its purpose.
-    ///   - value: The underlying value to be edited.
+    ///   - value: The underlying value to edit.
     ///   - formatter: A formatter to use when converting between the
     ///     string the user edits and the underlying value of type `V`.
-    ///     In the event that `formatter` is unable to perform the conversion,
-    ///     `binding.value` isn't modified.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///     If `formatter` can't perform the conversion, the text field doesn't
+    ///     modify `binding.value`.
+    ///   - prompt: A `Text` which provides users with guidance on what to enter
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text? = nil)
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, prompt: Text?)
 
-    /// Create an instance which binds over an arbitrary type, `V`.
+    /// Creates a text field that applies a formatter to a bound
+    /// value, with a label generated from a title string.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the formatter can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter>
+    /// instance to convert to and from a string representation. The formatter
+    /// uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter/Style/decimal>
+    /// style, to allow entering a fractional part. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var label = "Double"
+    ///     @State private var myDouble: Double = 0.673
+    ///     @State private var numberFormatter: NumberFormatter = {
+    ///         var nf = NumberFormatter()
+    ///         nf.numberStyle = .decimal
+    ///         return nf
+    ///     }()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 label,
+    ///                 value: $myDouble,
+    ///                 formatter: numberFormatter
+    ///             )
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
     ///
     /// - Parameters:
     ///   - title: The title of the text field, describing its purpose.
-    ///   - value: The underlying value to be edited.
+    ///   - value: The underlying value to edit.
     ///   - formatter: A formatter to use when converting between the
     ///     string the user edits and the underlying value of type `V`.
-    ///     In the event that `formatter` is unable to perform the conversion,
-    ///     `binding.value` isn't modified.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///     If `formatter` can't perform the conversion, the text field doesn't
+    ///     modify `binding.value`.
+    ///   - prompt: A `Text` which provides users with guidance on what to enter
+    ///     into the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text? = nil) where S : StringProtocol
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, prompt: Text?) where S : StringProtocol
 }
 
 extension TextField {
 
-    /// Create an instance which binds over an arbitrary type, `V`.
+    /// Creates a text field that applies a formatter to a bound optional
+    /// value, with a label generated from a view builder.
     ///
-    /// You can associate an action to be invoked upon submission of this
-    /// text field by using an `View.onSubmit(of:_)` modifier.
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the formatter can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter>
+    /// instance to convert to and from a string representation. The formatter
+    /// uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter/Style/decimal>
+    /// style, to allow entering a fractional part. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     @State private var numberFormatter: NumberFormatter = {
+    ///         var nf = NumberFormatter()
+    ///         nf.numberStyle = .decimal
+    ///         return nf
+    ///     }()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 value: $myDouble,
+    ///                 formatter: numberFormatter
+    ///             ) {
+    ///                 Text("Double")
+    ///             }
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
     ///
     /// - Parameters:
-    ///   - value: The underlying value to be edited.
+    ///   - value: The underlying value to edit.
     ///   - formatter: A formatter to use when converting between the
     ///     string the user edits and the underlying value of type `V`.
-    ///     In the event that `formatter` is unable to perform the conversion,
-    ///     `binding.value` isn't modified.
-    ///   - prompt: A `Text` representing the prompt of the text field
-    ///     which provides users with guidance on what to type into the text
-    ///     field.
+    ///     If `formatter` can't perform the conversion, the text field doesn't
+    ///     modify `binding.value`.
+    ///   - prompt: A `Text` which provides users with guidance on what to enter
+    ///     into the text field.
     ///   - label: A view that describes the purpose of the text field.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init<V>(value: Binding<V>, formatter: Formatter, prompt: Text? = nil, @ViewBuilder label: () -> Label)
@@ -28932,6 +29844,124 @@ extension TextField where Label == Text {
 
     /// Create an instance which binds over an arbitrary type, `V`.
     ///
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the formatter can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter>
+    /// instance to convert to and from a string representation. The formatter
+    /// uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter/Style/decimal>
+    /// style, to allow entering a fractional part. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     @State private var numberFormatter: NumberFormatter = {
+    ///         var nf = NumberFormatter()
+    ///         nf.numberStyle = .decimal
+    ///         return nf
+    ///     }()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 value: $myDouble,
+    ///                 formatter: numberFormatter
+    ///             ) {
+    ///                 Text("Double")
+    ///             }
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - value: The underlying value to edit.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     If `formatter` can't perform the conversion, the text field doesn't
+    ///     modify `binding.value`.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter)
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
+    /// Use this initializer to create a text field that binds to a bound optional
+    /// value, using a
+    /// <doc://com.apple.documentation/documentation/Foundation/Formatter>
+    /// to convert to and from this type. Changes to the bound value update
+    /// the string displayed by the text field. Editing the text field
+    /// updates the bound value, as long as the formatter can parse the
+    /// text. If the format style can't parse the input, the bound value
+    /// remains unchanged.
+    ///
+    /// Use the ``View/onSubmit(of:_:)`` modifier to invoke an action
+    /// whenever the user submits this text field.
+    ///
+    /// The following example uses a
+    /// <doc://com.apple.documentation/documentation/Swift/Double>
+    /// as the bound value, and a
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter>
+    /// instance to convert to and from a string representation. The formatter
+    /// uses the
+    /// <doc://com.apple.documentation/documentation/Foundation/NumberFormatter/Style/decimal>
+    /// style, to allow entering a fractional part. As the user types, the bound
+    /// value updates, which in turn updates three ``Text`` views that use
+    /// different format styles. If the user enters text that doesn't represent
+    /// a valid `Double`, the bound value doesn't update.
+    ///
+    ///     @State private var myDouble: Double = 0.673
+    ///     @State private var numberFormatter: NumberFormatter = {
+    ///         var nf = NumberFormatter()
+    ///         nf.numberStyle = .decimal
+    ///         return nf
+    ///     }()
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField(
+    ///                 value: $myDouble,
+    ///                 formatter: numberFormatter
+    ///             ) {
+    ///                 Text("Double")
+    ///             }
+    ///             Text(myDouble, format: .number)
+    ///             Text(myDouble, format: .number.precision(.significantDigits(5)))
+    ///             Text(myDouble, format: .number.notation(.scientific))
+    ///         }
+    ///     }
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text view, describing its purpose.
+    ///   - value: The underlying value to edit.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     If `formatter` can't perform the conversion, the text field doesn't
+    ///     modify `binding.value`.
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter) where S : StringProtocol
+}
+
+extension TextField where Label == Text {
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
     /// - Parameters:
     ///   - titleKey: The key for the localized title of the text field,
     ///     describing its purpose.
@@ -28952,7 +29982,47 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {})
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void)
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - value: The underlying value to be edited.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     In the event that `formatter` is unable to perform the conversion,
+    ///     `binding.value` isn't modified.
+    ///   - onEditingChanged: The action to perform when the user
+    ///     begins editing `text` and after the user finishes editing `text`.
+    ///     The closure receives a Boolean value that indicates the editing
+    ///     status: `true` when the user begins editing, `false` when they
+    ///     finish.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void)
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
+    /// - Parameters:
+    ///   - titleKey: The key for the localized title of the text field,
+    ///     describing its purpose.
+    ///   - value: The underlying value to be edited.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     In the event that `formatter` is unable to perform the conversion,
+    ///     `binding.value` isn't modified.
+    ///   - onCommit: An action to perform when the user performs an action
+    ///     (for example, when the user presses the Return key) while the text
+    ///     field has focus.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<V>(_ titleKey: LocalizedStringKey, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void)
 
     /// Create an instance which binds over an arbitrary type, `V`.
     ///
@@ -28975,7 +30045,45 @@ extension TextField where Label == Text {
     @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
     @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
-    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) where S : StringProtocol
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void, onCommit: @escaping () -> Void) where S : StringProtocol
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text field, describing its purpose.
+    ///   - value: The underlying value to be edited.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     In the event that `formatter` is unable to perform the conversion,
+    ///     `binding.value` isn't modified.
+    ///   - onEditingChanged: The action to perform when the user
+    ///     begins editing `text` and after the user finishes editing `text`.
+    ///     The closure receives a Boolean value that indicates the editing
+    ///     status: `true` when the user begins editing, `false` when they
+    ///     finish.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onEditingChanged: @escaping (Bool) -> Void) where S : StringProtocol
+
+    /// Create an instance which binds over an arbitrary type, `V`.
+    ///
+    /// - Parameters:
+    ///   - title: The title of the text field, describing its purpose.
+    ///   - value: The underlying value to be edited.
+    ///   - formatter: A formatter to use when converting between the
+    ///     string the user edits and the underlying value of type `V`.
+    ///     In the event that `formatter` is unable to perform the conversion,
+    ///     `binding.value` isn't modified.
+    ///   - onCommit: An action to perform when the user performs an action
+    ///     (for example, when the user presses the Return key) while the text
+    ///     field has focus.
+    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Renamed TextField.init(_:value:formatter:onEditingChanged:). Use View.onSubmit(of:_:) for functionality previously provided by the onCommit parameter. Use FocusState<T> and View.focused(_:equals:) for functionality previously provided by the onEditingChanged parameter.")
+    public init<S, V>(_ title: S, value: Binding<V>, formatter: Formatter, onCommit: @escaping () -> Void) where S : StringProtocol
 }
 
 /// A specification for the appearance and interaction of a text field.
@@ -29026,7 +30134,7 @@ public struct TextFormattingCommands : Commands {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -29073,17 +30181,21 @@ extension TextInputAutocapitalization {
 
 /// A type that describes the ability to select text.
 ///
-/// To configure whether text selection is enabled or not, use the
-/// ``View/textSelection(_:)`` modifier.
+/// To configure whether people can select text in your app, use the
+/// ``View/textSelection(_:)`` modifier, passing in a text selectability
+/// value like ``enabled`` or ``disabled``.
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public protocol TextSelectability {
 
-    /// Whether text allows selection or not.
+    /// A Boolean value that indicates whether the selectability type allows
+    /// selection.
     ///
-    /// This should produce a constant value that is not affected by global
-    /// state.
+    /// Conforming types, such as ``EnabledTextSelectability`` and
+    /// ``DisabledTextSelectability``, return `true` or `false` for this
+    /// property as appropriate. SwiftUI expects this value for a given
+    /// selectability type to be constant, unaffected by global state.
     static var allowsSelection: Bool { get }
 }
 
@@ -29092,16 +30204,21 @@ public protocol TextSelectability {
 @available(watchOS, unavailable)
 extension TextSelectability where Self == EnabledTextSelectability {
 
-    /// Enables text selection by the user.
+    /// A selectability value that enables text selection by a person using your app.
     ///
-    /// Enabling text selection allows the user to perform actions on the text
-    /// content, such as copy and paste. Selection should be enabled in cases
-    /// where those operations are useful, such as detailed information on
-    /// content or error descriptions.
+    /// Enabling text selection allows people to perform actions on the text
+    /// content, such as copying and sharing. Enable text selection in views
+    /// where those operations are useful, such as copying unique IDs or
+    /// error messages. This allows people to paste the data into
+    /// emails or documents.
+    ///
+    /// The following example enables text selection on the second of two
+    /// ``Text`` views in a ``VStack``.
     ///
     ///     VStack {
     ///         Text("Event Invite")
-    ///         Text(invite.date.formatted())
+    ///             .font(.title)
+    ///         Text(invite.date.formatted(date: .long, time: .shortened))
     ///             .textSelection(.enabled)
     ///     }
     ///
@@ -29113,12 +30230,13 @@ extension TextSelectability where Self == EnabledTextSelectability {
 @available(watchOS, unavailable)
 extension TextSelectability where Self == DisabledTextSelectability {
 
-    /// Disables text selection by the user.
+    /// A selectability value that disables text selection by the person using your app.
     ///
-    /// Apply this to views that should never be selectable by the user, even
-    /// if contained within an overall context that allows text selection.
+    /// Use this property to disable text selection of views that
+    /// you don't want people to select and copy, even if contained within an
+    /// overall context that allows text selection.
     ///
-    ///     content // potentially Text
+    ///     content // Content that might contain Text views.
     ///        .textSelection(.disabled)
     ///        .padding()
     ///        .contentShape(Rectangle())
@@ -29652,10 +30770,14 @@ public struct TitleOnlyLabelStyle : LabelStyle {
 ///
 /// ### Styling Toggles
 ///
-/// You can customize the appearance and interaction of toggles by creating
-/// styles that conform to the ``ToggleStyle`` protocol. To set a specific style
-/// for all toggle instances within a view, use the ``View/toggleStyle(_:)``
-/// modifier:
+/// Toggles use a default style that varies based on both the platform and
+/// the context. For more information, read about the ``ToggleStyle/automatic``
+/// toggle style.
+///
+/// You can customize the appearance and interaction of toggles by applying
+/// styles using the ``View/toggleStyle(_:)`` modifier. You can apply built-in
+/// styles, like ``ToggleStyle/switch``, to either a toggle, or to a view
+/// hierarchy that contains toggles:
 ///
 ///     VStack {
 ///         Toggle("Vibrate on Ring", isOn: $vibrateOnRing)
@@ -29663,6 +30785,8 @@ public struct TitleOnlyLabelStyle : LabelStyle {
 ///     }
 ///     .toggleStyle(.switch)
 ///
+/// You can also define custom styles by creating a type that conforms to the
+/// ``ToggleStyle`` protocol.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct Toggle<Label> : View where Label : View {
 
@@ -29678,7 +30802,7 @@ public struct Toggle<Label> : View where Label : View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -29712,14 +30836,16 @@ extension Toggle where Label == ToggleStyleConfiguration.Label {
     /// For example, the following style adds a red border around the toggle,
     /// but otherwise preserves the toggle's current style:
     ///
-    ///     struct RedBorderedToggleStyle: ToggleStyle {
+    ///     struct RedBorderToggleStyle: ToggleStyle {
     ///         func makeBody(configuration: Configuration) -> some View {
     ///             Toggle(configuration)
-    ///                 .border(Color.red)
+    ///                 .padding()
+    ///                 .border(.red)
     ///         }
     ///     }
     ///
-    /// - Parameter configuration: A toggle style configuration.
+    /// - Parameter configuration: The properties of the toggle, including a
+    ///   label and a binding to the toggle's state.
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     public init(_ configuration: ToggleStyleConfiguration)
 }
@@ -29759,27 +30885,157 @@ extension Toggle where Label == Text {
     public init<S>(_ title: S, isOn: Binding<Bool>) where S : StringProtocol
 }
 
-/// A type that specifies the appearance and interaction of all toggles within a
-/// view hierarchy.
+/// The appearance and behavior of a toggle.
 ///
-/// To configure the current toggle style for a view hierarchy, use the
-/// ``View/toggleStyle(_:)`` modifier.
+/// To configure the style for a single ``Toggle`` or for all toggle instances
+/// in a view hierarchy, use the ``View/toggleStyle(_:)`` modifier. You can
+/// specify one of the built-in toggle styles, like ``ToggleStyle/switch`` or
+/// ``ToggleStyle/button``:
+///
+///     Toggle(isOn: $isFlagged) {
+///         Label("Flag", systemImage: "flag.fill")
+///     }
+///     .toggleStyle(.button)
+///
+/// Alternatively, you can create and apply a custom style.
+///
+/// ### Custom Styles
+///
+/// To create a custom style, declare a type that conforms to the `ToggleStyle`
+/// protocol and implement the required ``ToggleStyle/makeBody(configuration:)``
+/// method. For example, you can define a checklist toggle style:
+///
+///     struct ChecklistToggleStyle: ToggleStyle {
+///         func makeBody(configuration: Configuration) -> some View {
+///             // Return a view that has checklist appearance and behavior.
+///         }
+///     }
+///
+/// Inside the method, use the `configuration` parameter, which is an instance
+/// of the ``ToggleStyleConfiguration`` structure, to get the label and
+/// a binding to the toggle state. To see examples of how to use these items
+/// to construct a view that has the appearance and behavior of a toggle, see
+/// ``ToggleStyle/makeBody(configuration:)``.
+///
+/// To provide easy access to the new style, declare a corresponding static
+/// variable in an extension to `ToggleStyle`:
+///
+///     extension ToggleStyle where Self == ChecklistToggleStyle {
+///         static var checklist: ChecklistToggleStyle { .init() }
+///     }
+///
+/// You can then use your custom style:
+///
+///     Toggle(activity.name, isOn: $activity.isComplete)
+///         .toggleStyle(.checklist)
+///
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public protocol ToggleStyle {
 
     /// A view that represents the appearance and interaction of a toggle.
+    ///
+    /// SwiftUI infers this type automatically based on the ``View``
+    /// instance that you return from your implementation of the
+    /// ``makeBody(configuration:)`` method.
     associatedtype Body : View
 
     /// Creates a view that represents the body of a toggle.
     ///
-    /// The system calls this method for each ``Toggle`` instance in a view
-    /// hierarchy where this style is the current toggle style.
+    /// Implement this method when you define a custom toggle style that
+    /// conforms to the ``ToggleStyle`` protocol. Use the `configuration`
+    /// input --- a ``ToggleStyleConfiguration`` instance --- to access the
+    /// toggle's label and state. Return a view that has the appearance and
+    /// behavior of a toggle. For example you can create a toggle that displays
+    /// a label and a circle that's either empty or filled with a checkmark:
     ///
-    /// - Parameter configuration: The properties of the toggle, such as its
-    ///   label and its “on” state.
+    ///     struct ChecklistToggleStyle: ToggleStyle {
+    ///         func makeBody(configuration: Configuration) -> some View {
+    ///             Button {
+    ///                 configuration.isOn.toggle()
+    ///             } label: {
+    ///                 HStack {
+    ///                     Image(systemName: configuration.isOn
+    ///                             ? "checkmark.circle.fill"
+    ///                             : "circle")
+    ///                     configuration.label
+    ///                 }
+    ///             }
+    ///             .tint(.primary)
+    ///             .buttonStyle(.borderless)
+    ///         }
+    ///     }
+    ///
+    /// The `ChecklistToggleStyle` toggle style provides a way to both observe
+    /// and modify the toggle state: the circle fills for the on state, and
+    /// users can tap or click the toggle to change the state. By using a
+    /// customized ``Button`` to compose the toggle's body, SwiftUI
+    /// automatically provides the behaviors that users expect from a
+    /// control that has button-like characteristics.
+    ///
+    /// You can present a collection of toggles that use this style in a stack:
+    ///
+    /// ![A screenshot of three items stacked vertically. All have a circle
+    /// followed by a label. The first has the label Walk the dog, and the
+    /// circle is filled. The second has the label Buy groceries, and the
+    /// circle is filled. The third has the label Call Mom, and the cirlce is
+    /// empty.](ToggleStyle-makeBody-1-iOS)
+    ///
+    /// When updating a view hierarchy, the system calls your implementation
+    /// of the `makeBody(configuration:)` method for each ``Toggle`` instance
+    /// that uses the associated style.
+    ///
+    /// ### Modify the Current Style
+    ///
+    /// Rather than create an entirely new style, you can alternatively
+    /// modify a toggle's current style. Use the ``Toggle/init(_:)``
+    /// initializer inside the `makeBody(configuration:)` method to create
+    /// and modify a toggle based on a `configuration` value. For example,
+    /// you can create a style that adds padding and a red border to the
+    /// current style:
+    ///
+    ///     struct RedBorderToggleStyle: ToggleStyle {
+    ///         func makeBody(configuration: Configuration) -> some View {
+    ///             Toggle(configuration)
+    ///                 .padding()
+    ///                 .border(.red)
+    ///         }
+    ///     }
+    ///
+    /// If you create a `redBorder` static variable from this style,
+    /// you can apply the style to toggles that already use another style, like
+    /// the built-in ``ToggleStyle/switch`` and ``ToggleStyle/button`` styles:
+    ///
+    ///     Toggle("Switch", isOn: $isSwitchOn)
+    ///         .toggleStyle(.redBorder)
+    ///         .toggleStyle(.switch)
+    ///
+    ///     Toggle("Button", isOn: $isButtonOn)
+    ///         .toggleStyle(.redBorder)
+    ///         .toggleStyle(.button)
+    ///
+    /// Both toggles appear with the usual styling, each with a red border:
+    ///
+    /// ![A screenshot of a switch toggle with a red border, and a button
+    /// toggle with a red border.](ToggleStyle-makeBody-2-iOS)
+    ///
+    /// Apply the custom style closer to the toggle than the
+    /// modified style because SwiftUI evaluates style view modifiers in order
+    /// from outermost to innermost. If you apply the styles in the other
+    /// order, the red border style doesn't have an effect, because the
+    /// built-in styles override it completely.
+    ///
+    /// - Parameter configuration: The properties of the toggle, including a
+    ///   label and a binding to the toggle's state.
+    /// - Returns: A view that has behavior and appearance that enables it
+    ///   to function as a ``Toggle``.
     @ViewBuilder func makeBody(configuration: Self.Configuration) -> Self.Body
 
     /// The properties of a toggle instance.
+    ///
+    /// You receive a `configuration` parameter of this type --- which is an
+    /// alias for the ``ToggleStyleConfiguration`` type --- when you implement
+    /// the required ``makeBody(configuration:)`` method in a custom toggle
+    /// style implementation.
     typealias Configuration = ToggleStyleConfiguration
 }
 
@@ -29789,8 +31045,36 @@ extension ToggleStyle where Self == SwitchToggleStyle {
 
     /// A toggle style that displays a leading label and a trailing switch.
     ///
-    /// To apply this style to a toggle, or to a view that contains toggles, use
-    /// the ``View/toggleStyle(_:)`` modifier.
+    /// Apply this style to a ``Toggle`` or to a view hierarchy that contains
+    /// toggles using the ``View/toggleStyle(_:)`` modifier:
+    ///
+    ///     Toggle("Enhance Sound", isOn: $isEnhanced)
+    ///         .toggleStyle(.switch)
+    ///
+    /// The style produces a label that describes the purpose of the toggle
+    /// and a switch that shows the toggle's state. The user taps or clicks
+    /// the switch to change the toggle's state. The default appearance is
+    /// similar across platforms, although the way you use switches in your
+    /// user interface varies a little, as described in the respective Human
+    /// Interface Guidelines sections:
+    ///
+    /// | Platform    | Appearance | Human Interface Guidelines |
+    /// |-------------|------------|----------------------------|
+    /// | iOS, iPadOS | ![A screenshot of the text On appearing to the left of a toggle switch that's on. The toggle's tint color is green. The toggle and its text appear in a rounded rectangle, and are aligned with opposite edges of the rectangle.](ToggleStyle-switch-1-iOS) | [Switches](https://developer.apple.com/design/human-interface-guidelines/ios/controls/switches/) |
+    /// | macOS       | ![A screenshot of the text On appearing to the left of a toggle switch that's on. The toggle's tint color is blue. The toggle and its text are adjacent to each other.](ToggleStyle-switch-1-macOS) | [Switches](https://developer.apple.com/design/human-interface-guidelines/macos/buttons/switches/)
+    /// | watchOS     | ![A screenshot of the text On appearing to the left of a toggle switch that's on. The toggle's tint color is green. The toggle and its text appear in a rounded rectangle, and are aligned with opposite edges of the rectangle.](ToggleStyle-switch-1-watchOS) | [Toggles and Switches](https://developer.apple.com/design/human-interface-guidelines/watchos/elements/toggles-and-switches/) |
+    ///
+    /// In iOS, iPadOS, and watchOS, the label and switch fill as much
+    /// horizontal space as the toggle's parent offers by aligning the label's
+    /// leading edge and the switch's trailing edge with the containing view's
+    /// respective leading and trailing edges. In macOS, the style uses a
+    /// minimum of horizontal space by aligning the trailing edge of the label
+    /// with the leading edge of the switch. SwiftUI helps you to manage the
+    /// spacing and alignment when this style appears in a ``Form``.
+    ///
+    /// SwiftUI uses this style as the default for iOS, iPadOS, and watchOS in
+    /// most contexts when you don't set a style, or when you apply
+    /// the ``ToggleStyle/automatic`` style.
     public static var `switch`: SwitchToggleStyle { get }
 }
 
@@ -29801,13 +31085,35 @@ extension ToggleStyle where Self == ButtonToggleStyle {
 
     /// A toggle style that displays as a button with its label as the title.
     ///
-    ///     Toggle(isOn: $flagged) {
-    ///         Image(systemName: "flag.fill")
+    /// Apply this style to a ``Toggle`` or to a view hierarchy that contains
+    /// toggles using the ``View/toggleStyle(_:)`` modifier:
+    ///
+    ///     Toggle(isOn: $isFlagged) {
+    ///         Label("Flag", systemImage: "flag.fill")
     ///     }
     ///     .toggleStyle(.button)
     ///
-    /// To apply this style to a toggle, or to a view that contains toggles, use
-    /// the ``View/toggleStyle(_:)`` modifier.
+    /// The style produces a button with a label that describes the purpose
+    /// of the toggle. The user taps or clicks the button to change the
+    /// toggle's state. The button indicates the `on` state by filling in the
+    /// background with its tint color. You can change the tint color using
+    /// the ``View/tint(_:)`` modifier. SwiftUI uses this style as the default
+    /// for toggles that appear in a toolbar.
+    ///
+    /// The following table shows the toggle in both the off and `on` states,
+    /// respectively:
+    ///
+    ///   | Platform    | Appearance |
+    ///   |-------------|------------|
+    ///   | iOS, iPadOS | ![A screenshot of two buttons with a flag icon and the word flag inside. The first button isn't highlighted; the second one is.](ToggleStyle-button-1-iOS) |
+    ///   | macOS       | ![A screenshot of two buttons with a flag icon and the word flag inside. The first button isn't highlighted; the second one is.](ToggleStyle-button-1-macOS) |
+    ///
+    /// A ``Label`` instance is a good choice for a button toggle's label.
+    /// Based on the context, SwiftUI decides whether to display both the title
+    /// and icon, as in the example above, or just the icon, like when the
+    /// toggle appears in a toolbar. You can also control the label's style
+    /// by adding a ``View/labelStyle(_:)`` modifier. In any case, SwiftUI
+    /// always uses the title to identify the control using VoiceOver.
     public static var button: ButtonToggleStyle { get }
 }
 
@@ -29816,26 +31122,118 @@ extension ToggleStyle where Self == DefaultToggleStyle {
 
     /// The default toggle style.
     ///
-    /// If you create a toggle directly on a blank canvas, the style varies:
+    /// Use this ``ToggleStyle`` to let SwiftUI pick a suitable style for
+    /// the current platform and context. Toggles use the `automatic` style
+    /// by default, but you might need to set it explicitly using the
+    /// ``View/toggleStyle(_:)`` modifier to override another style
+    /// in the environment. For example, you can request automatic styling for
+    /// a toggle in an ``HStack`` that's otherwise configured to use the
+    /// ``ToggleStyle/button`` style:
     ///
-    /// - For the phone, pad, and watch idioms, the default toggle style is a
-    ///   switch.
-    /// - For the Mac idiom, the default toggle style is a checkbox.
-    /// - For the TV idom, the default toggle style is a button.
+    ///     HStack {
+    ///         Toggle(isOn: $isShuffling) {
+    ///             Label("Shuffle", systemImage: "shuffle")
+    ///         }
+    ///         Toggle(isOn: $isRepeating) {
+    ///             Label("Repeat", systemImage: "repeat")
+    ///         }
     ///
-    /// If you create a toggle inside a container, such as a ``List``, the
-    /// toggle automatically uses a style appropriate to the context. To apply a
-    /// different style to a toggle, or to a view that contains toggles, use the
-    /// ``View/toggleStyle(_:)`` modifier. To revert a custom-styled toggle to
-    /// the default, use `toggleStyle(.automatic)`.
+    ///         Divider()
+    ///
+    ///         Toggle("Enhance Sound", isOn: $isEnhanced)
+    ///             .toggleStyle(.automatic) // Set the style automatically here.
+    ///     }
+    ///     .toggleStyle(.button) // Use button style for toggles in the stack.
+    ///
+    /// ### Platform Defaults
+    ///
+    /// The `automatic` style produces an appearance that varies by platform,
+    /// using the following styles in most contexts:
+    ///
+    /// | Platform    | Default style                            |
+    /// |-------------|------------------------------------------|
+    /// | iOS, iPadOS | ``ToggleStyle/switch``                   |
+    /// | macOS       | ``ToggleStyle/checkbox``                 |
+    /// | tvOS        | A tvOS-specific button style (see below) |
+    /// | watchOS     | ``ToggleStyle/switch``                   |
+    ///
+    /// The default style for tvOS behaves like a button. However,
+    /// unlike the ``ToggleStyle/button`` style that's available in some other
+    /// platforms, the tvOS toggle takes as much horizontal space as its parent
+    /// offers, and displays both the toggle's label and a text field that
+    /// indicates the toggle's state. You typically collect tvOS toggles into
+    /// a ``List``:
+    ///
+    ///     List {
+    ///         Toggle("Show Lyrics", isOn: $isShowingLyrics)
+    ///         Toggle("Shuffle", isOn: $isShuffling)
+    ///         Toggle("Repeat", isOn: $isRepeating)
+    ///     }
+    ///
+    /// ![A screenshot of three buttons labeled Show Lyrics, Shuffle, and
+    /// Repeat, stacked vertically. The first is highlighted. The second is
+    /// on, while the others are off.](ToggleStyle-automatic-2-tvOS)
+    ///
+    /// ### Contextual Defaults
+    ///
+    /// A toggle's automatic appearance varies in certain contexts:
+    ///
+    /// * A toggle that appears as part of the content that you provide to one
+    ///   of the toolbar modifiers, like ``View/toolbar(content:)-5w0tj``, uses
+    ///   the ``ToggleStyle/button`` style by default.
+    ///
+    /// * A toggle in a ``Menu`` uses a style that you can't create explicitly:
+    ///     ```
+    ///     Menu("Playback") {
+    ///         Toggle("Show Lyrics", isOn: $isShowingLyrics)
+    ///         Toggle("Shuffle", isOn: $isShuffling)
+    ///         Toggle("Repeat", isOn: $isRepeating)
+    ///     }
+    ///     ```
+    ///   SwiftUI shows the toggle's label with a checkmark that appears only
+    ///   in the `on` state:
+    ///
+    ///   | Platform    | Appearance |
+    ///   |-------------|------------|
+    ///   | iOS, iPadOS | ![A screenshot of a Playback menu in iOS showing three menu items with the labels Repeat, Shuffle, and Show Lyrics. The shuffle item has a checkmark to its left, while the other two items have a blank space to their left.](ToggleStyle-automatic-1-iOS) |
+    ///   | macOS       | ![A screenshot of a Playback menu in macOS showing three menu items with the labels Repeat, Shuffle, and Show Lyrics. The shuffle item has a checkmark to its left, while the other two items have a blank space to their left.](ToggleStyle-automatic-1-macOS) |
     public static var automatic: DefaultToggleStyle { get }
 }
 
 /// The properties of a toggle instance.
+///
+/// When you define a custom toggle style by creating a type that conforms to
+/// the ``ToggleStyle`` protocol, you implement the
+/// ``ToggleStyle/makeBody(configuration:)`` method. That method takes a
+/// `ToggleStyleConfiguration` input that has the information you need
+/// to define the behavior and appearance of a ``Toggle``.
+///
+/// The configuration structure's ``label-swift.property`` reflects the
+/// toggle's content, which might be the value that you supply to the
+/// `label` parameter of the ``Toggle/init(isOn:label:)`` initializer.
+/// Alternatively, it could be another view that SwiftUI builds from an
+/// initializer that takes a string input, like ``Toggle/init(_:isOn:)-8qx3l``.
+/// In either case, incorporate the label into the toggle's view to help
+/// the user understand what the toggle does. For example, the built-in
+/// ``ToggleStyle/switch`` style horizontally stacks the label with the
+/// control element.
+///
+/// The structure's ``isOn`` property provides a ``Binding`` to the state
+/// of the toggle. Adjust the appearance of the toggle based on this value.
+/// For example, the built-in ``ToggleStyle/button`` style fills the button's
+/// background when the property is `true`, but leaves the background empty
+/// when the property is `false`. Change the value when the user performs
+/// an action that's meant to change the toggle, like the button does when
+/// tapped or clicked by the user.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct ToggleStyleConfiguration {
 
     /// A type-erased label of a toggle.
+    ///
+    /// SwiftUI provides a value of this type --- which is a ``View`` type ---
+    /// as the ``label-swift.property`` to your custom toggle style
+    /// implementation. Use the label to help define the appearance of the
+    /// toggle.
     public struct Label : View {
 
         /// The type of view representing the body of this view.
@@ -29845,12 +31243,50 @@ public struct ToggleStyleConfiguration {
         public typealias Body = Never
     }
 
-    /// A view that describes the effect of switching the toggle between its
-    /// on and off states.
+    /// A view that describes the effect of switching the toggle between states.
+    ///
+    /// Use this value in your implementation of the
+    /// ``ToggleStyle/makeBody(configuration:)`` method when defining a custom
+    /// ``ToggleStyle``. Access it through the that method's `configuration`
+    /// parameter.
+    ///
+    /// Because the label is a ``View``, you can incorporate it into the
+    /// view hierarchy that you return from your style definition. For example,
+    /// you can combine the label with a circle image in an ``HStack``:
+    ///
+    ///     HStack {
+    ///         Image(systemName: configuration.isOn
+    ///             ? "checkmark.circle.fill"
+    ///             : "circle")
+    ///         configuration.label
+    ///     }
+    ///
     public let label: ToggleStyleConfiguration.Label
 
-    /// A binding to a state property that indicates whether the toggle is on or
-    /// off.
+    /// A binding to a state property that indicates whether the toggle is on.
+    ///
+    /// Because this value is a ``Binding``, you can both read and write it
+    /// in your implementation of the ``ToggleStyle/makeBody(configuration:)``
+    /// method when defining a custom ``ToggleStyle``. Access it through
+    /// that method's `configuration` parameter.
+    ///
+    /// Read this value to set the appearance of the toggle. For example, you
+    /// can choose between empty and filled circles based on the `isOn` value:
+    ///
+    ///     Image(systemName: configuration.isOn
+    ///         ? "checkmark.circle.fill"
+    ///         : "circle")
+    ///
+    /// Write this value when the user takes an action that's meant to change
+    /// the state of the toggle. For example, you can toggle it inside the
+    /// `action` closure of a ``Button`` instance:
+    ///
+    ///     Button {
+    ///         configuration.isOn.toggle()
+    ///     } label: {
+    ///         // Draw the toggle.
+    ///     }
+    ///
     public var isOn: Bool { get nonmutating set }
 
     public var $isOn: Binding<Bool> { get }
@@ -29872,7 +31308,7 @@ public struct ToolbarCommands : Commands {
     ///
     /// For any commands that you create, provide a computed `body` property
     /// that defines the scene as a composition of other scenes. You can
-    /// assemble a command hierarchy from primitive commands that SwiftUI
+    /// assemble a command hierarchy from built-in commands that SwiftUI
     /// provides, as well as other commands that you've defined.
     public var body: some Commands { get }
 
@@ -31170,7 +32606,7 @@ public protocol VectorArithmetic : AdditiveArithmetic {
     var magnitudeSquared: Double { get }
 }
 
-/// An alignment position along the horizontal axis.
+/// An alignment position along the vertical axis.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct VerticalAlignment : Equatable {
 
@@ -31377,7 +32813,7 @@ extension VerticalEdge.Set : Sendable {
 ///         }
 ///     }
 ///
-/// Assemble the view's body by combining one or more of the primitive views
+/// Assemble the view's body by combining one or more of the built-in views
 /// provided by SwiftUI, like the ``Text`` instance in the example above, plus
 /// other custom views that you define, into a hierarchy of views. For more
 /// information about creating custom views, see <doc:Declaring-a-Custom-View>.
@@ -31413,7 +32849,7 @@ public protocol View {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
@@ -33514,7 +34950,7 @@ extension View {
     ///         var body: some View {
     ///             VStack {
     ///                 Rectangle()
-    ///                     .fill(Color.gray)
+    ///                     .fill(.gray)
     ///                     .frame(width: 250, height: 250, alignment: .center)
     ///                     .rotationEffect(.degrees(45.0))
     ///             }
@@ -33531,8 +34967,8 @@ extension View {
     ///         }
     ///     }
     ///
-    /// ![A view showing a large folder image with a grey diamond placed behind
-    /// it as its background view.](SwiftUI-View-background-1.png)
+    /// ![A view showing a large folder image with a gray diamond placed behind
+    /// it as its background view.](View-background-1)
     ///
     /// - Parameters:
     ///   - background: The view to draw behind this view.
@@ -33549,87 +34985,400 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Layers the given views behind this view.
+    /// Layers the views that you specify behind this view.
     ///
-    /// Use `background(alignment:content:)` when you need to place views behind
-    /// another, with the background views optionally aligned with a specified
-    /// edge of the frontmost view.
+    /// Use this modifier to place one or more views behind another view.
+    /// For example, you can place a collection of stars beind a ``Text`` view:
     ///
-    /// The example below creates two views: the `Frontmost` view, and the
-    /// background view which is a stack of provided `DiamondBackgound` views.
-    /// The `Frontmost` view uses the `DiamondBackground` views for the
-    /// background of the image element inside the `Frontmost` view's
-    /// ``VStack``.
+    ///     Text("ABCDEF")
+    ///         .background(alignment: .leading) { Star(color: .red) }
+    ///         .background(alignment: .center) { Star(color: .green) }
+    ///         .background(alignment: .trailing) { Star(color: .blue) }
     ///
-    ///     struct DiamondBackground: View {
+    /// The example above assumes that you've defined a `Star` view with a
+    /// parameterized color:
+    ///
+    ///     struct Star: View {
     ///         var color: Color
     ///
     ///         var body: some View {
-    ///             Rectangle()
-    ///                 .fill(color)
-    ///                 .frame(width: 250, height: 250, alignment: .center)
-    ///                 .rotationEffect(.degrees(45.0))
+    ///             Image(systemName: "star.fill")
+    ///                 .foregroundStyle(color)
     ///         }
     ///     }
     ///
-    ///     struct Frontmost: View {
-    ///         var body: some View {
-    ///             VStack {
-    ///                 Image(systemName: "folder")
-    ///                     .font(.system(size: 128, weight: .ultraLight))
-    ///                     .background{
-    ///                         DiamondBackground(color: .black)
-    ///                         DiamondBackground(color: .gray)
-    ///                             .rotationEffect(.degrees(45.0))
-    ///                     }
+    /// By setting different `alignment` values for each modifier, you make the
+    /// stars appear in different places behind the text:
+    ///
+    /// ![A screenshot of the letters A, B, C, D, E, and F written in front of
+    /// three stars. The stars, from left to right, are red, green, and
+    /// blue.](View-background-2)
+    ///
+    /// If you specify more than one view in the `content` closure, the modifier
+    /// collects all of the views in the closure into an implicit ``ZStack``,
+    /// taking them in order from back to front. For example, you can layer a
+    /// vertical bar behind a circle, with both of those behind a horizontal
+    /// bar:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 10) // Creates a horizontal bar.
+    ///         .background {
+    ///             Color.green
+    ///                 .frame(width: 10, height: 100) // Creates a vertical bar.
+    ///             Circle()
+    ///                 .frame(width: 50, height: 50)
+    ///         }
+    ///
+    /// Both the background modifier and the implicit ``ZStack`` composed from
+    /// the background content --- the circle and the vertical bar --- use a
+    /// default ``Alignment/center`` alignment. The vertical bar appears
+    /// centered behind the circle, and both appear as a composite view centered
+    /// behind the horizontal bar:
+    ///
+    /// ![A screenshot of a circle with a horizontal blue bar layered on top
+    /// and a vertical green bar layered underneath. All of the items are center
+    /// aligned.](View-background-3)
+    ///
+    /// If you specify an alignment for the background, it applies to the
+    /// implicit stack rather than to the individual views in the closure. You
+    /// can see this if you add the ``Alignment/leading`` alignment:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 10)
+    ///         .background(alignment: .leading) {
+    ///             Color.green
+    ///                 .frame(width: 10, height: 100)
+    ///             Circle()
+    ///                 .frame(width: 50, height: 50)
+    ///         }
+    ///
+    /// The vertical bar and the circle move as a unit to align the stack
+    /// with the leading edge of the horizontal bar, while the
+    /// vertical bar remains centered on the circle:
+    ///
+    /// ![A screenshot of a horizontal blue bar in front of a circle, which
+    /// is in front of a vertical green bar. The horizontal bar and the circle
+    /// are center aligned with each other; the left edges of the circle
+    /// and the horizontal are aligned.](View-background-3a)
+    ///
+    /// To control the placement of individual items inside the `content`
+    /// closure, either use a different background modifier for each item, as
+    /// the earlier example of stars under text demonstrates, or add an explicit
+    /// ``ZStack`` inside the content closure with its own alignment:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 10)
+    ///         .background(alignment: .leading) {
+    ///             ZStack(alignment: .leading) {
+    ///                 Color.green
+    ///                     .frame(width: 10, height: 100)
+    ///                 Circle()
+    ///                     .frame(width: 50, height: 50)
     ///             }
     ///         }
-    ///     }
+    ///
+    /// The stack alignment ensures that the circle's leading edge aligns with
+    /// the vertical bar's, while the background modifier aligns the composite
+    /// view with the horizontal bar:
+    ///
+    /// ![A screenshot of a horizontal blue bar in front of a circle, which
+    /// is in front of a vertical green bar. All items are aligned on their
+    /// left edges.](View-background-4)
+    ///
+    /// You can achieve layering without a background modifier by putting both
+    /// the modified view and the background content into a ``ZStack``. This
+    /// produces a simpler view hierarchy, but it changes the layout priority
+    /// that SwiftUI applies to the views. Use the background modifier when you
+    /// want the modified view to dominate the layout.
+    ///
+    /// If you want to specify a ``ShapeStyle`` like a
+    /// ``HierarchicalShapeStyle`` or a ``Material`` as the background, use
+    /// ``View/background(_:ignoresSafeAreaEdges:)`` instead.
+    /// To specify a ``Shape`` or ``InsettableShape``, use
+    /// ``View/background(_:in:fillStyle:)-89n7j`` or
+    /// ``View/background(_:in:fillStyle:)-20tq5``, respectively.
     ///
     /// - Parameters:
-    ///   - alignment: The alignment with a default value of
-    ///     ``Alignment/center`` that you use to position the background
-    ///     view.
-    ///   - content: The view builder which produces views to draw behind
-    ///     this view.
+    ///   - alignment: The alignment that the modifier uses to position the
+    ///     implicit ``ZStack`` that groups the background views. The default
+    ///     is ``Alignment/center``.
+    ///   - content: A ``ViewBuilder`` that you use to declare the views to draw
+    ///     behind this view, stacked in a cascading order from bottom to top.
+    ///     The last view that you list appears at the front of the stack.
     ///
-    /// - Returns: A view that layers `content` behind the view.
+    /// - Returns: A view that uses the specified content as a background.
     @inlinable public func background<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View
 
 
-    /// Sets the view's background to the default background style, filling
-    /// the view's container relative shape.
+    /// Sets the view's background to the default background style.
     ///
-    /// The background style may extend beyond the `container`
-    /// safe area region. The geometry in the style will be anchored to this
-    /// view's bounds.
+    /// This modifier behaves like ``View/background(_:ignoresSafeAreaEdges:)``,
+    /// except that it always uses the ``ShapeStyle/background`` shape style.
+    /// For example, you can add a background to a ``Label``:
+    ///
+    ///     ZStack {
+    ///         Color.teal
+    ///         Label("Flag", systemImage: "flag.fill")
+    ///             .padding()
+    ///             .background()
+    ///     }
+    ///
+    /// Without the background modifier, the teal color behind the label shows
+    /// through the label. With the modifier, the label's text and icon appear
+    /// backed by a region filled with a color that's appropriate for light
+    /// or dark appearance:
+    ///
+    /// ![A screenshot of a flag icon and the word flag inside a rectangle; the
+    /// rectangle is filled with the background color and layered on top of a
+    /// larger rectangle that's filled with the color teal.](View-background-7)
+    ///
+    /// If you want to specify a ``View`` or a stack of views as the background,
+    /// use ``View/background(alignment:content:)`` instead.
+    /// To specify a ``Shape`` or ``InsettableShape``, use
+    /// ``View/background(_:in:fillStyle:)-89n7j`` or
+    /// ``View/background(_:in:fillStyle:)-20tq5``, respectively.
+    ///
+    /// - Parameters:
+    ///   - edges: The set of edges for which to ignore safe area insets
+    ///     when adding the background. The default value is ``Edge/Set/all``.
+    ///     Specify an empty set to respect safe area insets on all edges.
+    ///
+    /// - Returns: A view with the ``ShapeStyle/background`` shape style
+    ///   drawn behind it.
     @inlinable public func background(ignoresSafeAreaEdges edges: Edge.Set = .all) -> some View
 
 
-    /// Sets the view's background to a specified style, filling the view's
-    /// container relative shape.
+    /// Sets the view's background to a style.
     ///
-    /// The background style may extend beyond the `container` safe area
-    /// region. The geometry in the style will be anchored to this
-    /// view's bounds.
+    /// Use this modifier to place a type that conforms to the ``ShapeStyle``
+    /// protocol --- like a ``Color``, ``Material``, or
+    /// ``HierarchicalShapeStyle`` --- behind a view. For example, you can add
+    /// the ``ShapeStyle/regularMaterial`` behind a ``Label``:
+    ///
+    ///     struct FlagLabel: View {
+    ///         var body: some View {
+    ///             Label("Flag", systemImage: "flag.fill")
+    ///                 .padding()
+    ///                 .background(.regularMaterial)
+    ///         }
+    ///     }
+    ///
+    /// SwiftUI anchors the style to the view's bounds. For the example above,
+    /// the background fills the entirety of the label's frame, which includes
+    /// the padding:
+    ///
+    /// ![A screenshot of a flag symbol and the word flag layered over a
+    /// gray rectangle.](View-background-5)
+    ///
+    /// SwiftUI limits the background style's extent to the modified view's
+    /// container-relative shape. You can see this effect if you constrain the
+    /// `FlagLabel` view with a ``View/containerShape(_:)`` modifier:
+    ///
+    ///     FlagLabel()
+    ///         .containerShape(RoundedRectangle(cornerRadius: 16))
+    ///
+    /// The background takes on the specified container shape:
+    ///
+    /// ![A screenshot of a flag symbol and the word flag layered over a
+    /// gray rectangle with rounded corners.](View-background-6)
+    ///
+    /// By default, the background ignores safe area insets on all edges, but
+    /// you can provide a specific set of edges to ignore, or an empty set to
+    /// respect safe area insets on all edges:
+    ///
+    ///     Rectangle()
+    ///         .background(
+    ///             .regularMaterial,
+    ///             ignoresSafeAreaEdges: []) // Ignore no safe area insets.
+    ///
+    /// If you want to specify a ``View`` or a stack of views as the background,
+    /// use ``View/background(alignment:content:)`` instead.
+    /// To specify a ``Shape`` or ``InsettableShape``, use
+    /// ``View/background(_:in:fillStyle:)-89n7j`` or
+    /// ``View/background(_:in:fillStyle:)-20tq5``, respectively.
+    ///
+    /// - Parameters:
+    ///   - style: An instance of a type that conforms to ``ShapeStyle`` that
+    ///     SwiftUI draws behind the modified view.
+    ///   - edges: The set of edges for which to ignore safe area insets
+    ///     when adding the background. The default value is ``Edge/Set/all``.
+    ///     Specify an empty set to respect safe area insets on all edges.
+    ///
+    /// - Returns: A view with the specified style drawn behind it.
     @inlinable public func background<S>(_ style: S, ignoresSafeAreaEdges edges: Edge.Set = .all) -> some View where S : ShapeStyle
 
 
-    /// Sets the view's background to a specified shape filled with the default
-    /// background style.
+    /// Sets the view's background to a shape filled with the
+    /// default background style.
+    ///
+    /// This modifier behaves like ``View/background(_:in:fillStyle:)-89n7j``,
+    /// except that it always uses the ``ShapeStyle/background`` shape style
+    /// to fill the specified shape. For example, you can create a ``Path``
+    /// that outlines a trapezoid:
+    ///
+    ///     let trapezoid = Path { path in
+    ///         path.move(to: .zero)
+    ///         path.addLine(to: CGPoint(x: 90, y: 0))
+    ///         path.addLine(to: CGPoint(x: 80, y: 50))
+    ///         path.addLine(to: CGPoint(x: 10, y: 50))
+    ///     }
+    ///
+    /// Then you can use that shape as a background for a ``Label``:
+    ///
+    ///     ZStack {
+    ///         Color.teal
+    ///         Label("Flag", systemImage: "flag.fill")
+    ///             .padding()
+    ///             .background(in: trapezoid)
+    ///     }
+    ///
+    /// Without the background modifier, the fill color shows
+    /// through the label. With the modifier, the label's text and icon appear
+    /// backed by a shape filled with a color that's appropriate for light
+    /// or dark appearance:
+    ///
+    /// ![A screenshot of a flag icon and the word flag inside a trapezoid; the
+    /// trapezoid is filled with the background color and layered on top of
+    /// a rectangle filled with the color teal.](View-background-B)
+    ///
+    /// To create a background with other ``View`` types --- or with a stack
+    /// of views --- use ``View/background(alignment:content:)`` instead.
+    /// To add a ``ShapeStyle`` as a background, use
+    /// ``View/background(_:ignoresSafeAreaEdges:)``.
+    ///
+    /// - Parameters:
+    ///   - shape: An instance of a type that conforms to ``Shape`` that
+    ///     SwiftUI draws behind the view using the ``ShapeStyle/background``
+    ///     shape style.
+    ///   - fillStyle: The ``FillStyle`` to use when drawing the shape.
+    ///     The default style uses the nonzero winding number rule and
+    ///     antialiasing.
+    ///
+    /// - Returns: A view with the specified shape drawn behind it.
     @inlinable public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : Shape
 
 
     /// Sets the view's background to a shape filled with a style.
+    ///
+    /// Use this modifier to layer a type that conforms to the ``Shape``
+    /// protocol behind a view. Specify the ``ShapeStyle`` that's used to
+    /// fill the shape. For example, you can create a ``Path`` that outlines
+    /// a trapezoid:
+    ///
+    ///     let trapezoid = Path { path in
+    ///         path.move(to: .zero)
+    ///         path.addLine(to: CGPoint(x: 90, y: 0))
+    ///         path.addLine(to: CGPoint(x: 80, y: 50))
+    ///         path.addLine(to: CGPoint(x: 10, y: 50))
+    ///     }
+    ///
+    /// Then you can use that shape as a background for a ``Label``:
+    ///
+    ///     Label("Flag", systemImage: "flag.fill")
+    ///         .padding()
+    ///         .background(.teal, in: trapezoid)
+    ///
+    /// The ``ShapeStyle/teal`` color fills the shape:
+    ///
+    /// ![A screenshot of the flag icon and the word flag inside a trapezoid;
+    /// The trapezoid is filled with the color teal.](View-background-A)
+    ///
+    /// This modifier and ``View/background(_:in:fillStyle:)-20tq5`` are
+    /// convenience methods for placing a single shape behind a view. To
+    /// create a background with other ``View`` types --- or with a stack
+    /// of views --- use ``View/background(alignment:content:)`` instead.
+    /// To add a ``ShapeStyle`` as a background, use
+    /// ``View/background(_:ignoresSafeAreaEdges:)``.
+    ///
+    /// - Parameters:
+    ///   - style: A ``ShapeStyle`` that SwiftUI uses to the fill the shape
+    ///     that you specify.
+    ///   - shape: An instance of a type that conforms to ``Shape`` that
+    ///     SwiftUI draws behind the view.
+    ///   - fillStyle: The ``FillStyle`` to use when drawing the shape.
+    ///     The default style uses the nonzero winding number rule and
+    ///     antialiasing.
+    ///
+    /// - Returns: A view with the specified shape drawn behind it.
     @inlinable public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape
 
 
     /// Sets the view's background to an insettable shape filled with the
     /// default background style.
+    ///
+    /// This modifier behaves like ``View/background(_:in:fillStyle:)-20tq5``,
+    /// except that it always uses the ``ShapeStyle/background`` shape style
+    /// to fill the specified insettable shape. For example, you can use
+    /// a ``RoundedRectangle`` as a background on a ``Label``:
+    ///
+    ///     ZStack {
+    ///         Color.teal
+    ///         Label("Flag", systemImage: "flag.fill")
+    ///             .padding()
+    ///             .background(in: RoundedRectangle(cornerRadius: 8))
+    ///     }
+    ///
+    /// Without the background modifier, the fill color shows
+    /// through the label. With the modifier, the label's text and icon appear
+    /// backed by a shape filled with a color that's appropriate for light
+    /// or dark appearance:
+    ///
+    /// ![A screenshot of a flag icon and the word flag inside a rectangle with
+    /// rounded corners; the rectangle is filled with the background color, and
+    /// is layered on top of a larger rectangle that's filled with the color
+    /// teal.](View-background-9)
+    ///
+    /// To create a background with other ``View`` types --- or with a stack
+    /// of views --- use ``View/background(alignment:content:)`` instead.
+    /// To add a ``ShapeStyle`` as a background, use
+    /// ``View/background(_:ignoresSafeAreaEdges:)``.
+    ///
+    /// - Parameters:
+    ///   - shape: An instance of a type that conforms to ``InsettableShape``
+    ///     that SwiftUI draws behind the view using the
+    ///     ``ShapeStyle/background`` shape style.
+    ///   - fillStyle: The ``FillStyle`` to use when drawing the shape.
+    ///     The default style uses the nonzero winding number rule and
+    ///     antialiasing.
+    ///
+    /// - Returns: A view with the specified insettable shape drawn behind it.
     @inlinable public func background<S>(in shape: S, fillStyle: FillStyle = FillStyle()) -> some View where S : InsettableShape
 
 
     /// Sets the view's background to an insettable shape filled with a style.
+    ///
+    /// Use this modifier to layer a type that conforms to the
+    /// ``InsettableShape`` protocol --- like a ``Rectangle``, ``Circle``, or
+    /// ``Capsule`` --- behind a view. Specify the ``ShapeStyle`` that's used to
+    /// fill the shape. For example, you can place a ``RoundedRectangle``
+    /// behind a ``Label``:
+    ///
+    ///     Label("Flag", systemImage: "flag.fill")
+    ///         .padding()
+    ///         .background(.teal, in: RoundedRectangle(cornerRadius: 8))
+    ///
+    /// The ``ShapeStyle/teal`` color fills the shape:
+    ///
+    /// ![A screenshot of the flag icon and word on a teal rectangle with
+    /// rounded corners.](View-background-8)
+    ///
+    /// This modifier and ``View/background(_:in:fillStyle:)-89n7j`` are
+    /// convenience methods for placing a single shape behind a view. To
+    /// create a background with other ``View`` types --- or with a stack
+    /// of views --- use ``View/background(alignment:content:)`` instead.
+    /// To add a ``ShapeStyle`` as a background, use
+    /// ``View/background(_:ignoresSafeAreaEdges:)``.
+    ///
+    /// - Parameters:
+    ///   - style: A ``ShapeStyle`` that SwiftUI uses to the fill the shape
+    ///     that you specify.
+    ///   - shape: An instance of a type that conforms to ``InsettableShape``
+    ///     that SwiftUI draws behind the view.
+    ///   - fillStyle: The ``FillStyle`` to use when drawing the shape.
+    ///     The default style uses the nonzero winding number rule and
+    ///     antialiasing.
+    ///
+    /// - Returns: A view with the specified insettable shape drawn behind it.
     @inlinable public func background<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : InsettableShape
 
 }
@@ -33649,7 +35398,7 @@ extension View {
     ///         .overlay(Text("❤️"), alignment: .bottom)
     ///
     /// ![View showing placement of a heart overlaid onto a folder
-    /// icon.](SwiftUI-View-overlay-1.png)
+    /// icon.](View-overlay-1)
     ///
     /// - Parameters:
     ///   - overlay: The view to layer in front of this view.
@@ -33665,15 +35414,16 @@ extension View {
 
     /// Adds a border to this view with the specified style and width.
     ///
-    /// Use `border(_:width:)` to draw a border of a specified width around the
+    /// Use this modifier to draw a border of a specified width around the
     /// view's frame. By default, the border appears inside the bounds of this
-    /// view. In this example, the four-point wide border covers the text:
+    /// view. For example, you can add a four-point wide border covers the text:
     ///
-    ///     Text("Purple border inside the view bounds")
+    ///     Text("Purple border inside the view bounds.")
     ///         .border(Color.purple, width: 4)
     ///
-    /// ![A screenshot showing showing border styles and thickness around a
-    /// view.](SwiftUI-View-border-1.png)
+    /// ![A screenshot showing the text Purple border inside the view bounds.
+    /// The text is surrounded by a purple border that outlines the text,
+    /// but isn't quite big enough and encroaches on the text.](View-border-1)
     ///
     /// To place a border around the outside of this view, apply padding of the
     /// same width before adding the border:
@@ -33682,13 +35432,15 @@ extension View {
     ///         .padding(4)
     ///         .border(Color.purple, width: 4)
     ///
-    /// ![A screenshot showing showing padded border styles and
-    /// thickness.](SwiftUI-View-border-2.png)
+    /// ![A screenshot showing the text Purple border outside the view bounds.
+    /// The text is surrounded by a purple border that outlines the text
+    /// without touching the text.](View-border-2)
     ///
     /// - Parameters:
-    ///   - content: The border style.
-    ///   - width: The thickness of the border; if not provided, the default is
-    ///     1 pixel.
+    ///   - content: A value that conforms to the ``ShapeStyle`` protocol,
+    ///     like a ``Color`` or ``HierarchicalShapeStyle``, that SwiftUI
+    ///     uses to fill the border.
+    ///   - width: The thickness of the border. The default is 1 pixel.
     ///
     /// - Returns: A view that adds a border with the specified style and width
     ///   to this view.
@@ -33699,31 +35451,219 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Layers specified views in front of this view.
+    /// Layers the views that you specify in front of this view.
     ///
-    /// When you provide multiple views, SwiftUI stacks them.
+    /// Use this modifier to place one or more views in front of another view.
+    /// For example, you can place a group of stars on a ``RoundedRectangle``:
+    ///
+    ///     RoundedRectangle(cornerRadius: 8)
+    ///         .frame(width: 200, height: 100)
+    ///         .overlay(alignment: .topLeading) { Star(color: .red) }
+    ///         .overlay(alignment: .topTrailing) { Star(color: .yellow) }
+    ///         .overlay(alignment: .bottomLeading) { Star(color: .green) }
+    ///         .overlay(alignment: .bottomTrailing) { Star(color: .blue) }
+    ///
+    /// The example above assumes that you've defined a `Star` view with a
+    /// parameterized color:
+    ///
+    ///     struct Star: View {
+    ///         var color = Color.yellow
+    ///
+    ///         var body: some View {
+    ///             Image(systemName: "star.fill")
+    ///                 .foregroundStyle(color)
+    ///         }
+    ///     }
+    ///
+    /// By setting different `alignment` values for each modifier, you make the
+    /// stars appear in different places on the rectangle:
+    ///
+    /// ![A screenshot of a rounded rectangle with a star in each corner. The
+    /// star in the upper-left is red; the start in the upper-right is yellow;
+    /// the star in the lower-left is green; the star the lower-right is
+    /// blue.](View-overlay-2)
+    ///
+    /// If you specify more than one view in the `content` closure, the modifier
+    /// collects all of the views in the closure into an implicit ``ZStack``,
+    /// taking them in order from back to front. For example, you can place a
+    /// star and a ``Circle`` on a field of ``ShapeStyle/blue``:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 200)
+    ///         .overlay {
+    ///             Circle()
+    ///                 .frame(width: 100, height: 100)
+    ///             Star()
+    ///         }
+    ///
+    /// Both the overlay modifier and the implicit ``ZStack`` composed from the
+    /// overlay content --- the circle and the star --- use a default
+    /// ``Alignment/center`` alignment. The star appears centered on the circle,
+    /// and both appear as a composite view centered in front of the square:
+    ///
+    /// ![A screenshot of a star centered on a circle, which is
+    /// centered on a square.](View-overlay-3)
+    ///
+    /// If you specify an alignment for the overlay, it applies to the implicit
+    /// stack rather than to the individual views in the closure. You can see
+    /// this if you add the ``Alignment/bottom`` alignment:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 200)
+    ///         .overlay(alignment: .bottom) {
+    ///             Circle()
+    ///                 .frame(width: 100, height: 100)
+    ///             Star()
+    ///         }
+    ///
+    /// The circle and the star move down as a unit to align the stack's bottom
+    /// edge with the bottom edge of the square, while the star remains
+    /// centered on the circle:
+    ///
+    /// ![A screenshot of a star centered on a circle, which is on a square.
+    /// The circle's bottom edge is aligned with the square's bottom
+    /// edge.](View-overlay-3a)
+    ///
+    /// To control the placement of individual items inside the `content`
+    /// closure, either use a different overlay modifier for each item, as the
+    /// earlier example of stars in the corners of a rectangle demonstrates, or
+    /// add an explicit ``ZStack`` inside the content closure with its own
+    /// alignment:
+    ///
+    ///     Color.blue
+    ///         .frame(width: 200, height: 200)
+    ///         .overlay(alignment: .bottom) {
+    ///             ZStack(alignment: .bottom) {
+    ///                 Circle()
+    ///                     .frame(width: 100, height: 100)
+    ///                 Star()
+    ///             }
+    ///         }
+    ///
+    /// The stack alignment ensures that the star's bottom edge aligns with the
+    /// circle's, while the overlay aligns the composite view with the square:
+    ///
+    /// ![A screenshot of a star, a circle, and a square with all their
+    /// bottom edges aligned.](View-overlay-4)
+    ///
+    /// You can achieve layering without an overlay modifier by putting both the
+    /// modified view and the overlay content into a ``ZStack``. This can
+    /// produce a simpler view hierarchy, but changes the layout priority that
+    /// SwiftUI applies to the views. Use the overlay modifier when you want the
+    /// modified view to dominate the layout.
+    ///
+    /// If you want to specify a ``ShapeStyle`` like a ``Color`` or a
+    /// ``Material`` as the overlay, use
+    /// ``View/overlay(_:ignoresSafeAreaEdges:)`` instead. To specify a
+    /// ``Shape``, use ``View/overlay(_:in:fillStyle:)``.
     ///
     /// - Parameters:
-    ///   - alignment: An alignment that you use to position the overlayed view.
-    ///     The default is ``Alignment/center``.
-    ///   - content: A view builder that produces views to layer in front of
-    ///     this view. Multiple views provided by content are organized in to a
-    ///     ``ZStack``.
+    ///   - alignment: The alignment that the modifier uses to position the
+    ///     implicit ``ZStack`` that groups the foreground views. The default
+    ///     is ``Alignment/center``.
+    ///   - content: A ``ViewBuilder`` that you use to declare the views to
+    ///     draw in front of this view, stacked in the order that you list them.
+    ///     The last view that you list appears at the front of the stack.
     ///
-    /// - Returns: A view that layers the specified content in front of the view.
+    /// - Returns: A view that uses the specified content as a foreground.
     @inlinable public func overlay<V>(alignment: Alignment = .center, @ViewBuilder content: () -> V) -> some View where V : View
 
 
-    /// Layers the specified style in front of this view, such that the style
-    /// fills the view's container-relative shape.
+    /// Layers the specified style in front of this view.
     ///
-    /// The overlay style can extend beyond the container's safe area
-    /// region. The geometry in the style is anchored to the modified
-    /// view's bounds.
+    /// Use this modifier to layer a type that conforms to the ``ShapeStyle``
+    /// protocol, like a ``Color``, ``Material``, or ``HierarchicalShapeStyle``,
+    /// in front of a view. For example, you can overlay the
+    /// ``ShapeStyle/ultraThinMaterial`` over a ``Circle``:
+    ///
+    ///     struct CoveredCircle: View {
+    ///         var body: some View {
+    ///             Circle()
+    ///                 .frame(width: 300, height: 200)
+    ///                 .overlay(.ultraThinMaterial)
+    ///         }
+    ///     }
+    ///
+    /// SwiftUI anchors the style to the view's bounds. For the example above,
+    /// the overlay fills the entirety of the circle's frame (which happens
+    /// to be wider than the circle is tall):
+    ///
+    /// ![A screenshot of a circle showing through a rectangle that imposes
+    /// a blurring effect.](View-overlay-5)
+    ///
+    /// SwiftUI also limits the style's extent to the view's
+    /// container-relative shape. You can see this effect if you constrain the
+    /// `CoveredCircle` view with a ``View/containerShape(_:)`` modifier:
+    ///
+    ///     CoveredCircle()
+    ///         .containerShape(RoundedRectangle(cornerRadius: 30))
+    ///
+    /// The overlay takes on the specified container shape:
+    ///
+    /// ![A screenshot of a circle showing through a rounded rectangle that
+    /// imposes a blurring effect.](View-overlay-6)
+    ///
+    /// By default, the overlay ignores safe area insets on all edges, but you
+    /// can provide a specific set of edges to ignore, or an empty set to
+    /// respect safe area insets on all edges:
+    ///
+    ///     Rectangle()
+    ///         .overlay(
+    ///             .secondary,
+    ///             ignoresSafeAreaEdges: []) // Ignore no safe area insets.
+    ///
+    /// If you want to specify a ``View`` or a stack of views as the overlay
+    /// rather than a style, use ``View/overlay(alignment:content:)`` instead.
+    /// If you want to specify a ``Shape``, use
+    /// ``View/overlay(_:in:fillStyle:)``.
+    ///
+    /// - Parameters:
+    ///   - style: An instance of a type that conforms to ``ShapeStyle`` that
+    ///     SwiftUI layers in front of the modified view.
+    ///   - edges: The set of edges for which to ignore safe area insets
+    ///     when adding the overlay. The default value is ``Edge/Set/all``.
+    ///     Specify an empty set to respect safe area insets on all edges.
+    ///
+    /// - Returns: A view with the specified style drawn in front of it.
     @inlinable public func overlay<S>(_ style: S, ignoresSafeAreaEdges edges: Edge.Set = .all) -> some View where S : ShapeStyle
 
 
-    /// Layers the specified shape style in front of the modified view.
+    /// Layers a shape that you specify in front of this view.
+    ///
+    /// Use this modifier to layer a type that conforms to the ``Shape``
+    /// protocol --- like a ``Rectangle``, ``Circle``, or ``Capsule`` --- in
+    /// front of a view. Specify a ``ShapeStyle`` that's used to fill the shape.
+    /// For example, you can overlay the outline of one rectangle in front of
+    /// another:
+    ///
+    ///     Rectangle()
+    ///         .frame(width: 200, height: 100)
+    ///         .overlay(.teal, in: Rectangle().inset(by: 10).stroke(lineWidth: 5))
+    ///
+    /// The example above uses the ``InsettableShape/inset(by:)`` method to
+    /// slightly reduce the size of the overlaid rectangle, and the
+    /// ``Shape/stroke(lineWidth:)`` method to fill only the shape's outline.
+    /// This creates an inset border:
+    ///
+    /// ![A screenshot of a rectangle with a teal border that's
+    /// inset from the edge.](View-overlay-7)
+    ///
+    /// This modifier is a convenience method for layering a shape over a view.
+    /// To handle the more general case of overlaying a ``View`` --- or a stack
+    /// of views --- with control over the position, use
+    /// ``View/overlay(alignment:content:)`` instead. To cover a view with a
+    /// ``ShapeStyle``, use ``View/overlay(_:ignoresSafeAreaEdges:)``.
+    ///
+    /// - Parameters:
+    ///   - style: A ``ShapeStyle`` that SwiftUI uses to the fill the shape
+    ///     that you specify.
+    ///   - shape: An instance of a type that conforms to ``Shape`` that
+    ///     SwiftUI draws in front of the view.
+    ///   - fillStyle: The ``FillStyle`` to use when drawing the shape.
+    ///     The default style uses the nonzero winding number rule and
+    ///     antialiasing.
+    ///
+    /// - Returns: A view with the specified shape drawn in front of it.
     @inlinable public func overlay<S, T>(_ style: S, in shape: T, fillStyle: FillStyle = FillStyle()) -> some View where S : ShapeStyle, T : Shape
 
 }
@@ -34436,16 +36376,16 @@ extension View {
     ///     VStack {
     ///         Text("Today's Weather")
     ///             .font(.title)
-    ///             .border(Color.gray)
+    ///             .border(.gray)
     ///         HStack {
     ///             Text("🌧")
     ///             Text("Rain & Thunderstorms")
     ///             Text("⛈")
     ///         }
     ///         .alignmentGuide(HorizontalAlignment.center) { _ in  50 }
-    ///         .border(Color.gray)
+    ///         .border(.gray)
     ///     }
-    ///     .border(Color.gray)
+    ///     .border(.gray)
     ///
     /// Changing the alignment of one view may have effects on surrounding
     /// views. Here the offset values inside a stack and its contained views is
@@ -34477,16 +36417,17 @@ extension View {
     ///     VStack {
     ///         Text("Today's Weather")
     ///             .font(.title)
-    ///             .border(Color.gray)
+    ///             .border(.gray)
     ///
     ///         HStack {
     ///             Text("🌧")
     ///                 .alignmentGuide(VerticalAlignment.center) { _ in -20 }
+    ///                 .border(.gray)
     ///             Text("Rain & Thunderstorms")
-    ///                 .border(Color.gray)
+    ///                 .border(.gray)
     ///             Text("⛈")
     ///                 .alignmentGuide(VerticalAlignment.center) { _ in 20 }
-    ///                 .border(Color.gray)
+    ///                 .border(.gray)
     ///         }
     ///     }
     ///
@@ -36819,11 +38760,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     public func alert<A, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View
 
 
@@ -36889,11 +38830,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     public func alert<S, A, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where S : StringProtocol, A : View
 
 
@@ -36960,11 +38901,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     public func alert<A, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A) -> some View where A : View
 
 }
@@ -37044,11 +38985,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     ///   - message: A ``ViewBuilder`` returning the message for the alert given
     ///     the currently available data.
     public func alert<A, M, T>(_ titleKey: LocalizedStringKey, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View
@@ -37120,11 +39061,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     ///   - message: A ``ViewBuilder`` returning the message for the alert given
     ///     the currently available data.
     public func alert<S, A, M, T>(_ title: S, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where S : StringProtocol, A : View, M : View
@@ -37196,11 +39137,11 @@ extension View {
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
     ///   - data: An optional source of truth for the alert. The system passes
-    ///.    the contents to the modifier's closures. You use this data to
-    ///.    populate the fields of an alert that you create that the system
+    ///     the contents to the modifier's closures. You use this data to
+    ///     populate the fields of an alert that you create that the system
     ///     displays to the user.
     ///   - actions: A ``ViewBuilder`` returning the alert's actions given the
-    ///.    currently available data.
+    ///     currently available data.
     ///   - message: A ``ViewBuilder`` returning the message for the alert given
     ///     the currently available data.
     public func alert<A, M, T>(_ title: Text, isPresented: Binding<Bool>, presenting data: T?, @ViewBuilder actions: (T) -> A, @ViewBuilder message: (T) -> M) -> some View where A : View, M : View
@@ -37951,18 +39892,96 @@ extension View {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension View {
 
-    /// Sets the style for toggles within this view.
+    /// Sets the style for toggles in a view hierarchy.
     ///
-    /// To set a specific style for all toggle instances within a view, use the
-    /// ``View/toggleStyle(_:)`` modifier, as follows:
+    /// Use this modifier on a ``Toggle`` instance to set a style that defines
+    /// the control's appearance and behavior. For example, you can choose
+    /// the ``ToggleStyle/switch`` style:
     ///
-    ///     VStack {
-    ///         Toggle("Vibrate on Ring", isOn: $vibrateOnRing)
-    ///         Toggle("Vibrate on Silent", isOn: $vibrateOnSilent)
+    ///     Toggle("Vibrate on Ring", isOn: $vibrateOnRing)
+    ///         .toggleStyle(.switch)
+    ///
+    /// Built-in styles typically have a similar appearance across platforms,
+    /// tailored to the platform's overall style:
+    ///
+    /// | Platform    | Appearance |
+    /// |-------------|------------|
+    /// | iOS, iPadOS | ![A screenshot of the text Vibrate on Ring appearing to the left of a toggle switch that's on. The toggle's tint color is green. The toggle and its text appear in a rounded rectangle.](View-toggleStyle-1-iOS) |
+    /// | macOS       | ![A screenshot of the text Vibrate on Ring appearing to the left of a toggle switch that's on. The toggle's tint color is blue. The toggle and its text appear on a neutral background.](View-toggleStyle-1-macOS) |
+    ///
+    /// ### Styling Toggles in a Hierarchy
+    ///
+    /// You can set a style for all toggle instances within a view hierarchy
+    /// by applying the style modifier to a container view. For example, you
+    /// can apply the ``ToggleStyle/button`` style to an ``HStack``:
+    ///
+    ///     HStack {
+    ///         Toggle(isOn: $isFlagged) {
+    ///             Label("Flag", systemImage: "flag.fill")
+    ///         }
+    ///         Toggle(isOn: $isMuted) {
+    ///             Label("Mute", systemImage: "speaker.slash.fill")
+    ///         }
     ///     }
-    ///     .toggleStyle(.switch)
+    ///     .toggleStyle(.button)
     ///
-    /// - Parameter style: The style to set.
+    /// The example above has the following appearance when `isFlagged` is
+    /// `true` and `isMuted` is `false`:
+    ///
+    /// | Platform    | Appearance |
+    /// |-------------|------------|
+    /// | iOS, iPadOS | ![A screenshot of two buttons arranged horizontally. The first has the image of a flag and is active with a blue tint. The second has an image of a speaker with a line through it and is inactive with a neutral tint.](View-toggleStyle-2-iOS) |
+    /// | macOS       | ![A screenshot of two buttons arranged horizontally. The first has the image of a flag and is active with a blue tint. The second has an image of a speaker with a line through it and is inactive with a neutral tint.](View-toggleStyle-2-macOS) |
+    ///
+    /// ### Automatic Styling
+    ///
+    /// If you don't set a style, SwiftUI assumes a value of
+    /// ``ToggleStyle/automatic``, which corresponds to a context-specific
+    /// default. Specify the automatic style explicitly to override a
+    /// container's style and revert to the default:
+    ///
+    ///     HStack {
+    ///         Toggle(isOn: $isShuffling) {
+    ///             Label("Shuffle", systemImage: "shuffle")
+    ///         }
+    ///         Toggle(isOn: $isRepeating) {
+    ///             Label("Repeat", systemImage: "repeat")
+    ///         }
+    ///
+    ///         Divider()
+    ///
+    ///         Toggle("Enhance Sound", isOn: $isEnhanced)
+    ///             .toggleStyle(.automatic) // Revert to the default style.
+    ///     }
+    ///     .toggleStyle(.button) // Use button style for toggles in the stack.
+    ///     .labelStyle(.iconOnly) // Omit the title from any labels.
+    ///
+    /// The style that SwiftUI uses as the default depends on both the platform
+    /// and the context. In macOS, the default in most contexts is a
+    /// ``ToggleStyle/checkbox``, while in iOS, the default toggle style is a
+    /// ``ToggleStyle/switch``:
+    ///
+    /// | Platform    | Appearance |
+    /// |-------------|------------|
+    /// | iOS, iPadOS | ![A screenshot of several horizontally arranged items: two buttons, a vertical divider line, the text Enhance sound, and a switch. The first button has two right facing arrows that cross over in the middle and is active with a blue tint. The second button has one right and one left facing arrow and is inactive with neutral tint. The switch is on and has a green tint.](View-toggleStyle-3-iOS) |
+    /// | macOS       | ![A screenshot of several horizontally arranged items: two buttons, a vertical divider line, a checkbox, and the text Enhance sound. The first button has two right facing arrows that cross over in the middle and is active with a blue tint. The second button has one right and one left facing arrow and is inactive with a neutral tint. The check box is checked and has a blue tint.](View-toggleStyle-3-macOS) |
+    ///
+    /// > Note: Like toggle style does for toggles, the ``View/labelStyle(_:)``
+    /// modifier sets the style for ``Label`` instances in the hierarchy. The
+    /// example above demostrates the compact ``LabelStyle/iconOnly`` style,
+    /// which is useful for button toggles in space-constrained contexts.
+    /// Always include a descriptive title for better accessibility.
+    ///
+    /// For more information about how SwiftUI chooses a default toggle style,
+    /// see the ``ToggleStyle/automatic`` style.
+    ///
+    /// - Parameter style: The toggle style to set. Use one of the built-in
+    ///   values, like ``ToggleStyle/switch`` or ``ToggleStyle/button``,
+    ///   or a custom style that you define by creating a type that conforms
+    ///   to the ``ToggleStyle`` protocol.
+    ///
+    /// - Returns: A view that uses the specified toggle style for itself
+    ///   and its child views.
     public func toggleStyle<S>(_ style: S) -> some View where S : ToggleStyle
 
 }
@@ -38275,10 +40294,11 @@ extension View {
     ///     If `item` changes, the system dismisses the currently presented
     ///     popover and replaces it with a new popover using the same process.
     ///   - attachmentAnchor: The positioning anchor that defines the
-    ///     attachment point of the popover in macOS. The default is
-    ///     ``Anchor/Source/bounds``. iOS ignores this parameter.
+    ///     attachment point of the popover. The default is
+    ///     ``Anchor/Source/bounds``.
     ///   - arrowEdge: The edge of the `attachmentAnchor` that defines the
-    ///     location of the popover's arrow. The default is ``Edge/top``.
+    ///     location of the popover's arrow in macOS. The default is ``Edge/top``.
+    ///     iOS ignores this parameter.
     ///   - content: A closure returning the content of the popover.
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -38321,10 +40341,11 @@ extension View {
     ///     to present the popover content that you return from the modifier's
     ///     `content` closure.
     ///   - attachmentAnchor: The positioning anchor that defines the
-    ///     attachment point of the popover in macOS. The default is
-    ///     ``Anchor/Source/bounds``. iOS ignores this parameter.
+    ///     attachment point of the popover. The default is
+    ///     ``Anchor/Source/bounds``.
     ///   - arrowEdge: The edge of the `attachmentAnchor` that defines the
-    ///     location of the popover's arrow. The default is ``Edge/top``.
+    ///     location of the popover's arrow in macOS. The default is ``Edge/top``.
+    ///     iOS ignores this parameter.
     ///   - content: A closure returning the content of the popover.
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -38632,6 +40653,10 @@ extension View {
     ///         .dynamicTypeSize(...DynamicTypeSize.large)
     ///         .dynamicTypeSize(.xLarge)
     ///
+    /// When limiting the Dynamic Type size, consider if adding a
+    /// large content view with ``View/accessibilityShowsLargeContentViewer()``
+    /// would be appropriate.
+    ///
     /// - Parameter size: The size to set for this view.
     ///
     /// - Returns: A view that sets the Dynamic Type size to the specified
@@ -38659,6 +40684,10 @@ extension View {
     ///     ContentView() // Dynamic Type size is .xLarge
     ///         .dynamicTypeSize(.xLarge)
     ///         .dynamicTypeSize(...DynamicTypeSize.large)
+    ///
+    /// When limiting the Dynamic Type size, consider if adding a
+    /// large content view with ``View/accessibilityShowsLargeContentViewer()``
+    /// would be appropriate.
     ///
     /// - Parameter range: The range of sizes that are allowed in this view.
     ///
@@ -38731,7 +40760,7 @@ extension View {
     ///
     /// You can use the ``View/submitScope(_:)`` modifier to stop a submit
     /// trigger from a control from propagating higher up in the view hierarchy
-    /// to higher ``View.onSubmit(of:_)`` modifiers.
+    /// to higher `View.onSubmit(of:_:)` modifiers.
     ///
     ///     Form {
     ///         TextField("Username", text: $viewModel.userName)
@@ -38938,33 +40967,58 @@ extension View {
 @available(watchOS, unavailable)
 extension View {
 
-    /// Changes whether text in this view is allowed to be selected by the
-    /// user.
+    /// Controls whether people can select text within this view.
     ///
-    /// Enabling text selection allows the user to perform actions on the text
-    /// content, such as copy and paste. Enable selection in cases
-    /// where those operations are useful, like detailed information on
-    /// content or error descriptions.
+    /// People sometimes need to copy useful information from ``Text`` views ---
+    /// including error messages, serial numbers, or IP addresses --- so they
+    /// can then paste the text into another context. Enable text selection
+    /// to let people select text in a platform-appropriate way.
     ///
-    /// You can apply this method to an individual text view or to a
-    /// container of text views, as shown in the below example:
+    /// You can apply this method to an individual text view, or to a
+    /// container to make each contained text view selectable. In the following
+    /// example, the person using the app can select text that shows the date of
+    /// an event or the name or email of any of the event participants:
     ///
-    ///     VStack {
-    ///         Text("Event Invite")
-    ///         Text(invite.date.formatted())
-    ///             .textSelection(.enabled)
+    ///     var body: some View {
+    ///         VStack {
+    ///             Text("Event Invite")
+    ///                 .font(.title)
+    ///             Text(invite.date.formatted(date: .long, time: .shortened))
+    ///                 .textSelection(.enabled)
     ///
-    ///         List(invite.recipients) { recipient in
-    ///             VStack {
-    ///                 Text(recipient.name)
-    ///                 Text(recipient.email)
-    ///                     .foregroundStyle(SecondaryForegroundStyle())
+    ///             List(invite.recipients) { recipient in
+    ///                 VStack (alignment: .leading) {
+    ///                     Text(recipient.name)
+    ///                     Text(recipient.email)
+    ///                         .foregroundStyle(.secondary)
+    ///                 }
     ///             }
+    ///             .textSelection(.enabled)
     ///         }
-    ///         .textSelection(.enabled)
+    ///         .navigationTitle("New Invitation")
     ///     }
     ///
-    /// Text selection is not supported inside ``Button`` views on iOS.
+    /// On macOS, people use the mouse or trackpad to select a range of text,
+    /// which they can quickly copy by choosing Edit > Copy, or with the
+    /// standard keyboard shortcut.
+    ///
+    /// ![A macOS window titled New Invitation, with header Event Invite and
+    /// the date and time of the event below it. The date --- July 31, 2022 ---
+    /// is selected. Below this, a list of invitees by name and
+    /// email.](View-textSelection-1)
+    ///
+    /// On iOS, the person using the app touches and holds on a selectable
+    /// `Text` view, which brings up a system menu with menu items appropriate
+    /// for the current context. These menu items operate on the entire contents
+    /// of the `Text` view; the person can't select a range of text like they
+    /// can on macOS.
+    ///
+    /// ![A portion of an iOS view, with header Event Invite and
+    /// the date and time of the event below it. Below the date and time, a
+    /// menu shows two items: Copy and Share. Below this, a list of invitees by
+    /// name and email.](View-textSelection-2)
+    ///
+    /// - Note: ``Button`` views don't support text selection.
     public func textSelection<S>(_ selectability: S) -> some View where S : TextSelectability
 
 }
@@ -39679,9 +41733,9 @@ extension View {
     ///                 .resizable()
     ///                 .frame(width: 200, height: 200)
     ///                 .foregroundColor(fgColor)
-    ///                 .onTapGesture(count: 2, perform: {
+    ///                 .onTapGesture(count: 2) {
     ///                     fgColor = colors.randomElement()!
-    ///                 })
+    ///                 }
     ///         }
     ///     }
     ///
@@ -41072,6 +43126,73 @@ extension View {
     public func accessibilitySortPriority(_ sortPriority: Double) -> ModifiedContent<Self, AccessibilityAttachmentModifier>
 }
 
+extension View {
+
+    /// Adds a custom large content view to be shown by
+    /// the large content viewer.
+    ///
+    /// Rely on the large content viewer only in situations
+    /// where items must remain small due to unavoidable
+    /// design constraints. For example, buttons in a tab bar
+    /// remain small to leave more room for the main app content.
+    ///
+    /// The following example shows how to add a custom large
+    /// content view:
+    ///
+    ///     var body: some View {
+    ///         Button(action: newMessage) {
+    ///             Image(systemName: "plus")
+    ///         }
+    ///         .accessibilityShowsLargeContentViewer {
+    ///             Label("New Message", systemImage: "plus")
+    ///         }
+    ///     }
+    ///
+    /// Don’t use the large content viewer as a replacement for proper
+    /// Dynamic Type support. For example, Dynamic Type allows items
+    /// in a list to grow or shrink vertically to accommodate the user’s preferred
+    /// font size. Rely on the large content viewer only in situations where
+    /// items must remain small due to unavoidable design constraints.
+    ///
+    /// For example, views that have their Dynamic Type size constrained
+    /// with ``View/dynamicTypeSize(_:)-26aj0`` or
+    /// ``View/dynamicTypeSize(_:)-26aj0`` may require a
+    /// large content view.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public func accessibilityShowsLargeContentViewer<V>(@ViewBuilder _ largeContentView: () -> V) -> some View where V : View
+
+
+    /// Adds a default large content view to be shown by
+    /// the large content viewer.
+    ///
+    /// Rely on the large content viewer only in situations
+    /// where items must remain small due to unavoidable
+    /// design constraints. For example, buttons in a tab bar
+    /// remain small to leave more room for the main app content.
+    ///
+    /// The following example shows how to add a custom large
+    /// content view:
+    ///
+    ///     var body: some View {
+    ///         Button("New Message", action: newMessage)
+    ///             .accessibilityShowsLargeContentViewer()
+    ///     }
+    ///
+    /// Don’t use the large content viewer as a replacement for proper
+    /// Dynamic Type support. For example, Dynamic Type allows items
+    /// in a list to grow or shrink vertically to accommodate the user’s preferred
+    /// font size. Rely on the large content viewer only in situations where
+    /// items must remain small due to unavoidable design constraints.
+    ///
+    /// For example, views that have their Dynamic Type size constrained
+    /// with ``View/dynamicTypeSize(_:)-26aj0`` or
+    /// ``View/dynamicTypeSize(_:)-26aj0`` may require a
+    /// large content view.
+    @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+    public func accessibilityShowsLargeContentViewer() -> some View
+
+}
+
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -41307,47 +43428,71 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// Adds a condition that prevents interactive dismissal when the view
-    /// is contained within a popover or a sheet.
+    /// Conditionally prevents interactive dismissal of a popover or a sheet.
     ///
-    /// On macOS, disabling interactive dismissal in a popover makes the popover
-    /// non-transient.
+    /// Users can dismiss certain kinds of presentations using built-in
+    /// gestures. In particular, a user can dismiss a sheet by dragging it down,
+    /// or a popover by clicking or tapping outside of the presented view. Use
+    /// the `interactiveDismissDisabled(_:)` modifier to conditionally prevent
+    /// this kind of dismissal. You typically do this to prevent the user from
+    /// dismissing a presentation before providing needed data or completing
+    /// a required action.
     ///
-    /// Use this modifier to disable user-initiated
-    /// dismissal of the containing hierarchy. When the condition is true, a
-    /// presentation containing the view can only be dismissed programatically,
-    /// by setting the environment's ``EnvironmentValues/presentationMode``
-    /// or by updating the ``Binding`` controlling the presentation.
+    /// For instance, suppose you have a view that displays a licensing
+    /// agreement that the user must acknowledge before continuing:
     ///
-    /// In the example below, a terms of service sheet is shown. The user cannot
-    /// dismiss the sheet unless they have accepted the terms of service.
-    ///
-    ///     struct PresentingView: View {
-    ///         @Binding var showTerms: Bool
-    ///
-    ///         var body: some View {
-    ///             AppContents()
-    ///                 .sheet(isPresented: $showTerms) {
-    ///                     Sheet()
-    ///                 }
-    ///         }
-    ///     }
-    ///
-    ///     struct Sheet: View {
-    ///         @State private var acceptedTerms = false
+    ///     struct TermsOfService: View {
+    ///         @Binding var areTermsAccepted: Bool
+    ///         @Environment(\.dismiss) private var dismiss
     ///
     ///         var body: some View {
     ///             Form {
-    ///                 Button("Accept Terms") {
-    ///                     acceptedTerms = true
+    ///                 Text("License Agreement")
+    ///                     .font(.title)
+    ///                 Text("Terms and conditions go here.")
+    ///                 Button("Accept") {
+    ///                     areTermsAccepted = true
+    ///                     dismiss()
     ///                 }
     ///             }
-    ///             .interactiveDismissDisabled(!acceptedTerms)
     ///         }
     ///     }
     ///
-    /// - Parameter isDisabled: A Boolean that indicates whether dismissal is
-    ///   prevented.
+    /// If you present this view in a sheet, the user can dismiss it by either
+    /// tapping the button --- which calls ``EnvironmentValues/dismiss``
+    /// from its `action` closure --- or by dragging the sheet down. To
+    /// ensure that the user accepts the terms by tapping the button,
+    /// disable interactive dismissal, conditioned on the `areTermsAccepted`
+    /// property:
+    ///
+    ///     struct ContentView: View {
+    ///         @State private var isSheetPresented = false
+    ///         @State private var areTermsAccepted = false
+    ///
+    ///         var body: some View {
+    ///             Button("Use Service") {
+    ///                 isSheetPresented = true
+    ///             }
+    ///             .sheet(isPresented: $isSheetPresented) {
+    ///                 TermsOfService()
+    ///                     .interactiveDismissDisabled(!areTermsAccepted)
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// You can apply the modifier to any view in the sheet's view hierarchy,
+    /// including to the sheet's top level view, as the example demonstrates,
+    /// or to any child view, like the ``Form`` or the Accept ``Button``.
+    ///
+    /// The modifier has no effect on programmatic dismissal, which you can
+    /// invoke by updating the ``Binding`` that controls the presentation, or
+    /// by calling the environment's ``EnvironmentValues/dismiss`` action.
+    /// On macOS, disabling interactive dismissal in a popover makes the popover
+    /// nontransient.
+    ///
+    /// - Parameter isDisabled: A Boolean value that indicates whether to
+    ///   prevent nonprogrammatic dismissal of the containing view hierarchy
+    ///   when presented in a sheet or popover.
     public func interactiveDismissDisabled(_ isDisabled: Bool = true) -> some View
 
 }
@@ -43601,7 +45746,7 @@ public struct WindowGroup<Content> : Scene where Content : View {
     ///
     /// For any scene that you create, provide a computed `body` property that
     /// defines the scene as a composition of other scenes. You can assemble a
-    /// scene from primitive scenes that SwiftUI provides, as well as other
+    /// scene from built-in scenes that SwiftUI provides, as well as other
     /// scenes that you've defined.
     ///
     /// Swift infers the scene's ``SwiftUI/Scene/Body-swift.associatedtype``
@@ -43728,7 +45873,7 @@ extension Never {
     ///
     /// When you implement a custom view, you must implement a computed
     /// `body` property to provide the content for your view. Return a view
-    /// that's composed of primitive views that SwiftUI provides, plus other
+    /// that's composed of built-in views that SwiftUI provides, plus other
     /// composite views that you've already defined:
     ///
     ///     struct MyView: View {
