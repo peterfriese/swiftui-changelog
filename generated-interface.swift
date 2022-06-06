@@ -1,4 +1,4 @@
-// Xcode 13.2
+// Xcode 13.3
 
 import Accessibility
 import Combine
@@ -3460,10 +3460,8 @@ extension BackgroundStyle : Sendable {
 ///         @Binding var isPlaying: Bool
 ///
 ///         var body: some View {
-///             Button(action: {
-///                 self.isPlaying.toggle()
-///             }) {
-///                 Image(systemName: isPlaying ? "pause.circle" : "play.circle")
+///             Button(isPlaying ? "Pause" : "Play") {
+///                 isPlaying.toggle()
 ///             }
 ///         }
 ///     }
@@ -3479,8 +3477,8 @@ extension BackgroundStyle : Sendable {
 ///         var body: some View {
 ///             VStack {
 ///                 Text(episode.title)
-///                 Text(episode.showTitle)
-///                 PlayButton(isPlaying: $isPlaying)
+///                     .foregroundStyle(isPlaying ? .primary : .secondary)
+///                 PlayButton(isPlaying: $isPlaying) // Pass a binding.
 ///             }
 ///         }
 ///     }
@@ -3539,18 +3537,16 @@ extension BackgroundStyle : Sendable {
     ///
     /// This property provides primary access to the value's data. However, you
     /// don't access `wrappedValue` directly. Instead, you use the property
-    /// variable created with the `@Binding` attribute. For instance, in the
-    /// following code example the binding variable `isPlaying` returns the
+    /// variable created with the ``Binding`` attribute. In the
+    /// following code example, the binding variable `isPlaying` returns the
     /// value of `wrappedValue`:
     ///
     ///     struct PlayButton: View {
     ///         @Binding var isPlaying: Bool
     ///
     ///         var body: some View {
-    ///             Button(action: {
-    ///                 self.isPlaying.toggle()
-    ///             }) {
-    ///                 Image(systemName: isPlaying ? "pause.circle" : "play.circle")
+    ///             Button(isPlaying ? "Pause" : "Play") {
+    ///                 isPlaying.toggle()
     ///             }
     ///         }
     ///     }
@@ -3575,11 +3571,12 @@ extension BackgroundStyle : Sendable {
     ///         var body: some View {
     ///             VStack {
     ///                 Text(episode.title)
-    ///                 Text(episode.showTitle)
+    ///                     .foregroundStyle(isPlaying ? .primary : .secondary)
     ///                 PlayButton(isPlaying: $isPlaying)
     ///             }
     ///         }
     ///     }
+    ///
     public var projectedValue: Binding<Value> { get }
 
     /// Creates a binding from the value of another binding.
@@ -3637,12 +3634,11 @@ extension Binding : Sequence where Value : MutableCollection {
     /// encapsulates its iteration state.
     public typealias Iterator = IndexingIterator<Binding<Value>>
 
-    /// A sequence that represents a contiguous subrange of the collection's
-    /// elements.
+    /// A collection representing a contiguous subrange of this collection's
+    /// elements. The subsequence shares indices with the original collection.
     ///
-    /// This associated type appears as a requirement in the `Sequence`
-    /// protocol, but it is restated here with stricter constraints. In a
-    /// collection, the subsequence should also conform to `Collection`.
+    /// The default subsequence type for collections that don't define their own
+    /// is `Slice`.
     public typealias SubSequence = Slice<Binding<Value>>
 }
 
@@ -5586,16 +5582,31 @@ extension ColorRenderingMode : Equatable {
 extension ColorRenderingMode : Hashable {
 }
 
-/// The possible types of color schemes, like Dark Mode.
+/// The possible color schemes, corresponding to the light and dark appearances.
 ///
-/// The color scheme enumerates the user setting options for Light or Dark Mode.
-/// It also provides the light or dark options for any particular view when the
-/// app wants to override the user setting.
+/// You receive a color scheme value when you read the
+/// ``EnvironmentValues/colorScheme`` environment value. The value tells you if
+/// a light or dark appearance currently applies to the view. SwiftUI updates
+/// the value whenever the appearance changes, and redraws views that
+/// depend on the value. For example, the following ``Text`` view automatically
+/// updates when the user enables Dark Mode:
+///
+///     @Environment(\.colorScheme) private var colorScheme
+///
+///     var body: some View {
+///         Text(colorScheme == .dark ? "Dark" : "Light")
+///     }
+///
+/// Set a preferred appearance for a particular view hierarchy to override
+/// the user's Dark Mode setting using the ``View/preferredColorScheme(_:)``
+/// view modifier.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public enum ColorScheme : CaseIterable {
 
+    /// The color scheme that corresponds to a light appearance.
     case light
 
+    /// The color scheme that corresponds to a dark appearance.
     case dark
 
     /// Returns a Boolean value indicating whether two values are equal.
@@ -5641,7 +5652,7 @@ public enum ColorScheme : CaseIterable {
 
 extension ColorScheme {
 
-    /// Create a color scheme from its UIUserInterfaceStyle equivalent.
+    /// Creates a color scheme from its user interface style equivalent.
     @available(iOS 14.0, tvOS 14.0, *)
     @available(macOS, unavailable)
     @available(watchOS, unavailable)
@@ -5656,20 +5667,36 @@ extension ColorScheme : Equatable {
 extension ColorScheme : Hashable {
 }
 
-/// Options indicating whether the system uses standard or increased contrast
-/// between the app's foreground and background colors.
+/// The contrast between the app's foreground and background colors.
 ///
-/// The user sets the Increase Contrast option using the Settings app. Your app
-/// cannot override the user's choice.
+/// You receive a contrast value when you read the
+/// ``EnvironmentValues/colorSchemeContrast`` environment value. The value
+/// tells you if a standard or increased contrast currently applies to the view.
+/// SwiftUI updates the value whenever the contrast changes, and redraws
+/// views that depend on the value. For example, the following ``Text`` view
+/// automatically updates when the user enables increased contrast:
+///
+///     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+///
+///     var body: some View {
+///         Text(colorSchemeContrast == .standard ? "Standard" : "Increased")
+///     }
+///
+/// The user sets the contrast by selecting the Increase Contrast option in
+/// Accessibility > Display in System Preferences on macOS, or
+/// Accessibility > Display & Text Size in the Settings app on iOS.
+/// Your app can't override the user's choice. For
+/// information about using color and contrast in your app, see
+/// [Color and Contrast](https://developer.apple.com/design/human-interface-guidelines/accessibility/overview/color-and-contrast).
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public enum ColorSchemeContrast : CaseIterable {
 
-    /// An option indicating that the system is using standard contrast between
-    /// the app's foreground and background colors.
+    /// SwiftUI displays views with standard contrast between the app's
+    /// foreground and background colors.
     case standard
 
-    /// An option indicating that the system is using increased contrast between
-    /// the app's foreground and background colors.
+    /// SwiftUI displays views with increased contrast between the app's
+    /// foreground and background colors.
     case increased
 
     /// Returns a Boolean value indicating whether two values are equal.
@@ -5715,7 +5742,7 @@ public enum ColorSchemeContrast : CaseIterable {
 
 extension ColorSchemeContrast {
 
-    /// Create a contrast from its UIAccessibilityContrast equivalent.
+    /// Creates a contrast from its accessibility contrast equivalent.
     @available(iOS 14.0, tvOS 14.0, *)
     @available(macOS, unavailable)
     @available(watchOS, unavailable)
@@ -6148,8 +6175,22 @@ extension ContainerRelativeShape : Sendable {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public enum ContentMode : Hashable, CaseIterable {
 
+    /// An option that resizes the content so it's all within the available space,
+    /// both vertically and horizontally.
+    ///
+    /// This mode preserves the content's aspect ratio.
+    /// If the content doesn't have the same aspect ratio as the available
+    /// space, the content becomes the same size as the available space on
+    /// one axis and leaves empty space on the other.
     case fit
 
+    /// An option that resizes the content so it occupies all available space,
+    /// both vertically and horizontally.
+    ///
+    /// This mode preserves the content's aspect ratio.
+    /// If the content doesn't have the same aspect ratio as the available
+    /// space, the content becomes the same size as the available space on
+    /// one axis, and larger on the other axis.
     case fill
 
     /// Returns a Boolean value indicating whether two values are equal.
@@ -7465,48 +7506,209 @@ extension DisclosureGroup where Label == Text {
     public init<S>(_ label: S, isExpanded: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) where S : StringProtocol
 }
 
-/// Provides functionality for dismissing a presentation.
+/// An action that dismisses a presentation.
 ///
-/// The `DismissAction` instance in the app's ``Environment`` offers a handler
-/// that you can use to dismiss a presentation. The action has no effect if the
-/// view is not currently being presented. You can use
-/// ``EnvironmentValues/isPresented`` to query whether the view is currently
-/// being presented.
+/// Use the ``EnvironmentValues/dismiss`` environment value to get the instance
+/// of this structure for a given ``Environment``. Then call the instance
+/// to perform the dismissal. You call the instance directly because
+/// it defines a ``DismissAction/callAsFunction()``
+/// method that Swift calls when you call the instance.
 ///
-/// Use the ``EnvironmentValues/dismiss`` environment value to get the handler.
-/// Then call the action's handler to perform the dismissal. For example,
-/// you can use the action to add a done button to a sheet's toolbar:
+/// For example, you can create a button that calls the ``DismissAction``:
 ///
-///     struct SheetView: View {
-///         @Environment(\.dismiss) var dismiss
+///     private struct SheetContents: View {
+///         @Environment(\.dismiss) private var dismiss
 ///
 ///         var body: some View {
-///             NavigationView {
-///                 SheetContents()
-///                     .toolbar {
-///                         Button("Done") {
-///                             dismiss()
-///                         }
-///                     }
+///             Button("Done") {
+///                 dismiss()
 ///             }
 ///         }
 ///     }
 ///
+/// If you present the `SheetContents` view in a sheet, the user can dismiss
+/// the sheet by tapping or clicking the sheet's button:
+///
+///     private struct DetailView: View {
+///         @State private var isSheetPresented = false
+///
+///         var body: some View {
+///             Button("Show Sheet") {
+///                 isSheetPresented = true
+///             }
+///             .sheet(isPresented: $isSheetPresented) {
+///                 SheetContents()
+///             }
+///         }
+///     }
+///
+/// Be sure that you define the action in the appropriate environment.
+/// For example, don't reorganize the `DetailView` in the example above
+/// so that it creates the `dismiss` property and calls it from the
+/// ``View/sheet(item:onDismiss:content:)`` view modifier's `content`
+/// closure:
+///
+///     private struct DetailView: View {
+///         @State private var isSheetPresented = false
+///         @Environment(\.dismiss) private var dismiss // Applies to DetailView.
+///
+///         var body: some View {
+///             Button("Show Sheet") {
+///                 isSheetPresented = true
+///             }
+///             .sheet(isPresented: $isSheetPresented) {
+///                 Button("Done") {
+///                     dismiss() // Fails to dismiss the sheet.
+///                 }
+///             }
+///         }
+///     }
+///
+/// If you do this, the sheet fails to dismiss because the action applies
+/// to the environment where you declared it, which is that of the detail
+/// view, rather than the sheet. In fact, if you've presented the detail
+/// view in a ``NavigationView``, the dismissal pops the detail view
+/// from the navigation stack.
+///
+/// The dismiss action has no effect on a view that isn't currently
+/// presented. If you need to query whether SwiftUI is currently presenting
+/// a view, read the ``EnvironmentValues/isPresented`` environment value.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct DismissAction {
 
     /// Dismisses the view if it is currently presented.
     ///
-    /// Use this method to attempt to dismiss a presentation. This function
-    /// is used when you call the function ``dismiss()``.
+    /// Don't call this method directly. SwiftUI calls it for you when you
+    /// call the ``DismissAction`` structure that you get from the
+    /// ``Environment``:
+    ///
+    ///     private struct SheetContents: View {
+    ///         @Environment(\.dismiss) private var dismiss
+    ///
+    ///         var body: some View {
+    ///             Button("Done") {
+    ///                 dismiss() // Implicitly calls dismiss.callAsFunction()
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// For information about how Swift uses the `callAsFunction()` method to
+    /// simplify call site syntax, see
+    /// [Methods with Special Names](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID622)
+    /// in *The Swift Programming Language*.
     public func callAsFunction()
 }
 
-/// Provides functionality for dismissing a search interaction.
+/// An action that can end a search interaction.
+///
+/// Use the ``EnvironmentValues/dismissSearch`` environment value to get the
+/// instance of this structure for a given ``Environment``. Then call the
+/// instance to dismiss the current search interaction. You call the instance
+/// directly because it defines a ``DismissSearchAction/callAsFunction()``
+/// method that Swift calls when you call the instance.
+///
+/// When you dismiss search, SwiftUI:
+///
+/// * Sets ``EnvironmentValues/isSearching`` to `false`.
+/// * Clears any text from the search field.
+/// * Removes focus from the search field.
+///
+/// > Note: Calling this instance has no effect if the user isn't
+/// interacting with a search field.
+///
+/// Use this action to dismiss a search operation based on
+/// another user interaction. For example, consider a searchable
+/// view with a ``Button`` that presents more information about the first
+/// matching item from a collection:
+///
+///     struct ContentView: View {
+///         @State private var text = ""
+///
+///         var body: some View {
+///             NavigationView {
+///                 SearchResults(searchText: text)
+///                     .searchable(text: $text)
+///             }
+///         }
+///     }
+///
+///     private struct SearchResults: View {
+///         let searchText: String
+///
+///         let items = ["a", "b", "c"]
+///         var filteredItems: [String] { items.filter { $0 == searchText.lowercased() } }
+///
+///         @State private var isPresented = false
+///
+///         var body: some View {
+///             if let item = filteredItems.first {
+///                 Button("Details about \(item)") {
+///                     isPresented = true
+///                 }
+///                 .sheet(isPresented: $isPresented) {
+///                     NavigationView {
+///                         DetailView(item: item)
+///                     }
+///                 }
+///             }
+///         }
+///     }
+///
+/// The button becomes visible only after the user enters search text
+/// that produces a match. When the user taps the button, SwiftUI shows
+/// a sheet that provides more information about the item, including
+/// an Add button for adding the item to a stored list of items:
+///
+///     private struct DetailView: View {
+///         let item: String
+///
+///         @Environment(\.dismiss) private var dismiss
+///         @Environment(\.dismissSearch) private var dismissSearch
+///
+///         var body: some View {
+///             Text("Information about \(item).")
+///                 .toolbar {
+///                     Button("Add") {
+///                         // Store the item here...
+///
+///                         dismiss()
+///                         dismissSearch()
+///                     }
+///                 }
+///         }
+///     }
+///
+/// The user can dismiss the sheet by dragging it down, effectively
+/// canceling the operation, leaving the in-progress search interaction
+/// intact. Alternatively, the user can tap the Add button to store the
+/// item. Because the user is likely to be done with both the detail view
+/// and the search interaction at this point, the button's closure also
+/// uses the ``EnvironmentValues/dismiss`` property to dismiss the sheet,
+/// and the ``EnvironmentValues/dismissSearch`` property to reset the
+/// search field.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct DismissSearchAction {
 
-    /// Requests the current view hierarchy to end searching.
+    /// Dismisses the current search operation, if any.
+    ///
+    /// Don't call this method directly. SwiftUI calls it for you when you
+    /// call the ``DismissSearchAction`` structure that you get from the
+    /// ``Environment``:
+    ///
+    ///     private struct SearchedView: View {
+    ///         @Environment(\.dismissSearch) private var dismissSearch
+    ///
+    ///         var body: some View {
+    ///             Button("Cancel") {
+    ///                 dismissSearch() // Implicitly calls dismissSearch.callAsFunction()
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// For information about how Swift uses the `callAsFunction()` method to
+    /// simplify call site syntax, see
+    /// [Methods with Special Names](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID622)
+    /// in *The Swift Programming Language*.
     public func callAsFunction()
 }
 
@@ -8434,11 +8636,12 @@ extension EdgeInsets : Animatable {
 extension EdgeInsets : Sendable {
 }
 
-/// A button that toggles the edit mode for the current edit scope.
+/// A button that toggles the edit mode environment value.
 ///
-/// An Edit button toggles the ``EditMode`` for content within a container that
-/// supports ``EditMode/active``. In the following example, an `EditButton`
-/// placed inside a ``NavigationView`` supports editing of a ``List``:
+/// An edit button toggles the environment's ``EnvironmentValues/editMode``
+/// value for content within a container that supports edit mode.
+/// In the following example, an edit button placed inside a ``NavigationView``
+/// supports editing of a ``List``:
 ///
 ///     @State private var fruits = [
 ///         "Apple",
@@ -8448,35 +8651,36 @@ extension EdgeInsets : Sendable {
 ///     ]
 ///
 ///     var body: some View {
-///         NavigationView{
+///         NavigationView {
 ///             List {
-///                 ForEach(
-///                     fruits,
-///                     id: \.self
-///                 ) { fruit in
+///                 ForEach(fruits, id: \.self) { fruit in
 ///                     Text(fruit)
 ///                 }
-///                 .onDelete { self.deleteFruit(at :$0) }
-///                 .onMove { self.moveFruit(from: $0, to: $1) }
+///                 .onDelete { fruits.remove(atOffsets: $0) }
+///                 .onMove { fruits.move(fromOffsets: $0, toOffset: $1) }
 ///             }
 ///             .navigationTitle("Fruits")
-///             .toolbar { EditButton() }
+///             .toolbar {
+///                 EditButton()
+///             }
 ///         }
 ///     }
 ///
-/// Because the list defines behaviors for
+/// Because the ``ForEach`` in the above example defines behaviors for
 /// ``DynamicViewContent/onDelete(perform:)`` and
 /// ``DynamicViewContent/onMove(perform:)``, the editable list displays the
-/// delete and move UI when the user taps Edit, as seen in the
-/// following screenshot. Also notice that the Edit button displays the title
-/// "Done", because the list is in editing mode.
+/// delete and move UI when the user taps Edit. Notice that the Edit button
+/// displays the title "Done" while edit mode is active:
 ///
-/// ![A screenshot of an app with an navigation with an EditButton as its
-/// right-side button, labeled Done to indicate it is active. Below the
-/// navigation, a list labeled Fruits contains four members, each showing
-/// its delete and move user interface
-/// elements.](SwiftUI-EditButton-editingList.png)
+/// ![A screenshot of an app with an Edit button in the navigation bar.
+/// The button is labeled Done to indicate edit mode is active. Below the
+/// navigation bar, a list labeled Fruits in edit mode. The list contains
+/// four members, each showing a red circle containing a white dash to the
+/// left of the item, and an icon composed of three horizontal lines to the
+/// right of the item.](EditButton-1)
 ///
+/// You can also create custom views that react to changes in the edit mode
+/// state, as described in ``EditMode``.
 @available(iOS 13.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
@@ -8510,26 +8714,76 @@ public struct EditButton : View {
     public typealias Body = some View
 }
 
-/// The mode of a view indicating whether the user can edit its content.
+/// A mode that indicates whether the user can edit a view's content.
+///
+/// You receive an optional binding to the edit mode state when you
+/// read the ``EnvironmentValues/editMode`` environment value. The binding
+/// contains an `EditMode` value that indicates whether edit mode is active,
+/// and that you can use to change the mode. To learn how to read an environment
+/// value, see ``EnvironmentValues``.
+///
+/// Certain built-in views automatically alter their appearance and behavior
+/// in edit mode. For example, a ``List`` with a ``ForEach`` that's
+/// configured with the ``DynamicViewContent/onDelete(perform:)`` or
+/// ``DynamicViewContent/onMove(perform:)`` modifier provides controls to
+/// delete or move list items while in edit mode. On iOS and tvOS, lists
+/// configured for selection activate the selection interface only when
+/// edit mode is active.
+///
+/// You can also customize your own views to react to edit mode.
+/// The following example replaces a read-only ``Text`` view with
+/// an editable ``TextField``, checking for edit mode by
+/// testing the wrapped value's ``EditMode/isEditing`` property:
+///
+///     @Environment(\.editMode) private var editMode
+///     @State private var name = "Maria Ruiz"
+///
+///     var body: some View {
+///         Form {
+///             if editMode?.wrappedValue.isEditing == true {
+///                 TextField("Name", text: $name)
+///             } else {
+///                 Text(name)
+///             }
+///         }
+///         .animation(nil, value: editMode?.wrappedValue)
+///         .toolbar { // Assumes embedding this view in a NavigationView.
+///             EditButton()
+///         }
+///     }
+///
+/// You can set the edit mode through the binding, or you can
+/// rely on an ``EditButton`` to do that for you, as the example above
+/// demonstrates. The button activates edit mode when the user
+/// taps it, and disables the mode when the user taps again.
 @available(iOS 13.0, tvOS 13.0, *)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
 public enum EditMode {
 
-    /// The view content cannot be edited.
+    /// The user can't edit the view content.
+    ///
+    /// The ``isEditing`` property is `false` in this state.
     case inactive
 
     /// The view is in a temporary edit mode.
     ///
-    /// The definition of temporary might vary by platform or specific control.
-    /// As an example, temporary edit mode may be engaged over the duration of a
-    /// swipe gesture.
+    /// The use of this state varies by platform and for different
+    /// controls. As an example, SwiftUI might engage temporary edit mode
+    /// over the duration of a swipe gesture.
+    ///
+    /// The ``isEditing`` property is `true` in this state.
     case transient
 
-    /// The view content can be edited.
+    /// The user can edit the view content.
+    ///
+    /// The ``isEditing`` property is `true` in this state.
     case active
 
     /// Indicates whether a view is being edited.
+    ///
+    /// This property returns `true` if the mode is something other than
+    /// inactive.
     public var isEditing: Bool { get }
 
     /// Returns a Boolean value indicating whether two values are equal.
@@ -9444,12 +9698,53 @@ extension EnvironmentValues {
 extension EnvironmentValues {
 
     /// The horizontal size class of this environment.
+    ///
+    /// You receive a ``UserInterfaceSizeClass`` value when you read this
+    /// environment value. The value tells you about the amount of horizontal
+    /// space available to the view that reads it. You can read this
+    /// size class like any other of the ``EnvironmentValues``, by creating a
+    /// property with the ``Environment`` property wrapper:
+    ///
+    ///     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    ///
+    /// SwiftUI sets this size class based on several factors, including:
+    ///
+    /// * The current device type.
+    /// * The orientation of the device.
+    /// * The appearance of Slide Over and Split View on iPad.
+    ///
+    /// Several built-in views change their behavior based on this size class.
+    /// For example, a ``NavigationView`` presents a multicolumn view when
+    /// the horizontal size class is ``UserInterfaceSizeClass/regular``,
+    /// but a single column otherwise. You can also adjust the appearance of
+    /// custom views by reading the size class and conditioning your views.
+    /// If you do, be prepared to handle size class changes while
+    /// your app runs, because factors like device orientation can change at
+    /// runtime.
     @available(macOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
     public var horizontalSizeClass: UserInterfaceSizeClass?
 
     /// The vertical size class of this environment.
+    ///
+    /// You receive a ``UserInterfaceSizeClass`` value when you read this
+    /// environment value. The value tells you about the amount of vertical
+    /// space available to the view that reads it. You can read this
+    /// size class like any other of the ``EnvironmentValues``, by creating a
+    /// property with the ``Environment`` property wrapper:
+    ///
+    ///     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    ///
+    /// SwiftUI sets this size class based on several factors, including:
+    ///
+    /// * The current device type.
+    /// * The orientation of the device.
+    ///
+    /// You can adjust the appearance of custom views by reading this size
+    /// class and conditioning your views. If you do, be prepared to
+    /// handle size class changes while your app runs, because factors like
+    /// device orientation can change at runtime.
     @available(macOS, unavailable)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -9547,79 +9842,115 @@ extension EnvironmentValues {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension EnvironmentValues {
 
-    /// Whether the user is currently interacting with a search field that has
-    /// been placed by a surrounding searchable modifier.
+    /// A Boolean value that indicates when the user is searching.
     ///
-    ///     struct ContentView: View {
-    ///         @State var text = ""
+    /// You can read this value like any of the other ``EnvironmentValues``,
+    /// by creating a property with the ``Environment`` property wrapper:
+    ///
+    ///     @Environment(\.isSearching) private var isSearching
+    ///
+    /// Get the value to find out when the user interacts with a search
+    /// field that's produced by one of the searchable modifiers, like
+    /// ``View/searchable(text:placement:prompt:)-18a8f``:
+    ///
+    ///     struct SearchingExample: View {
+    ///         @State private var text = ""
     ///
     ///         var body: some View {
-    ///             SearchReadingView()
-    ///                 .searchable(text: $text)
+    ///             NavigationView {
+    ///                 SearchedView()
+    ///                     .searchable(text: $text)
+    ///             }
     ///         }
     ///     }
     ///
-    ///     struct SearchReadingView: View {
-    ///         @Environment(\.isSearching) var isSearching
-    ///
-    ///         var body: some View {
-    ///             if isSearching {
-    ///                Text("Searching!")
-    ///             } else {
-    ///                 Text("Not searching.")
-    ///         }
-    ///     }
-    ///
-    public var isSearching: Bool { get }
-
-    /// Asks the system to dismiss the current search interaction.
-    ///
-    /// When able, this will cause ``EnvironmentValues/isSearching`` to
-    /// become false, any search text to be cleared, and the search field to
-    /// lose focus.
-    ///
-    ///     NavigationView {
-    ///         MyList()
-    ///            .searchable(text: $text)
-    ///     }
-    ///
-    ///     struct MyList: View {
-    ///         @State private var isPresented = false
+    ///     struct SearchedView: View {
     ///         @Environment(\.isSearching) private var isSearching
     ///
     ///         var body: some View {
-    ///             Text("Main List")
-    ///                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-    ///                 .overlay {
-    ///                     if isSearching {
-    ///                         Button {
-    ///                             isPresented = true
-    ///                         } label: {
-    ///                             Text("Present")
-    ///                                 .frame(
-    ///                                     maxWidth: .infinity,
-    ///                                     maxHeight: .infinity
-    ///                                 )
-    ///                                 .background()
-    ///                         }
-    ///                         .sheet(isPresented: $isPresented) {
-    ///                             NavigationView {
-    ///                                 DetailView()
-    ///                             }
-    ///                         }
-    ///                     }
-    ///                 }
+    ///             Text(isSearching ? "Searching!" : "Not searching.")
     ///         }
     ///     }
     ///
-    ///     struct DetailView: View {
+    /// When the user first taps or clicks in a search field, the
+    /// `isSearching` property becomes `true`. When the user cancels the
+    /// search operation, the property becomes `false`. To programmatically
+    /// set the value to `false` and dismiss the search operation, use
+    /// ``EnvironmentValues/dismissSearch``.
+    public var isSearching: Bool { get }
+
+    /// An action that ends the current search interaction.
+    ///
+    /// Use this environment value to get the ``DismissSearchAction`` instance
+    /// for the current ``Environment``. Then call the instance to dismiss
+    /// the current search interaction. You call the instance directly because
+    /// it defines a ``DismissSearchAction/callAsFunction()`` method that Swift
+    /// calls when you call the instance.
+    ///
+    /// When you dismiss search, SwiftUI:
+    ///
+    /// * Sets ``EnvironmentValues/isSearching`` to `false`.
+    /// * Clears any text from the search field.
+    /// * Removes focus from the search field.
+    ///
+    /// > Note: Calling this instance has no effect if the user isn't
+    /// interacting with a search field.
+    ///
+    /// Use this action to dismiss a search operation based on
+    /// another user interaction. For example, consider a searchable
+    /// view with a ``Button`` that presents more information about the first
+    /// matching item from a collection:
+    ///
+    ///     struct ContentView: View {
+    ///         @State private var text = ""
+    ///
+    ///         var body: some View {
+    ///             NavigationView {
+    ///                 SearchResults(searchText: text)
+    ///                     .searchable(text: $text)
+    ///             }
+    ///         }
+    ///     }
+    ///
+    ///     private struct SearchResults: View {
+    ///         let searchText: String
+    ///
+    ///         let items = ["a", "b", "c"]
+    ///         var filteredItems: [String] { items.filter { $0 == searchText.lowercased() } }
+    ///
+    ///         @State private var isPresented = false
+    ///
+    ///         var body: some View {
+    ///             if let item = filteredItems.first {
+    ///                 Button("Details about \(item)") {
+    ///                     isPresented = true
+    ///                 }
+    ///                 .sheet(isPresented: $isPresented) {
+    ///                     NavigationView {
+    ///                         DetailView(item: item)
+    ///                     }
+    ///                 }
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// The button becomes visible only after the user enters search text
+    /// that produces a match. When the user taps the button, SwiftUI shows
+    /// a sheet that provides more information about the item, including
+    /// an Add button for adding the item to a stored list of items:
+    ///
+    ///     private struct DetailView: View {
+    ///         let item: String
+    ///
     ///         @Environment(\.dismiss) private var dismiss
     ///         @Environment(\.dismissSearch) private var dismissSearch
     ///
     ///         var body: some View {
-    ///             Text("Detail Content")
+    ///             Text("Information about \(item).")
     ///                 .toolbar {
     ///                     Button("Add") {
+    ///                         // Store the item here...
+    ///
     ///                         dismiss()
     ///                         dismissSearch()
     ///                     }
@@ -9627,6 +9958,13 @@ extension EnvironmentValues {
     ///         }
     ///     }
     ///
+    /// The user can dismiss the sheet by dragging it down, effectively
+    /// canceling the operation, leaving the in-progress search interaction
+    /// intact. Alternatively, the user can tap the Add button to store the
+    /// item. Because the user is likely to be done with both the detail view
+    /// and the search interaction at this point, the button's closure also
+    /// uses the ``EnvironmentValues/dismiss`` property to dismiss the sheet,
+    /// and the `dismissSearch` property to reset the search field.
     public var dismissSearch: DismissSearchAction { get }
 }
 
@@ -9635,35 +9973,128 @@ extension EnvironmentValues {
 
     /// A refresh action stored in a view's environment.
     ///
-    /// If you design a custom view that can support a refresh operation,
-    /// like a view that displays a collection of model objects stored on a
-    /// server, use the existence of an action in the view's environment
-    /// to change the view's appearance and behavior to provide
-    /// a way for the user to initiate the refresh action. An action of `nil`
-    /// indicates that the view doesn't need to support refresh.
+    /// When this environment value contains an instance of the
+    /// ``RefreshAction`` structure, certain built-in views in the corresponding
+    /// ``Environment`` begin offering a refresh capability. They apply the
+    /// instance's handler to any refresh operation that the user initiates.
+    /// By default, the environment value is `nil`, but you can use the
+    /// ``View/refreshable(action:)`` modifier to create and store a new
+    /// refresh action that uses the handler that you specify:
     ///
-    /// Set a value for this action on a view using the
-    /// ``View/refreshable(action:)`` modifier.
+    ///     List(mailbox.conversations) { conversation in
+    ///         ConversationCell(conversation)
+    ///     }
+    ///     .refreshable {
+    ///         await mailbox.fetch()
+    ///     }
+    ///
+    /// On iOS and iPadOS, the ``List`` in the example above offers a
+    /// pull to refresh gesture because it detects the refresh action. When
+    /// the user drags the list down and releases, the list calls the action's
+    /// handler. Because SwiftUI declares the handler as asynchronous, it can
+    /// safely make long-running asynchronous calls, like fetching network data.
+    ///
+    /// ### Refreshing Custom Views
+    ///
+    /// You can also offer refresh capability in your custom views.
+    /// Read the `refresh` environment value to get the ``RefreshAction``
+    /// instance for a given ``Environment``. If you find
+    /// a non-`nil` value, change your view's appearance or behavior to offer
+    /// the refresh to the user, and call the instance to conduct the
+    /// refresh. You can call the refresh instance directly because it defines
+    /// a ``RefreshAction/callAsFunction()`` method that Swift calls
+    /// when you call the instance:
+    ///
+    ///     struct RefreshableView: View {
+    ///         @Environment(\.refresh) private var refresh
+    ///
+    ///         var body: some View {
+    ///             Button("Refresh") {
+    ///                 Task {
+    ///                     await refresh?()
+    ///                 }
+    ///             }
+    ///             .disabled(refresh == nil)
+    ///         }
+    ///     }
+    ///
+    /// Be sure to call the handler asynchronously by preceding it
+    /// with `await`. Because the call is asynchronous, you can use
+    /// its lifetime to indicate progress to the user. For example,
+    /// you can reveal an indeterminate ``ProgressView`` before
+    /// calling the handler, and hide it when the handler completes.
+    ///
+    /// If your code isn't already in an asynchronous context, create a
+    /// <doc://com.apple.documentation/documentation/Swift/Task> for the
+    /// method to run in. If you do this, consider adding a way for the
+    /// user to cancel the task. For more information, see
+    /// [Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
+    /// in *The Swift Programming Language*.
     public var refresh: RefreshAction? { get }
 }
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension EnvironmentValues {
 
-    /// Opens a URL using the ``OpenURLAction`` from the environment.
+    /// An action that opens a URL.
     ///
-    /// Set this value to customize URL handling in the view hierarchy.
-    /// This affects URL handling in ``Link`` views and links embedded in
-    /// ``Text`` views through link attributes in ``AttributedString`` or
-    /// Markdown links.
+    /// Read this environment value to get an ``OpenURLAction``
+    /// instance for a given ``Environment``. Call the
+    /// instance to open a URL. You call the instance directly because it
+    /// defines a ``OpenURLAction/callAsFunction(_:)`` method that Swift
+    /// calls when you call the instance.
     ///
-    ///     Text("Visit [Example Co](https://www.example.com) for details.")
+    /// For example, you can open a web site when the user taps a button:
+    ///
+    ///     struct OpenURLExample: View {
+    ///         @Environment(\.openURL) private var openURL
+    ///
+    ///         var body: some View {
+    ///             Button {
+    ///                 if let url = URL(string: "https://www.example.com") {
+    ///                     openURL(url)
+    ///                 }
+    ///             } label: {
+    ///                 Label("Get Help", systemImage: "person.fill.questionmark")
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// If you want to know whether the action succeeds, add a completion
+    /// handler that takes a Boolean value. In this case, Swift implicitly
+    /// calls the ``OpenURLAction/callAsFunction(_:completion:)`` method
+    /// instead. That method calls your completion handler after it determines
+    /// whether it can open the URL, but possibly before it finishes opening
+    /// the URL. You can add a handler to the example above so that
+    /// it prints the outcome to the console:
+    ///
+    ///     openURL(url) { accepted in
+    ///         print(accepted ? "Success" : "Failure")
+    ///     }
+    ///
+    /// The system provides a default open URL action with behavior
+    /// that depends on the contents of the URL. For example, the default
+    /// action opens a Universal Link in the associated app if possible,
+    /// or in the user’s default web browser if not.
+    ///
+    /// You can also set a custom action using the ``View/environment(_:_:)``
+    /// view modifier. Any views that read the action from the environment,
+    /// including the built-in ``Link`` view and ``Text`` views with markdown
+    /// links, or links in attributed strings, use your action. Initialize an
+    /// action by calling the ``OpenURLAction/init(handler:)`` initializer with
+    /// a handler that takes a URL and returns an ``OpenURLAction/Result``:
+    ///
+    ///     Text("Visit [Example Company](https://www.example.com) for details.")
     ///         .environment(\.openURL, OpenURLAction { url in
-    ///             handleURL(url)
+    ///             handleURL(url) // Define this method to take appropriate action.
     ///             return .handled
     ///         })
     ///
-    /// The default value opens a URL using the appropriate system service.
+    /// SwiftUI translates the value that your custom action's handler
+    /// returns into an appropriate Boolean result for the action call.
+    /// For example, a view that uses the action declared above
+    /// receives `true` when calling the action, because the
+    /// handler always returns ``OpenURLAction/Result/handled``.
     public var openURL: OpenURLAction
 }
 
@@ -9702,11 +10133,101 @@ extension EnvironmentValues {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension EnvironmentValues {
 
-    /// Dismisses the current presentation.
+    /// An action that dismisses the current presentation.
+    ///
+    /// Use this environment value to get the ``DismissAction`` instance
+    /// for the current ``Environment``. Then call the instance
+    /// to perform the dismissal. You call the instance directly because
+    /// it defines a ``DismissAction/callAsFunction()``
+    /// method that Swift calls when you call the instance.
+    ///
+    /// For example, you can create a button that calls the ``DismissAction``:
+    ///
+    ///     private struct SheetContents: View {
+    ///         @Environment(\.dismiss) private var dismiss
+    ///
+    ///         var body: some View {
+    ///             Button("Done") {
+    ///                 dismiss()
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// If you present the `SheetContents` view in a sheet, the user can dismiss
+    /// the sheet by tapping or clicking the sheet's button:
+    ///
+    ///     private struct DetailView: View {
+    ///         @State private var isSheetPresented = false
+    ///
+    ///         var body: some View {
+    ///             Button("Show Sheet") {
+    ///                 isSheetPresented = true
+    ///             }
+    ///             .sheet(isPresented: $isSheetPresented) {
+    ///                 SheetContents()
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// Be sure that you define the action in the appropriate environment.
+    /// For example, don't reorganize the `DetailView` in the example above
+    /// so that it creates the `dismiss` property and calls it from the
+    /// ``View/sheet(item:onDismiss:content:)`` view modifier's `content`
+    /// closure:
+    ///
+    ///     private struct DetailView: View {
+    ///         @State private var isSheetPresented = false
+    ///         @Environment(\.dismiss) private var dismiss // Applies to DetailView.
+    ///
+    ///         var body: some View {
+    ///             Button("Show Sheet") {
+    ///                 isSheetPresented = true
+    ///             }
+    ///             .sheet(isPresented: $isSheetPresented) {
+    ///                 Button("Done") {
+    ///                     dismiss() // Fails to dismiss the sheet.
+    ///                 }
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// If you do this, the sheet fails to dismiss because the action applies
+    /// to the environment where you declared it, which is that of the detail
+    /// view, rather than the sheet. In fact, if you've presented the detail
+    /// view in a ``NavigationView``, the dismissal pops the detail view
+    /// the navigation stack.
+    ///
+    /// The dismiss action has no effect on a view that isn't currently
+    /// presented. If you need to query whether SwiftUI is currently presenting
+    /// a view, read the ``EnvironmentValues/isPresented`` environment value.
     public var dismiss: DismissAction { get }
 
     /// A Boolean value that indicates whether the view associated with this
-    /// environment is currently being presented.
+    /// environment is currently presented.
+    ///
+    /// You can read this value like any of the other ``EnvironmentValues``
+    /// by creating a property with the ``Environment`` property wrapper:
+    ///
+    ///     @Environment(\.isPresented) private var isPresented
+    ///
+    /// Read the value inside a view if you need to know when SwiftUI
+    /// presents that view. For example, you can take an action when SwiftUI
+    /// presents a view by using the ``View/onChange(of:perform:)``
+    /// modifier:
+    ///
+    ///     .onChange(of: isPresented) { isPresented in
+    ///         if isPresented {
+    ///             // Do something when first presented.
+    ///         }
+    ///     }
+    ///
+    /// This behaves differently than ``View/onAppear(perform:)``, which
+    /// SwiftUI can call more than once for a given presentation, like
+    /// when you navigate back to a view that's already in the
+    /// navigation hierarchy.
+    ///
+    /// To dismiss the currently presented view, use
+    /// ``EnvironmentValues/dismiss``.
     public var isPresented: Bool { get }
 }
 
@@ -9789,8 +10310,48 @@ extension EnvironmentValues {
 @available(watchOS, unavailable)
 extension EnvironmentValues {
 
-    /// The mode indicating whether the user can edit the contents of a view
+    /// An indication of whether the user can edit the contents of a view
     /// associated with this environment.
+    ///
+    /// Read this environment value to receive a optional binding to the
+    /// edit mode state. The binding contains an ``EditMode`` value
+    /// that indicates whether edit mode is active, and that you can use to
+    /// change the mode. To learn how to read an environment
+    /// value, see ``EnvironmentValues``.
+    ///
+    /// Certain built-in views automatically alter their appearance and behavior
+    /// in edit mode. For example, a ``List`` with a ``ForEach`` that's
+    /// configured with the ``DynamicViewContent/onDelete(perform:)`` or
+    /// ``DynamicViewContent/onMove(perform:)`` modifier provides controls to
+    /// delete or move list items while in edit mode. On iOS and tvOS, lists
+    /// present the selection interface only when edit mode is active.
+    ///
+    /// You can also customize your own views to react to edit mode.
+    /// The following example replaces a read-only ``Text`` view with
+    /// an editable ``TextField``, checking for edit mode by
+    /// testing the wrapped value's ``EditMode/isEditing`` property:
+    ///
+    ///     @Environment(\.editMode) private var editMode
+    ///     @State private var name = "Maria Ruiz"
+    ///
+    ///     var body: some View {
+    ///         Form {
+    ///             if editMode?.wrappedValue.isEditing == true {
+    ///                 TextField("Name", text: $name)
+    ///             } else {
+    ///                 Text(name)
+    ///             }
+    ///         }
+    ///         .animation(nil, value: editMode?.wrappedValue)
+    ///         .toolbar { // Assumes embedding this view in a NavigationView.
+    ///             EditButton()
+    ///         }
+    ///     }
+    ///
+    /// You can set the edit mode through the binding, or you can
+    /// rely on an ``EditButton`` to do that for you, as the example above
+    /// demonstrates. The button activates edit mode when the user
+    /// taps the Edit button, and disables editing mode when the user taps Done.
     @available(macOS, unavailable)
     @available(watchOS, unavailable)
     public var editMode: Binding<EditMode>?
@@ -9842,26 +10403,61 @@ extension EnvironmentValues {
 
     /// The color scheme of this environment.
     ///
-    /// When writing custom drawing code that depends on the current color
-    /// scheme, you should also consider the
-    /// ``EnvironmentValues/colorSchemeContrast`` property. You can specify
-    /// images and colors in asset catalogs according to either the
-    /// ``ColorScheme/light`` or ``ColorScheme/dark`` color scheme, as well as
-    /// standard or increased contrast. The correct image or color displays
-    /// automatically for the current environment.
+    /// Read this environment value from within a view to find out if SwiftUI
+    /// is currently displaying the view using the ``ColorScheme/light`` or
+    /// ``ColorScheme/dark`` appearance. The value that you receive depends on
+    /// whether the user has enabled Dark Mode, possibly superseded by
+    /// the configuration of the current presentation's view hierarchy.
     ///
-    /// You only need to check `colorScheme` and
-    /// ``EnvironmentValues/colorSchemeContrast`` for custom drawing if the
-    /// differences go beyond images and colors.
+    ///     @Environment(\.colorScheme) private var colorScheme
     ///
-    /// Setting the `colorScheme` environment value directly is an advanced use
-    /// case, as it changes the color scheme of the contained views but *not* of
-    /// the container. Instead, consider using the
-    /// ``View/preferredColorScheme(_:)`` modifier, which propagates to the
-    /// presentation containing the view.
+    ///     var body: some View {
+    ///         Text(colorScheme == .dark ? "Dark" : "Light")
+    ///     }
+    ///
+    /// You can set the `colorScheme` environment value directly,
+    /// but that usually isn't what you want. Doing so changes the color
+    /// scheme of the given view and its child views but *not* the views
+    /// above it in the view hierarchy. Instead, set a color scheme using the
+    /// ``View/preferredColorScheme(_:)`` modifier, which also propagates the
+    /// value up through the view hierarchy to the enclosing presentation, like
+    /// a sheet or a window.
+    ///
+    /// When adjusting your app's user interface to match the color scheme,
+    /// consider also checking the ``EnvironmentValues/colorSchemeContrast``
+    /// property, which reflects a system-wide contrast setting that the user
+    /// controls. For information about using color and contrast in your app,
+    /// see [Color and Contrast](https://developer.apple.com/design/human-interface-guidelines/accessibility/overview/color-and-contrast/).
+    ///
+    /// > Note: If you only need to provide different colors or
+    /// images for different color scheme and contrast settings, do that in
+    /// your app's Asset Catalog. See
+    /// <doc://com.apple.documentation/documentation/Xcode/Asset-Management>.
     public var colorScheme: ColorScheme
 
     /// The contrast associated with the color scheme of this environment.
+    ///
+    /// Read this environment value from within a view to find out if SwiftUI
+    /// is currently displaying the view using ``ColorSchemeContrast/standard``
+    /// or ``ColorSchemeContrast/increased`` contrast. The value that you read
+    /// depends entirely on user settings, and you can't change it.
+    ///
+    ///     @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+    ///
+    ///     var body: some View {
+    ///         Text(colorSchemeContrast == .standard ? "Standard" : "Increased")
+    ///     }
+    ///
+    /// When adjusting your app's user interface to match the contrast,
+    /// consider also checking the ``EnvironmentValues/colorScheme`` property
+    /// to find out if SwiftUI is displaying the view with a light or dark
+    /// appearance. For information about using color and contrast in your app,
+    /// see [Color and Contrast](https://developer.apple.com/design/human-interface-guidelines/accessibility/overview/color-and-contrast/).
+    ///
+    /// > Note: If you only need to provide different colors or
+    /// images for different color scheme and contrast settings, do that in
+    /// your app's Asset Catalog. See
+    /// <doc://com.apple.documentation/documentation/Xcode/Asset-Management>.
     public var colorSchemeContrast: ColorSchemeContrast { get }
 }
 
@@ -10627,12 +11223,11 @@ public struct FetchedResults<Result> : RandomAccessCollection where Result : NSF
     /// type.
     public typealias Iterator = IndexingIterator<FetchedResults<Result>>
 
-    /// A sequence that represents a contiguous subrange of the collection's
-    /// elements.
+    /// A collection representing a contiguous subrange of this collection's
+    /// elements. The subsequence shares indices with the original collection.
     ///
-    /// This associated type appears as a requirement in the `Sequence`
-    /// protocol, but it is restated here with stricter constraints. In a
-    /// collection, the subsequence should also conform to `Collection`.
+    /// The default subsequence type for collections that don't define their own
+    /// is `Slice`.
     public typealias SubSequence = Slice<FetchedResults<Result>>
 }
 
@@ -11237,7 +11832,38 @@ extension Font {
     /// the flow of text.
     public func uppercaseSmallCaps() -> Font
 
-    /// Adjusts the font to use monospace digits.
+    /// Returns a modified font that uses fixed-width digits, while leaving
+    /// other characters proportionally spaced.
+    ///
+    /// This modifier only affects numeric characters, and leaves all other
+    /// characters unchanged. If the base font doesn't support fixed-width,
+    /// or _monospace_ digits, the font remains unchanged.
+    ///
+    /// The following example shows two text fields arranged in a ``VStack``.
+    /// Both text fields specify the 12-point system font, with the second
+    /// adding the `monospacedDigit()` modifier to the font. Because the text
+    /// includes the digit 1, normally a narrow character in proportional
+    /// fonts, the second text field becomes wider than the first.
+    ///
+    ///     @State private var userText = "Effect of monospacing digits: 111,111."
+    ///
+    ///     var body: some View {
+    ///         VStack {
+    ///             TextField("Proportional", text: $userText)
+    ///                 .font(.system(size: 12))
+    ///             TextField("Monospaced", text: $userText)
+    ///                 .font(.system(size: 12).monospacedDigit())
+    ///         }
+    ///         .padding()
+    ///         .navigationTitle(Text("Font + monospacedDigit()"))
+    ///     }
+    ///
+    /// ![A macOS window showing two text fields arranged vertically. Each
+    /// shows the text Effect of monospacing digits: 111,111. The even spacing
+    /// of the digit 1 in the second text field causes it to be noticably wider
+    /// than the first.](Environment-Font-monospacedDigit-1)
+    ///
+    /// - Returns: A font that uses fixed-width numeric characters.
     public func monospacedDigit() -> Font
 
     /// Sets the weight of the font.
@@ -11246,9 +11872,49 @@ extension Font {
     /// Adds bold styling to the font.
     public func bold() -> Font
 
-    /// Switches the font to a monospaced version of the same family
-    /// as the base font or a default monospaced font
-    /// if no suitable font face in the same family is found.
+    /// Returns a fixed-width font from the same family as the base font.
+    ///
+    /// If there's no suitable font face in the same family, SwiftUI
+    /// returns a default fixed-width font.
+    ///
+    /// The following example adds the `monospaced()` modifier to the default
+    /// system font, then applies this font to a ``Text`` view:
+    ///
+    ///     struct ContentView: View {
+    ///         let myFont = Font
+    ///             .system(size: 24)
+    ///             .monospaced()
+    ///
+    ///         var body: some View {
+    ///             Text("Hello, world!")
+    ///                 .font(myFont)
+    ///                 .padding()
+    ///                 .navigationTitle("Monospaced")
+    ///         }
+    ///     }
+    ///
+    ///
+    /// ![A macOS window showing the text Hello, world in a 24-point
+    /// fixed-width font.](Environment-Font-monospaced-1)
+    ///
+    /// SwiftUI may provide different fixed-width replacements for standard
+    /// user interface fonts (such as ``Font/title``, or a system font created
+    /// with ``Font/system(_:design:)``) than for those same fonts when created
+    /// by name with ``Font/custom(_:size:)``.
+    ///
+    /// The ``View/font(_:)`` modifier applies the font to all text within
+    /// the view. To mix fixed-width text with other styles in the same
+    /// `Text` view, use the ``Text/init(_:)-1a4oh`` initializer to use an
+    /// appropropriately-styled
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributedString>
+    /// for the text view's content. You can use the
+    /// <doc://com.apple.documentation/documentation/Foundation/AttributedString/3796160-init>
+    /// initializer to provide a Markdown-formatted string containing the
+    /// backtick-syntax (\`…\`) to apply code voice to specific ranges
+    /// of the attributed string.
+    ///
+    /// - Returns: A fixed-width font from the same family as the base font,
+    /// if one is available, and a default fixed-width font otherwise.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func monospaced() -> Font
 
@@ -11283,16 +11949,6 @@ extension Font {
 
         public static let black: Font.Weight
 
-        /// Returns a Boolean value indicating whether two values are equal.
-        ///
-        /// Equality is the inverse of inequality. For any values `a` and `b`,
-        /// `a == b` implies that `a != b` is `false`.
-        ///
-        /// - Parameters:
-        ///   - lhs: A value to compare.
-        ///   - rhs: Another value to compare.
-        public static func == (a: Font.Weight, b: Font.Weight) -> Bool
-
         /// Hashes the essential components of this value by feeding them into the
         /// given hasher.
         ///
@@ -11307,6 +11963,16 @@ extension Font {
         /// - Parameter hasher: The hasher to use when combining the components
         ///   of this instance.
         public func hash(into hasher: inout Hasher)
+
+        /// Returns a Boolean value indicating whether two values are equal.
+        ///
+        /// Equality is the inverse of inequality. For any values `a` and `b`,
+        /// `a == b` implies that `a != b` is `false`.
+        ///
+        /// - Parameters:
+        ///   - lhs: A value to compare.
+        ///   - rhs: Another value to compare.
+        public static func == (a: Font.Weight, b: Font.Weight) -> Bool
 
         /// The hash value.
         ///
@@ -11995,7 +12661,7 @@ extension Gesture {
     @inlinable public func updating<State>(_ state: GestureState<State>, body: @escaping (Self.Value, inout State, inout Transaction) -> Void) -> GestureStateGesture<Self, State>
 }
 
-/// Options that control how adding a gesture to a view affect's other gestures
+/// Options that control how adding a gesture to a view affects other gestures
 /// recognized by the view and its subviews.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct GestureMask : OptionSet {
@@ -12682,7 +13348,7 @@ public struct GraphicalDatePickerStyle : DatePickerStyle {
     ///
     /// SwiftUI initially sets this to the environment of the context's
     /// enclosing view. The context uses values like display
-    /// resolution and teh color scheme from the environment to resolve types
+    /// resolution and the color scheme from the environment to resolve types
     /// like ``Image`` and ``Color``. You can also access values stored in the
     /// environment for your own purposes.
     public var environment: EnvironmentValues { get }
@@ -14288,6 +14954,7 @@ public struct GroupedListStyle : ListStyle {
 ///             }
 ///         }
 ///     }
+///
 /// ![Five text views, named Item 1 through Item 5, arranged in a
 /// horizontal row.](SwiftUI-HStack-simple.png)
 ///
@@ -16264,20 +16931,27 @@ public struct LinearProgressViewStyle : ProgressViewStyle {
 
 /// A control for navigating to a URL.
 ///
-/// You create a link by providing a destination URL and a title. The title
-/// tells the user the purpose of the link, which can be either a string, or a
-/// title key that returns a localized string used to construct a label
-/// displayed to the user in your app's UI. The example below creates a link to
-/// `example.com` and displays the title string you provide as a
-/// link-styled view in your app:
+/// Create a link by providing a destination URL and a title. The title
+/// tells the user the purpose of the link, and can be a string, a title
+/// key that produces a localized string, or a view that acts as a label.
+/// The example below creates a link to `example.com` and displays the
+/// title string as a link-styled view:
 ///
 ///     Link("View Our Terms of Service",
 ///           destination: URL(string: "https://www.example.com/TOS.html")!)
 ///
-/// When a user taps or clicks a `Link`, where the URL opens depends on the
-/// contents of the URL. For example, a Universal Link will open in the
-/// associated app, if possible, but otherwise in the user's default web
-/// browser.
+/// When a user taps or clicks a `Link`, the default behavior depends on the
+/// contents of the URL. For example, SwiftUI opens a Universal Link in the
+/// associated app if possible, or in the user's default web browser if not.
+/// Alternatively, you can override the default behavior by setting the
+/// ``EnvironmentValues/openURL`` environment value with a custom
+/// ``OpenURLAction``:
+///
+///     Link("Visit Our Site", destination: URL(string: "https://www.example.com")!)
+///         .environment(\.openURL, OpenURLAction { url in
+///             print("Open \(url)")
+///             return .handled
+///         })
 ///
 /// As with other views, you can style links using standard view modifiers
 /// depending on the view type of the link's label. For example, a ``Text``
@@ -16384,6 +17058,7 @@ extension Link where Label == Text {
 ///         let name: String
 ///         let id = UUID()
 ///     }
+///
 ///     private var oceans = [
 ///         Ocean(name: "Pacific"),
 ///         Ocean(name: "Atlantic"),
@@ -16416,6 +17091,7 @@ extension Link where Label == Text {
 ///         let name: String
 ///         let id = UUID()
 ///     }
+///
 ///     private var oceans = [
 ///         Ocean(name: "Pacific"),
 ///         Ocean(name: "Atlantic"),
@@ -16423,6 +17099,7 @@ extension Link where Label == Text {
 ///         Ocean(name: "Southern"),
 ///         Ocean(name: "Arctic")
 ///     ]
+///
 ///     @State private var multiSelection = Set<UUID>()
 ///
 ///     var body: some View {
@@ -16435,6 +17112,12 @@ extension Link where Label == Text {
 ///         }
 ///         Text("\(multiSelection.count) selections")
 ///     }
+///
+/// On iOS and tvOS, you must explicitly put the list into edit mode to
+/// enable selections. To do that, either add an ``EditButton`` to
+/// your user interface, or modify the ``EnvironmentValues/editMode``
+/// value directly. The example above uses an Edit button, which changes
+/// its title to Done while in edit mode:
 ///
 /// ![A navigation view with the title Oceans and an active edit button with
 /// the title Done. Below this, a vertical list with five text views, each with
@@ -16458,11 +17141,14 @@ extension Link where Label == Text {
 ///          let id = UUID()
 ///          let stats: [String: String]
 ///      }
+///
 ///      class OceanStore: ObservableObject {
 ///          @Published var oceans = [Ocean]()
-///          func loadStats() async -> Void {}
+///          func loadStats() async {}
 ///      }
+///
 ///      @EnvironmentObject var store: OceanStore
+///
 ///      var body: some View {
 ///          NavigationView {
 ///              List(store.oceans) { ocean in
@@ -16493,12 +17179,14 @@ extension Link where Label == Text {
 ///             let name: String
 ///             let id = UUID()
 ///         }
+///
 ///         struct OceanRegion: Identifiable {
 ///             let name: String
 ///             let seas: [Sea]
 ///             let id = UUID()
 ///         }
-///         private let oceanRegions: [OceanRegion]  = [
+///
+///         private let oceanRegions: [OceanRegion] = [
 ///             OceanRegion(name: "Pacific",
 ///                         seas: [Sea(name: "Australasian Mediterranean"),
 ///                                Sea(name: "Philippine"),
@@ -16511,15 +17199,16 @@ extension Link where Label == Text {
 ///             OceanRegion(name: "Indian",
 ///                         seas: [Sea(name: "Bay of Bengal")]),
 ///             OceanRegion(name: "Southern",
-///                         seas: [Sea(name:"Weddell")]),
+///                         seas: [Sea(name: "Weddell")]),
 ///             OceanRegion(name: "Arctic",
 ///                         seas: [Sea(name: "Greenland")])
 ///         ]
-///         @State private var singleSelection : UUID?
+///
+///         @State private var singleSelection: UUID?
 ///
 ///         var body: some View {
 ///             NavigationView {
-///                 List(selection: $singleSelection){
+///                 List(selection: $singleSelection) {
 ///                     ForEach(oceanRegions) { region in
 ///                         Section(header: Text("Major \(region.name) Ocean Seas")) {
 ///                             ForEach(region.seas) { sea in
@@ -16616,7 +17305,9 @@ public struct List<SelectionValue, Content> : View where SelectionValue : Hashab
     /// rows.
     ///
     /// On iOS and tvOS, you must explicitly put the list into edit mode for
-    /// the selection to apply.
+    /// the selection to apply. To do that, either add an ``EditButton`` to
+    /// your user interface, or modify the ``EnvironmentValues/editMode``
+    /// value directly.
     ///
     /// - Parameters:
     ///   - selection: A binding to a set that identifies selected rows.
@@ -16628,7 +17319,9 @@ public struct List<SelectionValue, Content> : View where SelectionValue : Hashab
     /// row.
     ///
     /// On iOS and tvOS, you must explicitly put the list into edit mode for
-    /// the selection to apply.
+    /// the selection to apply. To do that, either add an ``EditButton`` to
+    /// your user interface, or modify the ``EnvironmentValues/editMode``
+    /// value directly.
     ///
     /// - Parameters:
     ///   - selection: A binding to a selected row.
@@ -17421,12 +18114,55 @@ extension ListStyle where Self == PlainListStyle {
         @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
         public mutating func appendInterpolation(_ text: Text)
 
-        /// Appends an AttributedString to a string interpolation.
+        /// Appends an attributed string to a string interpolation.
         ///
         /// Don't call this method directly; it's used by the compiler when
         /// interpreting string interpolations.
         ///
-        /// - Parameter attributedString: The AttributedString to append.
+        /// The following example shows how to use a string interpolation to
+        /// format an
+        /// <doc://com.apple.documentation/documentation/Foundation/AttributedString>
+        /// and append it to static text. The resulting interpolation implicitly
+        /// creates a ``LocalizedStringKey``, which a ``Text`` view uses to provide
+        /// its content.
+        ///
+        ///     struct ContentView: View {
+        ///
+        ///         var nextDate: AttributedString {
+        ///             var result = Calendar.current
+        ///                 .nextWeekend(startingAfter: Date.now)!
+        ///                 .start
+        ///                 .formatted(
+        ///                     .dateTime
+        ///                     .month(.wide)
+        ///                     .day()
+        ///                     .attributed
+        ///                 )
+        ///             result.backgroundColor = .green
+        ///             result.foregroundColor = .white
+        ///             return result
+        ///         }
+        ///
+        ///         var body: some View {
+        ///             Text("Our next catch-up is on \(nextDate)!")
+        ///         }
+        ///     }
+        ///
+        /// For this example, assume that the app runs on a device set to a
+        /// Russian locale, and has the following entry in a Russian-localized
+        /// `Localizable.strings` file:
+        ///
+        ///     "Our next catch-up is on %@!" = "Наша следующая встреча состоится %@!";
+        ///
+        /// The attributed string `nextDate` replaces the format specifier
+        /// `%@`,  maintaining its color and date-formatting attributes, when
+        /// the ``Text`` view renders its contents:
+        ///
+        /// ![A text view with Russian text, ending with a date that uses white
+        /// text on a green
+        /// background.](LocalizedStringKey-AttributedString-Russian)
+        ///
+        /// - Parameter attributedString: The attributed string to append.
         @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
         public mutating func appendInterpolation(_ attributedString: AttributedString)
 
@@ -19526,92 +20262,209 @@ extension OffsetShape : InsettableShape where Content : InsettableShape {
     public typealias InsetShape = OffsetShape<Content.InsetShape>
 }
 
-/// Provides functionality for opening a URL.
+/// An action that opens a URL.
 ///
-/// The `OpenURLAction` instance in the app's ``Environment`` offers
-/// a handler that you can use to open a URL in response to some action.
-/// Use the ``EnvironmentValues/openURL`` environment value to get the handler.
-/// Then call the action's handler when you need to open a URL. For example,
-/// you can open a support URL in response to when a user taps a button:
+/// Read the ``EnvironmentValues/openURL`` environment value to get an
+/// instance of this structure for a given ``Environment``. Call the
+/// instance to open a URL. You call the instance directly because it
+/// defines a ``OpenURLAction/callAsFunction(_:)`` method that Swift
+/// calls when you call the instance.
 ///
-///     struct OpenUrlActionView: View {
-///         @Environment(\.openURL) var openURL
+/// For example, you can open a web site when the user taps a button:
+///
+///     struct OpenURLExample: View {
+///         @Environment(\.openURL) private var openURL
 ///
 ///         var body: some View {
-///             Button(action: contactSupport) {
-///                 Text("Email Support")
-///                 Image(systemName: "envelope.open")
+///             Button {
+///                 if let url = URL(string: "https://www.example.com") {
+///                     openURL(url)
+///                 }
+///             } label: {
+///                 Label("Get Help", systemImage: "person.fill.questionmark")
 ///             }
-///         }
-///
-///         func contactSupport() {
-///             guard let url = URL(string: "https://www.example.com") else {
-///                 return
-///             }
-///             openURL(url)
 ///         }
 ///     }
 ///
+/// If you want to know whether the action succeeds, add a completion
+/// handler that takes a Boolean value. In this case, Swift implicitly
+/// calls the ``OpenURLAction/callAsFunction(_:completion:)`` method
+/// instead. That method calls your completion handler after it determines
+/// whether it can open the URL, but possibly before it finishes opening
+/// the URL. You can add a handler to the example above so that
+/// it prints the outcome to the console:
+///
+///     openURL(url) { accepted in
+///         print(accepted ? "Success" : "Failure")
+///     }
+///
+/// The system provides a default open URL action with behavior
+/// that depends on the contents of the URL. For example, the default
+/// action opens a Universal Link in the associated app if possible,
+/// or in the user’s default web browser if not.
+///
+/// You can also set a custom action using the ``View/environment(_:_:)``
+/// view modifier. Any views that read the action from the environment,
+/// including the built-in ``Link`` view and ``Text`` views with markdown
+/// links, or links in attributed strings, use your action. Initialize an
+/// action by calling the ``OpenURLAction/init(handler:)`` initializer with
+/// a handler that takes a URL and returns an ``OpenURLAction/Result``:
+///
+///     Text("Visit [Example Company](https://www.example.com) for details.")
+///         .environment(\.openURL, OpenURLAction { url in
+///             handleURL(url) // Define this method to take appropriate action.
+///             return .handled
+///         })
+///
+/// SwiftUI translates the value that your custom action's handler
+/// returns into an appropriate Boolean result for the action call.
+/// For example, a view that uses the action declared above
+/// receives `true` when calling the action, because the
+/// handler always returns ``OpenURLAction/Result/handled``.
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct OpenURLAction {
 
-    /// The result of a custom ``OpenURLAction``.
+    /// The result of a custom open URL action.
     ///
-    /// Use this type to indicate if the URL was handled, discarded or if
-    /// it should be handled by the system instead.
+    /// If you declare a custom ``OpenURLAction`` in the ``Environment``,
+    /// return one of the result values from its handler.
+    ///
+    /// * Use ``handled`` to indicate that the handler opened the URL.
+    /// * Use ``discarded`` to indicate that the handler discarded the URL.
+    /// * Use ``systemAction`` without an argument to ask SwiftUI
+    ///   to open the URL with the system handler.
+    /// * Use ``systemAction(_:)`` with a URL argument to ask SwiftUI
+    ///   to open the specified URL with the system handler.
+    ///
+    /// You can use the last option to transform URLs, while
+    /// still relying on the system to open the URL. For example,
+    /// you could append a path component to every URL:
+    ///
+    ///     .environment(\.openURL, OpenURLAction { url in
+    ///         .systemAction(url.appendingPathComponent("edit"))
+    ///     })
+    ///
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public struct Result {
 
-        /// The URL was handled.
+        /// The handler opened the URL.
         ///
-        /// The completion handler for this action is invoked with `true`.
+        /// The action invokes its completion handler with `true` when your
+        /// handler returns this value.
         public static let handled: OpenURLAction.Result
 
-        /// The URL was discarded.
+        /// The handler discarded the URL.
         ///
-        /// The completion handler for this action is invoked with `false`.
+        /// The action invokes its completion handler with `false` when your
+        /// handler returns this value.
         public static let discarded: OpenURLAction.Result
 
-        /// The original URL should be handled by the system.
+        /// The handler asks the system to open the original URL.
+        ///
+        /// The action invokes its completion handler with a value that
+        /// depends on the outcome of the system's attempt to open the URL.
         public static let systemAction: OpenURLAction.Result
 
-        /// The URL should be handled by the system.
+        /// The handler asks the system to open the modified URL.
         ///
-        /// - Parameter url: The URL to forward to the system action to handle.
+        /// The action invokes its completion handler with a value that
+        /// depends on the outcome of the system's attempt to open the URL.
+        ///
+        /// - Parameter url: The URL that the handler asks the system to open.
         public static func systemAction(_ url: URL) -> OpenURLAction.Result
     }
 
-    /// Creates an action that provides functionality for opening a URL.
+    /// Creates an action that opens a URL.
     ///
-    /// - Parameter handler: The action to run for the given URL.
+    /// Use this initializer to create a custom action for opening URLs.
+    /// Provide a handler that takes a URL and returns an
+    /// ``OpenURLAction/Result``. Place your handler in the environment
+    /// using the ``View/environment(_:_:)`` view modifier:
+    ///
+    ///     Text("Visit [Example Company](https://www.example.com) for details.")
+    ///         .environment(\.openURL, OpenURLAction { url in
+    ///             handleURL(url) // Define this method to take appropriate action.
+    ///             return .handled
+    ///         })
+    ///
+    /// Any views that read the action from the environment, including the
+    /// built-in ``Link`` view and ``Text`` views with markdown links, or
+    /// links in attributed strings, use your action.
+    ///
+    /// SwiftUI translates the value that your custom action's handler
+    /// returns into an appropriate Boolean result for the action call.
+    /// For example, a view that uses the action declared above
+    /// receives `true` when calling the action, because the
+    /// handler always returns ``OpenURLAction/Result/handled``.
+    ///
+    /// - Parameter handler: The closure to run for the given URL.
+    ///   The closure takes a URL as input, and returns a ``Result``
+    ///   that indicates the outcome of the action.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public init(handler: @escaping (URL) -> OpenURLAction.Result)
 
     /// Opens a URL, following system conventions.
     ///
-    /// Use this method to attempt to open a URL. This function handles the
-    /// calling of the platform specific URL handler contained in the
-    /// `openURL` property stored the app's ``Environment``, and is used when
-    /// you call the function ``openURL(:_)``.
+    /// Don't call this method directly. SwiftUI calls it when you
+    /// call the ``OpenURLAction`` structure that you get from the
+    /// ``Environment``, using a URL as an argument:
     ///
-    /// - Parameters:
-    ///   - url: The URL to open.
+    ///     struct OpenURLExample: View {
+    ///         @Environment(\.openURL) private var openURL
+    ///
+    ///         var body: some View {
+    ///             Button {
+    ///                 if let url = URL(string: "https://www.example.com") {
+    ///                     openURL(url) // Implicitly calls openURL.callAsFunction(url)
+    ///                 }
+    ///             } label: {
+    ///                 Label("Get Help", systemImage: "person.fill.questionmark")
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// For information about how Swift uses the `callAsFunction()` method to
+    /// simplify call site syntax, see
+    /// [Methods with Special Names](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID622)
+    /// in *The Swift Programming Language*.
+    ///
+    /// - Parameter url: The URL to open.
     public func callAsFunction(_ url: URL)
 
     /// Asynchronously opens a URL, following system conventions.
     ///
-    /// Use this method when attempting to asynchronously open a URL; the
-    /// result indicates whether the system was able open the URL.
-    /// The completion runs after the system decides that it can open the URL,
-    /// but the full opening of the URL may not yet be complete when calling the
-    /// completion handler.
+    /// Don't call this method directly. SwiftUI calls it when you
+    /// call the ``OpenURLAction`` structure that you get from the
+    /// ``Environment``, using a URL and a completion handler as arguments:
+    ///
+    ///     struct OpenURLExample: View {
+    ///         @Environment(\.openURL) private var openURL
+    ///
+    ///         var body: some View {
+    ///             Button {
+    ///                 if let url = URL(string: "https://www.example.com") {
+    ///                     // Implicitly calls openURL.callAsFunction(url) { ... }
+    ///                     openURL(url) { accepted in
+    ///                         print(accepted ? "Success" : "Failure")
+    ///                     }
+    ///                 }
+    ///             } label: {
+    ///                 Label("Get Help", systemImage: "person.fill.questionmark")
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// For information about how Swift uses the `callAsFunction()` method to
+    /// simplify call site syntax, see
+    /// [Methods with Special Names](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID622)
+    /// in *The Swift Programming Language*.
     ///
     /// - Parameters:
     ///   - url: The URL to open.
     ///   - completion: A closure the method calls after determining if
-    ///     it is possible to open the URL, although possibly before fully
-    ///     opening the URL. The closure takes a Boolean that indicates whether
-    ///     the URL can be opened.
+    ///     it can open the URL, but possibly before fully opening the URL.
+    ///     The closure takes a Boolean value that indicates whether the
+    ///     method can open the URL.
     @available(watchOS, unavailable)
     public func callAsFunction(_ url: URL, completion: @escaping (_ accepted: Bool) -> Void)
 }
@@ -20319,38 +21172,47 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 /// the label to a view that visually describes the purpose of selecting content
 /// in the picker, and then provide the content for the picker to display.
 ///
-/// For example, consider the following enumeration of ice cream flavors:
+/// For example, consider an enumeration of ice cream flavors and a ``State``
+/// variable to hold the selected flavor:
 ///
 ///     enum Flavor: String, CaseIterable, Identifiable {
-///         case chocolate
-///         case vanilla
-///         case strawberry
-///
-///         var id: String { self.rawValue }
+///         case chocolate, vanilla, strawberry
+///         var id: Self { self }
 ///     }
 ///
-/// You can create a picker to select among these values by providing ``Text``
-/// views in the picker initializer's content. You can optionally provide a
-/// string as the first parameter; if you do, the picker creates a ``Text``
-/// label using this string:
+///     @State private var selectedFlavor: Flavor = .chocolate
 ///
-///     @State private var selectedFlavor = Flavor.chocolate
+/// You can create a picker to select among the values by providing a label, a
+/// binding to the current selection, and a collection of views for the picker's
+/// content. Append a tag to each of these content views using the
+/// ``View/tag(_:)`` view modifier so that the type of each selection matches
+/// the type of the bound state variable:
 ///
-///     Picker("Flavor", selection: $selectedFlavor) {
-///         Text("Chocolate").tag(Flavor.chocolate)
-///         Text("Vanilla").tag(Flavor.vanilla)
-///         Text("Strawberry").tag(Flavor.strawberry)
+///     List {
+///         Picker("Flavor", selection: $selectedFlavor) {
+///             Text("Chocolate").tag(Flavor.chocolate)
+///             Text("Vanilla").tag(Flavor.vanilla)
+///             Text("Strawberry").tag(Flavor.strawberry)
+///         }
 ///     }
-///     Text("Selected flavor: \(selectedFlavor.rawValue)")
 ///
-/// You append a tag to each text view so that the type of each selection
-/// matches the type of the bound state variable.
+/// If you provide a string label for the picker, as the example above does,
+/// the picker uses it to initialize a ``Text`` view as a
+/// label. Alternatively, you can use the ``init(selection:content:label:)``
+/// initializer to compose the label from other views. The exact appearance
+/// of the picker depends on the context. If you use a picker in a ``List``
+/// in iOS, it appears in a row with the label and selected value, and a
+/// chevron to indicate that you can tap the row to select a new value:
 ///
-/// ### Iterating Over a Picker’s Options
+/// ![A screenshot of a list row that has the string Flavor on the left side,
+/// and the string Chocolate on the right. The word Chocolate appears in a less
+/// prominent color than the word Flavor. A right facing chevron appears to the
+/// right of the word Chocolate.](Picker-1-iOS)
+///
+/// ### Iterating over a Picker’s Options
 ///
 /// To provide selection values for the `Picker` without explicitly listing
-/// each option, you can create the picker with a ``ForEach`` construct, like
-/// this:
+/// each option, you can create the picker with a ``ForEach``:
 ///
 ///     Picker("Flavor", selection: $selectedFlavor) {
 ///         ForEach(Flavor.allCases) { flavor in
@@ -20358,24 +21220,21 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 ///         }
 ///     }
 ///
-/// In this case, ``ForEach`` automatically assigns a tag to the selection
-/// views, using each option's `id`, which it can do because `Flavor` conforms
-/// to the <doc://com.apple.documentation/documentation/Swift/Identifiable>
+/// ``ForEach`` automatically assigns a tag to the selection views using
+/// each option's `id`. This is possible because `Flavor` conforms to the
+/// <doc://com.apple.documentation/documentation/Swift/Identifiable>
 /// protocol.
 ///
-/// On the other hand, if the selection type doesn't match the input to the
-/// ``ForEach``, you need to provide an explicit tag. The following example
-/// shows a picker that's bound to a `Topping` type, even though the options
-/// are all `Flavor` instances. Each option uses ``View/tag(_:)`` to associate
-/// a topping with the flavor it displays.
+/// The example above relies on the fact that `Flavor` defines the type of its
+/// `id` parameter to exactly match the selection type. If that's not the case,
+/// you need to override the tag. For example, consider a `Topping` type
+/// and a suggested topping for each flavor:
 ///
 ///     enum Topping: String, CaseIterable, Identifiable {
-///         case nuts
-///         case cookies
-///         case blueberries
-///
-///         var id: String { self.rawValue }
+///         case nuts, cookies, blueberries
+///         var id: Self { self }
 ///     }
+///
 ///     extension Flavor {
 ///         var suggestedTopping: Topping {
 ///             switch self {
@@ -20385,29 +21244,58 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 ///             }
 ///         }
 ///     }
-///     @State var suggestedTopping: Topping = .cookies
 ///
-///     Picker("Suggest a topping for:", selection: $suggestedTopping) {
-///         ForEach(Flavor.allCases) { flavor in
-///             Text(flavor.rawValue.capitalized)
-///                 .tag(flavor.suggestedTopping)
+///     @State private var suggestedTopping: Topping = .nuts
+///
+/// The following example shows a picker that's bound to a `Topping` type,
+/// while the options are all `Flavor` instances. Each option uses the tag
+/// modifier to associate the suggested topping with the flavor it displays:
+///
+///     List {
+///         Picker("Flavor", selection: $suggestedTopping) {
+///             ForEach(Flavor.allCases) { flavor in
+///                 Text(flavor.rawValue.capitalized)
+///                     .tag(flavor.suggestedTopping)
+///             }
+///         }
+///         HStack {
+///             Text("Suggested Topping")
+///             Spacer()
+///             Text(suggestedTopping.rawValue.capitalized)
+///                 .foregroundStyle(.secondary)
 ///         }
 ///     }
-///     Text("suggestedTopping: \(suggestedTopping.rawValue)")
+///
+/// When the user selects chocolate, the picker sets `suggestedTopping`
+/// to the value in the associated tag:
+///
+/// ![A screenshot of two list rows. The first has the string Flavor on the left
+/// side, and the string Chocolate on the right. A right facing chevron appears
+/// to the right of the word Chocolate. The second row has the string Suggested
+/// Topping on the left, and the string Nuts on the right. Both words on the
+/// right use a less prominent color than those on the left.](Picker-2-iOS)
+///
+/// Other examples of when the views in a picker's ``ForEach`` need an explicit
+/// tag modifier include when you:
+/// * Select over the cases of an enumeration that conforms to the
+///   <doc://com.apple.documentation/documentation/Swift/Identifiable> protocol
+///   by using anything besides `Self` as the `id` parameter type. For example,
+///   a string enumeration might use the case's `rawValue` string as the `id`.
+///   That identifier type doesn't match the selection type, which is the type
+///   of the enumeration itself.
+/// * Use an optional value for the `selection` input parameter. For that to
+///   work, you need to explicitly cast the tag modifier's input as
+///   <doc://com.apple.documentation/documentation/Swift/Optional> to match.
+///   For an example of this, see ``View/tag(_:)``.
 ///
 /// ### Styling Pickers
 ///
-/// You can customize the appearance and interaction of pickers by creating
-/// styles that conform to the ``PickerStyle`` protocol. You create your own style
-/// or use one of the styles provided by SwiftUI, like ``PickerStyle/segmented``
-/// or ``PickerStyle/menu``.
-///
-/// To set a specific style for all picker instances within a view, use the
-/// ``View/pickerStyle(_:)`` modifier. The following example adds a second binding
-/// type, `Topping`, and applies the ``PickerStyle/segmented`` style to two pickers:
-///
-///     @State private var selectedFlavor = Flavor.chocolate
-///     @State private var selectedTopping = Topping.nuts
+/// You can customize the appearance and interaction of pickers using
+/// styles that conform to the ``PickerStyle`` protocol, like
+/// ``PickerStyle/segmented`` or ``PickerStyle/menu``. To set a specific style
+/// for all picker instances within a view, use the ``View/pickerStyle(_:)``
+/// modifier. The following example applies the ``PickerStyle/segmented``
+/// style to two pickers that independently select a flavor and a topping:
 ///
 ///     VStack {
 ///         Picker("Flavor", selection: $selectedFlavor) {
@@ -20416,16 +21304,17 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 ///             }
 ///         }
 ///         Picker("Topping", selection: $selectedTopping) {
-///             ForEach(Topping.allCases) { flavor in
-///                 Text(flavor.rawValue.capitalized)
+///             ForEach(Topping.allCases) { topping in
+///                 Text(topping.rawValue.capitalized)
 ///             }
 ///         }
-///
-///         Text("Selected flavor: \(selectedFlavor.rawValue)")
-///         Text("Selected topping: \(selectedTopping.rawValue)")
 ///     }
 ///     .pickerStyle(.segmented)
 ///
+/// ![A screenshot of two segmented controls. The first has segments labeled
+/// Chocolate, Vanilla, and Strawberry, with the first of these selected.
+/// The second control has segments labeled Nuts, Cookies, and Blueberries,
+/// with the second of these selected.](Picker-3-iOS)
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public struct Picker<Label, SelectionValue, Content> : View where Label : View, SelectionValue : Hashable, Content : View {
 
@@ -20768,6 +21657,11 @@ extension PreferenceKey where Self.Value : ExpressibleByNilLiteral {
 }
 
 /// A key for specifying the preferred color scheme.
+///
+/// Don't use this key directly. Instead, set a preferred color scheme for a
+/// view using the ``View/preferredColorScheme(_:)`` view modifier. Get the
+/// current color scheme for a view by accessing the
+/// ``EnvironmentValues/colorScheme`` value.
 @available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 public struct PreferredColorSchemeKey : PreferenceKey {
 
@@ -22025,21 +22919,93 @@ public struct ReferenceFileDocumentConfiguration<Document> where Document : Refe
     public var isEditable: Bool
 }
 
-/// An action that users can initiate to refresh model data.
+/// An action that initiates a refresh operation.
 ///
-/// The `RefreshAction` instance in an app's ``Environment`` contains
-/// a handler that you can set to customize how a view
-/// refreshes its data model.
-/// Use the ``View/refreshable(action:)`` modifier to set this action.
+/// When the ``EnvironmentValues/refresh`` environment value contains an
+/// instance of this structure, certain built-in views in the corresponding
+/// ``Environment`` begin offering a refresh capability. They apply the
+/// instance's handler to any refresh operation that the user initiates.
+/// By default, the environment value is `nil`, but you can use the
+/// ``View/refreshable(action:)`` modifier to create and store a new
+/// refresh action that uses the handler that you specify:
+///
+///     List(mailbox.conversations) { conversation in
+///         ConversationCell(conversation)
+///     }
+///     .refreshable {
+///         await mailbox.fetch()
+///     }
+///
+/// On iOS and iPadOS, the ``List`` in the example above offers a
+/// pull to refresh gesture because it detects the refresh action. When
+/// the user drags the list down and releases, the list calls the action's
+/// handler. Because SwiftUI declares the handler as asynchronous, it can
+/// safely make long-running asynchronous calls, like fetching network data.
+///
+/// ### Refreshing Custom Views
+///
+/// You can also offer refresh capability in your custom views.
+/// Read the ``EnvironmentValues/refresh`` environment value to get the
+/// `RefreshAction` instance for a given ``Environment``. If you find
+/// a non-`nil` value, change your view's appearance or behavior to offer
+/// the refresh to the user, and call the instance to conduct the
+/// refresh. You can call the refresh instance directly because it defines
+/// a ``RefreshAction/callAsFunction()`` method that Swift calls
+/// when you call the instance:
+///
+///     struct RefreshableView: View {
+///         @Environment(\.refresh) private var refresh
+///
+///         var body: some View {
+///             Button("Refresh") {
+///                 Task {
+///                     await refresh?()
+///                 }
+///             }
+///             .disabled(refresh == nil)
+///         }
+///     }
+///
+/// Be sure to call the handler asynchronously by preceding it
+/// with `await`. Because the call is asynchronous, you can use
+/// its lifetime to indicate progress to the user. For example,
+/// you might reveal an indeterminate ``ProgressView`` before
+/// calling the handler, and hide it when the handler completes.
+///
+/// If your code isn't already in an asynchronous context, create a
+/// <doc://com.apple.documentation/documentation/Swift/Task> for the
+/// method to run in. If you do this, consider adding a way for the
+/// user to cancel the task. For more information, see
+/// [Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html)
+/// in *The Swift Programming Language*.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 public struct RefreshAction {
 
-    /// Trigger a refresh action.
+    /// Initiates a refresh action.
     ///
-    /// This async function is stored in the environment
-    /// ``EnvironmentValues/refresh`` and can be set with the modifier
-    /// ``View/refreshable(action:)``. Call this function to initiate a
-    /// refresh action.
+    /// Don't call this method directly. SwiftUI calls it when you
+    /// call the ``RefreshAction`` structure that you get from the
+    /// ``Environment``:
+    ///
+    ///     struct RefreshableView: View {
+    ///         @Environment(\.refresh) private var refresh
+    ///
+    ///         var body: some View {
+    ///             Button("Refresh") {
+    ///                 Task {
+    ///                     await refresh?()  // Implicitly calls refresh.callAsFunction()
+    ///                 }
+    ///             }
+    ///             .disabled(refresh == nil)
+    ///         }
+    ///     }
+    ///
+    /// For information about how Swift uses the `callAsFunction()` method to
+    /// simplify call site syntax, see
+    /// [Methods with Special Names](https://docs.swift.org/swift-book/ReferenceManual/Declarations.html#ID622)
+    /// in *The Swift Programming Language*.
+    /// For information about asynchronous operations in Swift, see
+    /// [Concurrency](https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html).
     public func callAsFunction() async
 }
 
@@ -23980,12 +24946,11 @@ public struct SectionedFetchResults<SectionIdentifier, Result> : RandomAccessCol
         /// type.
         public typealias Iterator = IndexingIterator<SectionedFetchResults<SectionIdentifier, Result>.Section>
 
-        /// A sequence that represents a contiguous subrange of the collection's
-        /// elements.
+        /// A collection representing a contiguous subrange of this collection's
+        /// elements. The subsequence shares indices with the original collection.
         ///
-        /// This associated type appears as a requirement in the `Sequence`
-        /// protocol, but it is restated here with stricter constraints. In a
-        /// collection, the subsequence should also conform to `Collection`.
+        /// The default subsequence type for collections that don't define their own
+        /// is `Slice`.
         public typealias SubSequence = Slice<SectionedFetchResults<SectionIdentifier, Result>.Section>
     }
 
@@ -24051,12 +25016,11 @@ public struct SectionedFetchResults<SectionIdentifier, Result> : RandomAccessCol
     /// type.
     public typealias Iterator = IndexingIterator<SectionedFetchResults<SectionIdentifier, Result>>
 
-    /// A sequence that represents a contiguous subrange of the collection's
-    /// elements.
+    /// A collection representing a contiguous subrange of this collection's
+    /// elements. The subsequence shares indices with the original collection.
     ///
-    /// This associated type appears as a requirement in the `Sequence`
-    /// protocol, but it is restated here with stricter constraints. In a
-    /// collection, the subsequence should also conform to `Collection`.
+    /// The default subsequence type for collections that don't define their own
+    /// is `Slice`.
     public typealias SubSequence = Slice<SectionedFetchResults<SectionIdentifier, Result>>
 }
 
@@ -25955,24 +26919,49 @@ public struct StackNavigationViewStyle : NavigationViewStyle {
 
 /// A property wrapper type that can read and write a value managed by SwiftUI.
 ///
-/// SwiftUI manages the storage of any property you declare as a state. When the
-/// state value changes, the view invalidates its appearance and recomputes the
-/// body. Use the state as the single source of truth for a given view.
+/// SwiftUI manages the storage of a property that you declare as state. When
+/// the value changes, SwiftUI updates the parts of the view hierarchy that
+/// depend on the value. Use state as the single source of truth for a given
+/// value stored in a view hierarchy.
 ///
-/// A ``State`` instance isn't the value itself; it's a means of reading and
-/// writing the value. To access a state's underlying value, use its variable
-/// name, which returns the ``State/wrappedValue`` property value.
+/// A `State` instance isn't the value itself; it's a means of reading and
+/// writing the value. To access a state's underlying value, refer to it by
+/// its property name, which returns the ``State/wrappedValue`` property value.
+/// For example, you can read and update the `isPlaying` state property in a
+/// `PlayButton` view by referring to the property directly:
 ///
-/// You should only access a state property from inside the view's body, or from
-/// methods called by it. For this reason, declare your state properties as
-/// private, to prevent clients of your view from accessing them. It is safe to
-/// mutate state properties from any thread.
+///     struct PlayButton: View {
+///         @State private var isPlaying: Bool = false
 ///
-/// To pass a state property to another view in the view hierarchy, use the
-/// variable name with the `$` prefix operator. This retrieves a binding of the
-/// state property from its ``State/projectedValue`` property. For example, in
-/// the following code example `PlayerView` passes its state property
-/// `isPlaying` to `PlayButton` using `$isPlaying`:
+///         var body: some View {
+///             Button(isPlaying ? "Pause" : "Play") {
+///                 isPlaying.toggle()
+///             }
+///         }
+///     }
+///
+/// If you pass a state property to a child view, SwiftUI updates the child
+/// any time the value changes in the parent, but the child can't modify the
+/// value. To enable the child view to modify the stored value, pass a
+/// ``Binding`` instead. You can get a binding to a state value by accessing
+/// the state's ``State/projectedValue``, which you get by prefixing the
+/// property name with a dollar sign (`$`).
+///
+/// For example, you can remove the `isPlaying` state from the play button in
+/// the example above, and instead make the button take a binding to the state:
+///
+///     struct PlayButton: View {
+///         @Binding var isPlaying: Bool
+///
+///         var body: some View {
+///             Button(isPlaying ? "Pause" : "Play") {
+///                 isPlaying.toggle()
+///             }
+///         }
+///     }
+///
+/// Then you can define a player view that declares the state and creates a
+/// binding to the state using the dollar sign prefix:
 ///
 ///     struct PlayerView: View {
 ///         var episode: Episode
@@ -25981,19 +26970,30 @@ public struct StackNavigationViewStyle : NavigationViewStyle {
 ///         var body: some View {
 ///             VStack {
 ///                 Text(episode.title)
-///                 Text(episode.showTitle)
-///                 PlayButton(isPlaying: $isPlaying)
+///                     .foregroundStyle(isPlaying ? .primary : .secondary)
+///                 PlayButton(isPlaying: $isPlaying) // Pass a binding.
 ///             }
 ///         }
 ///     }
+///
+/// Don't initialize a state property of a view at the point in the view
+/// hierarchy where you instantiate the view, because this can conflict with
+/// the storage management that SwiftUI provides. To avoid this, always
+/// declare state as private, and place it in the highest view in the view
+/// hierarchy that needs access to the value. Then share the state with any
+/// child views that also need access, either directly for read-only access,
+/// or as a binding for read-write access.
+///
+/// You can safely mutate state properties from any thread.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen @propertyWrapper public struct State<Value> : DynamicProperty {
 
     /// Creates the state with an initial wrapped value.
     ///
-    /// You don't call this initializer directly. Instead, declare a property
-    /// with the `@State` attribute, and provide an initial value; for example,
-    /// `@State private var isPlaying: Bool = false`.
+    /// Don't call this initializer directly. Instead, declare a property
+    /// with the ``State`` attribute, and provide an initial value:
+    ///
+    ///     @State private var isPlaying: Bool = false
     ///
     /// - Parameter wrappedValue: An initial wrappedValue for a state.
     public init(wrappedValue value: Value)
@@ -26006,34 +27006,31 @@ public struct StackNavigationViewStyle : NavigationViewStyle {
     /// The underlying value referenced by the state variable.
     ///
     /// This property provides primary access to the value's data. However, you
-    /// don't access `wrappedValue` directly. Instead, you use the property
-    /// variable created with the `@State` attribute. For example, in the
-    /// following code example the button's actions toggles the value of
-    /// `showingProfile`, which toggles `wrappedValue`:
+    /// don't access `wrappedValue` directly. Instead, you refer to the property
+    /// variable created with the ``State`` attribute. In the following example,
+    /// the button's label depends on the value of `isPlaying` and its action
+    /// toggles the value of `isPlaying`. Both of these accesses implicitly
+    /// rely on the state property's wrapped value.
     ///
-    ///     @State private var showingProfile = false
+    ///     struct PlayButton: View {
+    ///         @State private var isPlaying: Bool = false
     ///
-    ///     var profileButton: some View {
-    ///         Button(action: { self.showingProfile.toggle() }) {
-    ///             Image(systemName: "person.crop.circle")
-    ///                 .imageScale(.large)
-    ///                 .accessibilityLabel(Text("User Profile"))
-    ///                 .padding()
+    ///         var body: some View {
+    ///             Button(isPlaying ? "Pause" : "Play") {
+    ///                 isPlaying.toggle()
+    ///             }
     ///         }
     ///     }
     ///
-    /// When a mutable binding value changes, the new value is immediately
-    /// available. However, updates to a view displaying the value happens
-    /// asynchronously, so the view may not show the change immediately.
     public var wrappedValue: Value { get nonmutating set }
 
     /// A binding to the state value.
     ///
     /// Use the projected value to pass a binding value down a view hierarchy.
-    /// To get the `projectedValue`, prefix the property variable with `$`. For
-    /// example, in the following code example `PlayerView` projects a binding
+    /// To get the `projectedValue`, prefix the property variable with a dollar
+    /// sign (`$`). In the following example, `PlayerView` projects a binding
     /// of the state property `isPlaying` to the `PlayButton` view using
-    /// `$isPlaying`.
+    /// `$isPlaying`:
     ///
     ///     struct PlayerView: View {
     ///         var episode: Episode
@@ -26042,11 +27039,12 @@ public struct StackNavigationViewStyle : NavigationViewStyle {
     ///         var body: some View {
     ///             VStack {
     ///                 Text(episode.title)
-    ///                 Text(episode.showTitle)
+    ///                     .foregroundStyle(isPlaying ? .primary : .secondary)
     ///                 PlayButton(isPlaying: $isPlaying)
     ///             }
     ///         }
     ///     }
+    ///
     public var projectedValue: Binding<Value> { get }
 }
 
@@ -28383,12 +29381,53 @@ extension Text {
     /// - Returns: Italic text.
     public func italic() -> Text
 
-    /// Applies monospaced digits feature to the text.
+    /// Modifies the text view's font to use fixed-width digits, while leaving
+    /// other characters proportionally spaced.
     ///
-    /// If the base font of the text view doesn't support
-    /// monospaced digits, the font remains unchanged.
+    /// This modifier only affects numeric characters, and leaves all other
+    /// characters unchanged.
     ///
-    /// - Returns: Text with all digits of consistent width.
+    /// The following example shows the effect of `monospacedDigit()` on a
+    /// text view. It arranges two text views in a ``VStack``, each displaying
+    /// a formatted date that contains many instances of the character 1.
+    /// The second text view uses the `monospacedDigit()`. Because 1 is
+    /// usually a narrow character in proportional fonts, applying the
+    /// modifier widens all of the 1s, and the text view as a whole.
+    /// The non-digit characters in the text view remain unaffected.
+    ///
+    ///     let myDate = DateComponents(
+    ///         calendar: Calendar(identifier: .gregorian),
+    ///         timeZone: TimeZone(identifier: "EST"),
+    ///         year: 2011,
+    ///         month: 1,
+    ///         day: 11,
+    ///         hour: 11,
+    ///         minute: 11
+    ///     ).date!
+    ///
+    ///     var body: some View {
+    ///         VStack(alignment: .leading) {
+    ///             Text(myDate.formatted(date: .long, time: .complete))
+    ///                 .font(.system(size: 20))
+    ///             Text(myDate.formatted(date: .long, time: .complete))
+    ///                 .font(.system(size: 20))
+    ///                 .monospacedDigit()
+    ///         }
+    ///         .padding()
+    ///         .navigationTitle("monospacedDigit() Modifier")
+    ///     }
+    ///
+    /// ![Two vertically stacked text views, displaying the date January 11,
+    /// 2011, 11:11:00 AM. The second text view uses fixed-width digits, causing
+    /// all of the 1s to be wider than in the first text
+    /// view.](Text-monospacedDigit-1)
+    ///
+    /// If the base font of the text view doesn't support fixed-width digits,
+    /// the font remains unchanged.
+    ///
+    /// - Returns: A text view with a modified font that uses fixed-width
+    /// numeric characters, while leaving other characters proportionally
+    /// spaced.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func monospacedDigit() -> Text
 
@@ -28706,8 +29745,10 @@ extension Text {
     /// bold text, as described earlier. The link syntax around "website"
     /// creates a
     /// <doc://com.apple.documentation/documentation/Foundation/AttributeScopes/FoundationAttributes/3764633-link>
-    /// attribute, which `Text` styles to indicate it's a link; clicking or
-    /// tapping the link opens the linked URL in the user's default browser.
+    /// attribute, which `Text` styles to indicate it's a link; by default,
+    /// clicking or tapping the link opens the linked URL in the user's default
+    /// browser. Alternatively, you can perform custom link handling by putting
+    /// an ``OpenURLAction`` in the text view's environment.
     ///
     /// ![A text view that says Thank you. Please visit our website. The text
     /// The view displays the words Thank you in a bold font, and the word
@@ -28787,11 +29828,6 @@ extension Text.Case : Equatable {
 extension Text.Case : Hashable {
 }
 
-/// Aligns the child view within its bounds given anchor types
-///
-/// Child sizing: Respects the child's preferred size on the aligned axes. The child fills the context bounds on unaligned axes.
-///
-/// Preferred size: Child's preferred size
 /// An alignment position for text along the horizontal axis.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public enum TextAlignment : Hashable, CaseIterable {
@@ -31837,23 +32873,141 @@ extension Transaction {
     public typealias Body = Never
 }
 
-/// A property wrapper that is used in `App` to provide a delegate from UIKit.
+/// A property wrapper type that you use to create a UIKit app delegate.
+///
+/// To handle app delegate callbacks in an app that uses the
+/// SwiftUI life cycle, define a type that conforms to the
+/// <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate>
+/// protocol, and implement the delegate methods that you need. For example,
+/// you can implement the
+/// <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate/1622958-application>
+/// method to handle remote notification registration:
+///
+///     class MyAppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
+///         func application(
+///             _ application: UIApplication,
+///             didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+///         ) {
+///             // Record the device token.
+///         }
+///     }
+///
+/// Then use the `UIApplicationDelegateAdaptor` property wrapper inside your
+/// ``App`` declaration to tell SwiftUI about the delegate type:
+///
+///     @main
+///     struct MyApp: App {
+///         @UIApplicationDelegateAdaptor private var appDelegate: MyAppDelegate
+///
+///         var body: some Scene { ... }
+///     }
+///
+/// SwiftUI instantiates the delegate and calls the delegate's
+/// methods in response to life cycle events. Define the delegate adaptor
+/// only in your ``App`` declaration, and only once for a given app. If
+/// you declare it more than once, SwiftUI generates a runtime error.
+///
+/// If your app delegate conforms to the
+/// <doc://com.apple.documentation/documentation/Combine/ObservableObject>
+/// protocol, as in the example above, then SwiftUI puts the delegate it
+/// creates into the ``Environment``. You can access the delegate from
+/// any scene or view in your app using the ``EnvironmentObject`` property
+/// wrapper:
+///
+///     @EnvironmentObject private var appDelegate: MyAppDelegate
+///
+/// This enables you to use the dollar sign (`$`) prefix to get a binding to
+/// published properties that you declare in the delegate. For more information,
+/// see ``projectedValue``.
+///
+/// > Important: Manage an app's life cycle events without using an app
+/// delegate whenever possible. For example, prefer to handle changes
+/// in ``ScenePhase`` instead of relying on delegate callbacks, like
+/// <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate/1622921-application>.
+///
+/// ### Scene Delegates
+///
+/// Some iOS apps define a
+/// <doc://com.apple.documentation/documentation/UIKit/UIWindowSceneDelegate>
+/// to handle scene-based events, like app shortcuts:
+///
+///     class MySceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
+///         func windowScene(
+///             _ windowScene: UIWindowScene,
+///             performActionFor shortcutItem: UIApplicationShortcutItem
+///         ) async -> Bool {
+///             // Do something with the shortcut...
+///
+///             return true
+///         }
+///     }
+///
+/// You can provide this kind of delegate to a SwiftUI app by returning the
+/// scene delegate's type from the
+/// <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate/3197905-application>
+/// method inside your app delegate:
+///
+///     extension MyAppDelegate {
+///         func application(
+///             _ application: UIApplication,
+///             configurationForConnecting connectingSceneSession: UISceneSession,
+///             options: UIScene.ConnectionOptions
+///         ) -> UISceneConfiguration {
+///
+///             let configuration = UISceneConfiguration(
+///                                     name: nil,
+///                                     sessionRole: connectingSceneSession.role)
+///             if connectingSceneSession.role == .windowApplication {
+///                 configuration.delegateClass = MySceneDelegate.self
+///             }
+///             return configuration
+///         }
+///     }
+///
+/// When you configure the
+/// <doc://com.apple.documentation/documentation/UIKit/UISceneConfiguration>
+/// instance, you only need to indicate the delegate class, and not a scene
+/// class or storyboard. SwiftUI creates and manages the delegate instance,
+/// and sends it any relevant delegate callbacks.
+///
+/// As with the app delegate, if you make your scene delegate an observable
+/// object, SwiftUI automatically puts it in the ``Environment``, from where
+/// you can access it with the ``EnvironmentObject`` property wrapper, and
+/// create bindings to its published properties.
 @available(iOS 14.0, tvOS 14.0, *)
 @available(macOS, unavailable)
 @available(watchOS, unavailable)
 @propertyWrapper public struct UIApplicationDelegateAdaptor<DelegateType> : DynamicProperty where DelegateType : NSObject, DelegateType : UIApplicationDelegate {
 
-    /// The underlying delegate.
+    /// The underlying app delegate.
     public var wrappedValue: DelegateType { get }
 
-    /// Creates an `UIApplicationDelegateAdaptor` using a UIKit Application
-    /// Delegate.
+    /// Creates a UIKit app delegate adaptor.
     ///
-    /// The framework will initialize the provided delegate and manage its
-    /// lifetime, calling out to it when appropriate after performing its
-    /// own work.
+    /// Call this initializer indirectly by creating a property with the
+    /// ``UIApplicationDelegateAdaptor`` property wrapper from inside your
+    /// ``App`` declaration:
     ///
-    /// - Parameter delegate: the type of `UIApplicationDelegate` to use.
+    ///     @main
+    ///     struct MyApp: App {
+    ///         @UIApplicationDelegateAdaptor private var appDelegate: MyAppDelegate
+    ///
+    ///         var body: some Scene { ... }
+    ///     }
+    ///
+    /// SwiftUI initializes the delegate and manages its lifetime, calling upon
+    /// it to handle application delegate callbacks.
+    ///
+    /// If you want SwiftUI to put the instantiated delegate in the
+    /// ``Environment``, make sure the delegate class also conforms to the
+    /// <doc://com.apple.documentation/documentation/Combine/ObservableObject>
+    /// protocol. That causes SwiftUI to invoke the ``init(_:)-8vsx1``
+    /// initializer rather than this one.
+    ///
+    /// - Parameter delegateType: The type of application delegate that you
+    ///   define in your app, which conforms to the
+    ///   <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate>
+    ///   protocol.
     public init(_ delegateType: DelegateType.Type = DelegateType.self)
 }
 
@@ -31862,25 +33016,70 @@ extension Transaction {
 @available(watchOS, unavailable)
 extension UIApplicationDelegateAdaptor where DelegateType : ObservableObject {
 
-    /// Creates an `UIApplicationDelegateAdaptor` using a UIKit
-    /// Application Delegate.
+    /// Creates a UIKit app delegate adaptor using a delegate that's
+    /// an observable object.
     ///
-    /// The framework will initialize the provided delegate and manage its
-    /// lifetime, calling out to it when appropriate after performing its
-    /// own work.
+    /// Call this initializer indirectly by creating a property with the
+    /// ``UIApplicationDelegateAdaptor`` property wrapper from inside your
+    /// ``App`` declaration:
     ///
-    /// - Parameter delegate: the type of `UIApplicationDelegate` to use.
-    /// - Note: the instantiated delegate will be placed in the Environment
-    ///   and may be accessed by using the `@EnvironmentObject` property wrapper
-    ///   in the view hierarchy.
+    ///     @main
+    ///     struct MyApp: App {
+    ///         @UIApplicationDelegateAdaptor private var appDelegate: MyAppDelegate
+    ///
+    ///         var body: some Scene { ... }
+    ///     }
+    ///
+    /// SwiftUI initializes the delegate and manages its lifetime, calling it
+    /// as needed to handle application delegate callbacks.
+    ///
+    /// SwiftUI invokes this method when your app delegate conforms to the
+    /// <doc://com.apple.documentation/documentation/Combine/ObservableObject>
+    /// protocol. In this case, SwiftUI automatically places the delegate in the
+    /// ``Environment``. You can access such a delegate from any scene or
+    /// view in your app using the ``EnvironmentObject`` property wrapper:
+    ///
+    ///     @EnvironmentObject private var appDelegate: MyAppDelegate
+    ///
+    /// If your delegate isn't an observable object, SwiftUI invokes the
+    /// ``init(_:)-59sfu`` initializer rather than this one, and doesn't
+    /// put the delegate instance in the environment.
+    ///
+    /// - Parameter delegateType: The type of application delegate that you
+    ///   define in your app, which conforms to the
+    ///   <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate>
+    ///   and
+    ///   <doc://com.apple.documentation/documentation/Combine/ObservableObject>
+    ///   protocols.
     public init(_ delegateType: DelegateType.Type = DelegateType.self)
 
-    /// A projection of the observed object that creates bindings to its
-    /// properties using dynamic member lookup.
+    /// A projection of the observed object that provides bindings to its
+    /// properties.
     ///
-    /// Use the projected value to pass a binding value down a view
-    /// hierarchy. To get the `projectedValue`, prefix the property
-    /// variable with `$`.
+    /// Use the projected value to get a binding to a value that the delegate
+    /// publishes. Access the projected value by prefixing the name of the
+    /// delegate instance with a dollar sign (`$`). For example, you might
+    /// publish a Boolean value in your application delegate:
+    ///
+    ///     class MyAppDelegate: NSObject, UIApplicationDelegate, ObservableObject {
+    ///         @Published var isEnabled = false
+    ///
+    ///         // ...
+    ///     }
+    ///
+    /// If you declare the delegate in your ``App`` using the
+    /// ``UIApplicationDelegateAdaptor`` property wrapper, you can get
+    /// the delegate that SwiftUI instantiates from the environment and
+    /// access a binding to its published values from any view in your app:
+    ///
+    ///     struct MyView: View {
+    ///         @EnvironmentObject private var appDelegate: MyAppDelegate
+    ///
+    ///         var body: some View {
+    ///             Toggle("Enabled", isOn: $appDelegate.isEnabled)
+    ///         }
+    ///     }
+    ///
     public var projectedValue: ObservedObject<DelegateType>.Wrapper { get }
 }
 
@@ -31904,7 +33103,7 @@ extension UIApplicationDelegateAdaptor : Sendable {
 @available(watchOS, unavailable)
 open class UIHostingController<Content> : UIViewController where Content : View {
 
-    @objc override dynamic open var keyCommands: [UIKeyCommand]? { get }
+    override dynamic open var keyCommands: [UIKeyCommand]? { get }
 
     /// Creates a hosting controller object that wraps the specified SwiftUI
     /// view.
@@ -31936,9 +33135,9 @@ open class UIHostingController<Content> : UIViewController where Content : View 
     /// instead.
     ///
     /// -Parameter coder: The decoder to use during initialization.
-    @objc required dynamic public init?(coder aDecoder: NSCoder)
+    required dynamic public init?(coder aDecoder: NSCoder)
 
-    @objc override dynamic open func loadView()
+    override dynamic open func loadView()
 
     /// Notifies the view controller that its view is about to be added to a
     /// view hierarchy.
@@ -31951,7 +33150,7 @@ open class UIHostingController<Content> : UIViewController where Content : View 
     ///
     /// - Parameter animated: If `true`, the view is being added
     ///   using an animation.
-    @objc override dynamic open func viewWillAppear(_ animated: Bool)
+    override dynamic open func viewWillAppear(_ animated: Bool)
 
     /// Notifies the view controller that its view has been added to a
     /// view hierarchy.
@@ -31964,7 +33163,7 @@ open class UIHostingController<Content> : UIViewController where Content : View 
     ///
     /// - Parameter animated: If `true`, the view is being added
     ///   using an animation.
-    @objc override dynamic open func viewDidAppear(_ animated: Bool)
+    override dynamic open func viewDidAppear(_ animated: Bool)
 
     /// Notifies the view controller that its view will be removed from a
     /// view hierarchy.
@@ -31977,13 +33176,13 @@ open class UIHostingController<Content> : UIViewController where Content : View 
     ///
     /// - Parameter animated: If `true`, the view is being removed
     ///   using an animation.
-    @objc override dynamic open func viewWillDisappear(_ animated: Bool)
+    override dynamic open func viewWillDisappear(_ animated: Bool)
 
-    @objc override dynamic open func viewDidDisappear(_ animated: Bool)
+    override dynamic open func viewDidDisappear(_ animated: Bool)
 
-    @objc override dynamic open func viewWillLayoutSubviews()
+    override dynamic open func viewWillLayoutSubviews()
 
-    @objc override dynamic open var isModalInPresentation: Bool
+    override dynamic open var isModalInPresentation: Bool
 
     /// The root view of the SwiftUI view hierarchy managed by this view
     /// controller.
@@ -31997,28 +33196,28 @@ open class UIHostingController<Content> : UIViewController where Content : View 
     ///   contents.
     public func sizeThatFits(in size: CGSize) -> CGSize
 
-    @objc override dynamic open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer)
+    override dynamic open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer)
 
     /// The preferred status bar style for the view controller.
-    @objc override dynamic open var preferredStatusBarStyle: UIStatusBarStyle { get }
+    override dynamic open var preferredStatusBarStyle: UIStatusBarStyle { get }
 
     /// A Boolean value that indicates whether the view controller prefers the
     /// status bar to be hidden or shown.
-    @objc override dynamic open var prefersStatusBarHidden: Bool { get }
+    override dynamic open var prefersStatusBarHidden: Bool { get }
 
     /// The animation style to use when hiding or showing the status bar for
     /// this view controller.
-    @objc override dynamic open var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { get }
+    override dynamic open var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { get }
 
-    @objc override dynamic open var childForStatusBarHidden: UIViewController? { get }
+    override dynamic open var childForStatusBarHidden: UIViewController? { get }
 
-    @objc override dynamic open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
+    override dynamic open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
 
-    @objc override dynamic open func willMove(toParent parent: UIViewController?)
+    override dynamic open func willMove(toParent parent: UIViewController?)
 
-    @objc override dynamic open func didMove(toParent parent: UIViewController?)
+    override dynamic open func didMove(toParent parent: UIViewController?)
 
-    @objc override dynamic open func target(forAction action: Selector, withSender sender: Any?) -> Any?
+    override dynamic open func target(forAction action: Selector, withSender sender: Any?) -> Any?
 }
 
 /// A view that represents a UIKit view controller.
@@ -32471,6 +33670,32 @@ extension UnitPoint : Sendable {
 }
 
 /// A set of values that indicate the visual size available to the view.
+///
+/// You receive a size class value when you read either the
+/// ``EnvironmentValues/horizontalSizeClass`` or
+/// ``EnvironmentValues/verticalSizeClass`` environment value. The value tells
+/// you about the amount of space available to your views in a given
+/// direction. You can read the size class like any other of the
+/// ``EnvironmentValues``, by creating a property with the ``Environment``
+/// property wrapper:
+///
+///     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+///     @Environment(\.verticalSizeClass) private var verticalSizeClass
+///
+/// SwiftUI sets the size class based on several factors, including:
+///
+/// * The current device type.
+/// * The orientation of the device.
+/// * The appearance of Slide Over and Split View on iPad.
+///
+/// Several built-in views change their behavior based on the size class.
+/// For example, a ``NavigationView`` presents a multicolumn view when
+/// the horizontal size class is ``UserInterfaceSizeClass/regular``,
+/// but a single column otherwise. You can also adjust the appearance of
+/// custom views by reading the size class and conditioning your views.
+/// If you do, be prepared to handle size class changes while
+/// your app runs, because factors like device orientation can change at
+/// runtime.
 @available(iOS 13.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
@@ -32520,7 +33745,7 @@ public enum UserInterfaceSizeClass {
 
 extension UserInterfaceSizeClass {
 
-    /// Create a size class from its UIUserInterfaceSizeClass equivalent.
+    /// Creates a SwiftUI size class from the specified UIKit size class.
     @available(iOS 14.0, *)
     @available(macOS, unavailable)
     @available(tvOS, unavailable)
@@ -34420,9 +35645,9 @@ extension View {
     ///                     "Pistachio"]
     ///        var body: some View {
     ///             NavigationView {
-    ///                  List(items, id: \.self) {
-    ///                      Text($0)
-    ///                  }
+    ///                 List(items, id: \.self) {
+    ///                     Text($0)
+    ///                 }
     ///                 .navigationBarTitle(Text("Today's Flavors", displayMode: .inline)
     ///             }
     ///         }
@@ -34456,9 +35681,9 @@ extension View {
     ///                      "Pistachio"]
     ///         var body: some View {
     ///             NavigationView {
-    ///                  List(items, id: \.self) {
-    ///                      Text($0)
-    ///                  }
+    ///                 List(items, id: \.self) {
+    ///                     Text($0)
+    ///                 }
     ///                 .navigationBarTitle("Today's Flavors", displayMode: .inline)
     ///             }
     ///         }
@@ -34503,9 +35728,9 @@ extension View {
     ///         let title = "Today's Flavors"
     ///         var body: some View {
     ///             NavigationView {
-    ///                  List(items, id: \.self) {
-    ///                      Text($0)
-    ///                  }
+    ///                 List(items, id: \.self) {
+    ///                     Text($0)
+    ///                 }
     ///                 .navigationBarTitle(title, displayMode: .inline)
     ///             }
     ///         }
@@ -36188,89 +37413,153 @@ extension View {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension View {
 
-    /// Pads this view using the edges and padding amount you specify.
+    /// Adds a different padding amount to each edge of this view.
     ///
-    /// Use `padding(_:)` to add a specified amount of padding to one or more
-    /// edges of the view. For example, you can add padding of specific amounts
-    /// to specified edges of a view:
+    /// Use this modifier to add a different amount of padding on each edge
+    /// of a view:
     ///
     ///     VStack {
-    ///         Text("20 point padding on the left and bottom edges.")
-    ///             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 0))
-    ///             .border(Color.gray)
-    ///         Text("Unpadded text")
-    ///             .border(Color.yellow)
+    ///         Text("Text padded by different amounts on each edge.")
+    ///             .padding(EdgeInsets(top: 10, leading: 20, bottom: 40, trailing: 0))
+    ///             .border(.gray)
+    ///         Text("Unpadded text for comparison.")
+    ///             .border(.yellow)
     ///     }
     ///
-    /// ![A view showing padding added to leading/bottom edge
-    /// insets.](SwiftUI-View-padding-insets.png)
+    /// The order in which you apply modifiers matters. The example above
+    /// applies the padding before applying the border to ensure that the
+    /// border encompasses the padded region:
     ///
-    /// To pad selected outside edges of a view with an amount you specify, see
-    /// ``View/padding(_:_:)``. To pad all outside edges of a view with an
-    /// amount you specify, see ``View/padding(_:)-9f33x``.
+    /// ![A screenshot of two text strings arranged vertically, each surrounded
+    /// by a border, with a small space between the two borders.
+    /// The first string says Text padded by different amounts on each edge.
+    /// Its border is gray, and there are different amounts of space between
+    /// the string and its border on each edge: 40 points on the bottom, 10
+    /// points on the top, 20 points on the leading edge, and no space on
+    /// the trailing edge.
+    /// The second string says Unpadded text for comparison.
+    /// Its border is yellow, and there's no space between the string
+    /// and its border.](View-padding-3-iOS)
     ///
-    /// - Parameter insets: The edges and amounts to inset.
+    /// To pad a view on specific edges with equal padding for all padded
+    /// edges, use ``View/padding(_:_:)``. To pad all edges of a view
+    /// equally, use ``View/padding(_:)-9f33x``.
     ///
-    /// - Returns: A view that pads this view using the specified edge insets
-    ///   with specified amount of padding.
+    /// - Parameter insets: An ``EdgeInsets`` instance that contains
+    ///   padding amounts for each edge.
+    ///
+    /// - Returns: A view that's padded by different amounts on each edge.
     @inlinable public func padding(_ insets: EdgeInsets) -> some View
 
 
-    /// A view that pads this view inside the specified edge insets with a
-    /// system-calculated amount of padding.
+    /// Adds an equal padding amount to specific edges of this view.
     ///
-    /// Use `padding(_:)` to add a system-calculated amount of padding inside
-    /// one or more of the view's edges by passing either a single edge name, or
-    /// an `OptionSet` describing which edges should be padded. For example you
-    /// can add padding to the bottom of a text view:
+    /// Use this modifier to add a specified amount of padding to one or more
+    /// edges of the view. Indicate the edges to pad by naming either a single
+    /// value from ``Edge/Set``, or by specifying an
+    /// <doc://com.apple.documentation/documentation/Swift/OptionSet>
+    /// that contains edge values:
     ///
     ///     VStack {
-    ///         Text("Text padded on the bottom edge.")
-    ///             .padding(.bottom)
-    ///             .border(Color.gray)
-    ///         Text("Unpadded text")
-    ///             .border(Color.yellow)
+    ///         Text("Text padded by 20 points on the bottom and trailing edges.")
+    ///             .padding([.bottom, .trailing], 20)
+    ///             .border(.gray)
+    ///         Text("Unpadded text for comparison.")
+    ///             .border(.yellow)
     ///     }
     ///
-    /// ![A view showing padding added to the view's bottom
-    /// edge.](SwiftUI-View-padding-2.png)
+    /// The order in which you apply modifiers matters. The example above
+    /// applies the padding before applying the border to ensure that the
+    /// border encompasses the padded region:
     ///
-    /// To pad the view's insets, which affects the amount of padding _inside_
-    /// the edges of the view, see ``View/padding(_:)-6pgqq``. To pad all
-    /// outside edges of a view with an amount you specify, see
-    /// ``View/padding(_:)-9f33x``.
+    /// ![A screenshot of two text strings arranged vertically, each surrounded
+    /// by a border, with a small space between the two borders.
+    /// The first string says Text padded by 20 points
+    /// on the bottom and trailing edges.
+    /// Its border is gray, and there are 20 points of space between the bottom
+    /// and trailing edges of the string and its border.
+    /// There's no space between the string and the border on the other edges.
+    /// The second string says Unpadded text for comparison.
+    /// Its border is yellow, and there's no space between the string
+    /// and its border.](View-padding-2-iOS)
+    ///
+    /// You can omit either or both of the parameters. If you omit the `length`,
+    /// SwiftUI uses a default amount of padding. If you
+    /// omit the `edges`, SwiftUI applies the padding to all edges. Omit both
+    /// to add a default padding all the way around a view. SwiftUI chooses a
+    /// default amount of padding that's appropriate for the platform and
+    /// the presentation context.
+    ///
+    ///     VStack {
+    ///         Text("Text with default padding.")
+    ///             .padding()
+    ///             .border(.gray)
+    ///         Text("Unpadded text for comparison.")
+    ///             .border(.yellow)
+    ///     }
+    ///
+    /// The example above looks like this in iOS under typical conditions:
+    ///
+    /// ![A screenshot of two text strings arranged vertically, each surrounded
+    /// by a border, with a small space between the two borders.
+    /// The first string says Text with default padding.
+    /// Its border is gray, and there is padding on all sides
+    /// between the border and the string it encloses in an amount that's
+    /// similar to the height of the text.
+    /// The second string says Unpadded text for comparison.
+    /// Its border is yellow, and there's no space between the string
+    /// and its border.](View-padding-2a-iOS)
+    ///
+    /// To control the amount of padding independently for each edge, use
+    /// ``View/padding(_:)-6pgqq``. To pad all outside edges of a view by a
+    /// specified amount, use ``View/padding(_:)-9f33x``.
     ///
     /// - Parameters:
-    ///   - edges: The set of edges along which to pad this view. The default
+    ///   - edges: The set of edges to pad for this view. The default
     ///     is ``Edge/Set/all``.
-    ///   - length: The amount to inset this view on the specified edges. If
-    ///     you set the value to `nil`, SwiftUI uses the system-default amount.
-    ///     The default is `nil`.
+    ///   - length: An amount, given in points, to pad this view on the
+    ///     specified edges. If you set the value to `nil`, SwiftUI uses
+    ///     a platform-specific default amount. The default value of this
+    ///     parameter is `nil`.
     ///
-    /// - Returns: A view that pads this view using the specified edge insets
-    ///   with specified amount of padding.
+    /// - Returns: A view that's padded by the specified amount on the
+    ///   specified edges.
     @inlinable public func padding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> some View
 
 
-    /// Pads the view along all edges by the specified amount.
+    /// Adds a specific padding amount to each edge of this view.
     ///
-    /// Use `padding(_:)` to add a specific amount of padding around all edges
-    /// of the view.
+    /// Use this modifier to add padding all the way around a view.
     ///
     ///     VStack {
     ///         Text("Text padded by 10 points on each edge.")
-    ///             .padding(10.0)
-    ///             .border(Color.gray)
-    ///         Text("Unpadded text")
-    ///             .border(Color.yellow)
+    ///             .padding(10)
+    ///             .border(.gray)
+    ///         Text("Unpadded text for comparison.")
+    ///             .border(.yellow)
     ///     }
     ///
-    /// ![A view showing 10 points of padding to all
-    /// edges.](SwiftUI-View-padding-1.png)
+    /// The order in which you apply modifiers matters. The example above
+    /// applies the padding before applying the border to ensure that the
+    /// border encompasses the padded region:
     ///
-    /// - Parameter length: The amount to pad this view on each edge.
+    /// ![A screenshot of two text strings arranged vertically, each surrounded
+    /// by a border, with a small space between the two borders.
+    /// The first string says Text padded by 10 points on each edge.
+    /// Its border is gray, and there are 10 points of space on all sides
+    /// between the string and its border.
+    /// The second string says Unpadded text for comparison.
+    /// Its border is yellow, and there's no space between the string
+    /// and its border.](View-padding-1-iOS)
     ///
-    /// - Returns: A view that pads this view by the amount you specify.
+    /// To independently control the amount of padding for each edge, use
+    /// ``View/padding(_:)-6pgqq``. To pad a select set of edges by the
+    /// same amount, use ``View/padding(_:_:)``.
+    ///
+    /// - Parameter length: The amount, given in points, to pad this view on all
+    ///   edges.
+    ///
+    /// - Returns: A view that's padded by the amount you specify.
     @inlinable public func padding(_ length: CGFloat) -> some View
 
 }
@@ -36278,31 +37567,69 @@ extension View {
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension View {
 
-    /// A view that pads this view inside the specified edge insets with a
-    /// system-calculated amount of padding relative to the application's
-    /// scene.
+    /// Adds padding to the specified edges of this view using an amount that's
+    /// appropriate for the current scene.
     ///
-    /// Use `scenePadding(_:)` to add an amount of padding, measured from the
-    /// scene of the application, inside one or more of the view's edges by
-    /// passing either a single edge name, or an
-    /// <doc://com.apple.documentation/documentation/Swift/OptionSet> describing
-    /// which edges should be padded.
+    /// Use this modifier to add a scene-appropriate amount of padding to a
+    /// view. Specify either a single edge value from ``Edge/Set``, or an
+    /// <doc://com.apple.documentation/documentation/Swift/OptionSet> that
+    /// describes the edges to pad.
     ///
-    /// For example, on watchOS you can add padding to the horizontal edges
-    /// of a text view.
+    /// In macOS, use scene padding to produce the recommended spacing around
+    /// the root view of a window. In watchOS, use scene padding to align
+    /// elements of your user interface with top level elements, like the title
+    /// of a navigation view. For example, compare the effects of different
+    /// kinds of padding on text views presented inside a ``NavigationView``
+    /// in watchOS:
     ///
-    ///     VStack {
-    ///         Text("Text padded on the horizontal edges.")
+    ///     VStack(alignment: .leading, spacing: 10) {
+    ///         Text("Scene padding")
     ///             .scenePadding(.horizontal)
-    ///             .border(Color.gray)
-    ///         Button("Unpadded Button") { }
-    ///             .border(Color.yellow)
+    ///             .border(.red) // Border added for reference.
+    ///         Text("Regular padding")
+    ///             .padding(.horizontal)
+    ///             .border(.green)
+    ///         Text("Text with no padding")
+    ///             .border(.blue)
+    ///         Button("Button") { }
     ///     }
+    ///     .navigationTitle("Hello World")
     ///
-    /// - Parameter edges: The set of edges along which to pad this view; by
-    ///     default the system-calculated amount is applied to all edges.
+    /// The text with scene padding automatically aligns with the title,
+    /// unlike the text that uses the default padding or the text without
+    /// padding:
     ///
-    /// - Returns: A view that pads this view using the specified edge insets.
+    /// ![A watchOS screenshot with the title Hello World and a back button
+    /// in the upper left. The title is indented by a small amount from
+    /// the leading edge of the screen. Three bordered strings and a button
+    /// appear arranged vertially below the title.
+    /// The first string says Scene padding and has a red border that's aligned
+    /// with the leading edge of the screen. The leading
+    /// edge of the string inside the border aligns with the leading edge of
+    /// the screen's title.
+    /// The second string says Regular padding and has a green border that's
+    /// aligned with the leading edge of the screen. The leading edge of the
+    /// string appears offset from the title's leading edge by a small amount.
+    /// The third string says Text with no padding and has a blue border that's
+    /// aligned with the leading edge of the screen. The string is also aligned
+    /// with the leading edge of the screen.](View-scenePadding-1-watchOS)
+    ///
+    /// Scene padding in watchOS also ensures that your content avoids the
+    /// curved edges of a device like Apple Watch Series 7.
+    /// In other platforms, scene padding produces the same default padding that
+    /// you get from the ``View/padding(_:_:)`` modifier.
+    ///
+    /// > Important: Scene padding doesn't pad the top and bottom edges of a
+    /// view in watchOS, even if you specify those edges as part of the input.
+    /// For example, if you specify ``Edge/Set/vertical`` instead of
+    /// ``Edge/Set/horizontal`` in the example above, the modifier would have
+    /// no effect in watchOS. It does, however, apply to all the edges that you
+    /// specify in other platforms.
+    ///
+    /// - Parameter edges: The set of edges along which to pad this view.
+    ///
+    /// - Returns: A view that's padded on specified edges by a
+    ///   scene-appropriate amount.
     public func scenePadding(_ edges: Edge.Set = .all) -> some View
 
 }
@@ -38199,26 +39526,57 @@ extension View {
 
     /// Sets the preferred color scheme for this presentation.
     ///
-    /// The color scheme applies to the nearest enclosing presentation, such as
-    /// a popover or window. Views may read the color scheme using the
-    /// `colorScheme` environment value.
+    /// Use one of the values in ``ColorScheme`` with this modifier to set a
+    /// preferred color scheme for the nearest enclosing presentation, like a
+    /// popover, a sheet, or a window. The value that you set overrides the
+    /// user's Dark Mode selection for that presentation. In the example below,
+    /// the ``Toggle`` controls an `isDarkMode` state variable, which in turn
+    /// controls the color scheme of the sheet that contains the toggle:
     ///
-    /// In the example below the presentation containing the ``VStack`` has its
-    /// color scheme set to ``ColorScheme/dark``:
+    ///     @State private var isPresented = false
+    ///     @State private var isDarkMode = true
     ///
-    ///     VStack {
-    ///         Button(action: {}) {
-    ///             Text(" Button")
+    ///     var body: some View {
+    ///         Button("Show Sheet") {
+    ///             isPresented = true
     ///         }
-    ///         HStack {
-    ///             Text(" Slider").tint(.green)
-    ///             Slider(value: $sliderValue, in: -100...100, step: 0.1)
+    ///         .sheet(isPresented: $isPresented) {
+    ///             List {
+    ///                 Toggle("Dark Mode", isOn: $isDarkMode)
+    ///             }
+    ///             .preferredColorScheme(isDarkMode ? .dark : .light)
     ///         }
-    ///     }.preferredColorScheme(.dark)
+    ///     }
     ///
-    /// - Parameter colorScheme: The color scheme for this view.
+    /// If you apply the modifier to any of the views in the sheet --- which in
+    /// this case are a ``List`` and a ``Toggle`` --- the value that you set
+    /// propagates up through the view hierarchy to the enclosing
+    /// presentation, or until another color scheme modifier higher in the
+    /// hierarchy overrides it. The value you set also flows down to all child
+    /// views of the enclosing presentation.
     ///
-    /// - Returns: A view that wraps this view and sets the color scheme.
+    /// A common use for this modifier is to create side-by-side previews of the
+    /// same view with light and dark appearances:
+    ///
+    ///     struct MyView_Previews: PreviewProvider {
+    ///         static var previews: some View {
+    ///             MyView().preferredColorScheme(.light)
+    ///             MyView().preferredColorScheme(.dark)
+    ///         }
+    ///     }
+    ///
+    /// If you need to detect the color scheme that currently applies to a view,
+    /// read the ``EnvironmentValues/colorScheme`` environment value:
+    ///
+    ///     @Environment(\.colorScheme) private var colorScheme
+    ///
+    ///     var body: some View {
+    ///         Text(colorScheme == .dark ? "Dark" : "Light")
+    ///     }
+    ///
+    /// - Parameter colorScheme: The preferred color scheme for this view.
+    ///
+    /// - Returns: A view that sets the color scheme.
     @inlinable public func preferredColorScheme(_ colorScheme: ColorScheme?) -> some View
 
 }
@@ -38228,46 +39586,64 @@ extension View {
 
     /// Adds a luminance to alpha effect to this view.
     ///
-    /// The `luminanceToAlpha()` modifier creates a semitransparent mask out of
-    /// the view to which you you apply. The dark regions in a view become
-    /// transparent, and the bright regions become opaque black. Medium
-    /// brightness regions become a partially opaque gray color.
+    /// Use this modifier to create a semitransparent mask, with the opacity of
+    /// each part of the modified view controlled by the luminance of the
+    /// corresponding part of the original view. Regions of lower luminance
+    /// become more transparent, while higher luminance yields greater
+    /// opacity.
     ///
-    /// The example below shows two views: the first is a red square with an
-    /// overlaid green circle; the second is a copy of the first view with where
-    /// the `luminanceToAlpha()` modifier's masking operation transforms the
-    /// view's brightness levels into an equivalent grayscale version of the
-    /// first view:
+    /// In particular, the modifier maps the red, green, and blue components of
+    /// each input pixel's color to a grayscale value, and that value becomes
+    /// the alpha component of a black pixel in the output. This modifier
+    /// produces an effect that's equivalent to using the `feColorMatrix`
+    /// filter primitive with the `luminanceToAlpha` type attribute, as defined
+    /// by the [Scalable Vector Graphics (SVG) 2](https://www.w3.org/TR/SVG2/)
+    /// specification.
     ///
-    ///     struct LuminanceCircleView: View {
+    /// The example below defines a `Palette` view as a series of rectangles,
+    /// each composed as a ``Color`` with a particular white value,
+    /// and then displays two versions of the palette over a blue background:
+    ///
+    ///     struct Palette: View {
     ///         var body: some View {
-    ///             Circle()
-    ///                 .fill(Color.green)
-    ///                 .frame(width: 40, height: 40, alignment: .center)
-    ///         }
-    ///     }
-    ///
-    ///     struct LuminanceToAlpha: View {
-    ///         var body: some View {
-    ///             HStack {
-    ///                 Color.red.frame(width: 60, height: 60, alignment: .center)
-    ///                     .overlay(LuminanceCircleView(), alignment: .center)
-    ///                     .padding()
-    ///
-    ///                 Color.red.frame(width: 60, height: 60, alignment: .center)
-    ///                     .overlay(LuminanceCircleView(), alignment: .center)
-    ///                     .luminanceToAlpha()
+    ///             HStack(spacing: 0) {
+    ///                 ForEach(0..<10) { index in
+    ///                     Color(white: Double(index) / Double(9))
+    ///                         .frame(width: 20, height: 40)
+    ///                 }
     ///             }
     ///         }
     ///     }
     ///
-    /// ![The example below shows two views: the first is a red square with an
-    /// overlaid green circle; the second is a copy of the first view with where
-    /// the luminanceToAlpha() modifier transforms the view's brightness levels
-    /// into an equivalent grayscale version of the
-    /// view.](SwiftUI-luminanceToAlpha.png)
+    ///     struct LuminanceToAlphaExample: View {
+    ///         var body: some View {
+    ///             VStack(spacing: 20) {
+    ///                 Palette()
     ///
-    /// - Returns: A view that applies a luminance to alpha effect to this view.
+    ///                 Palette()
+    ///                     .luminanceToAlpha()
+    ///             }
+    ///             .padding()
+    ///             .background(.blue)
+    ///         }
+    ///     }
+    ///
+    /// The unmodified version of the palette contains rectangles that range
+    /// from solid black to solid white, thus with increasing luminance. The
+    /// second version of the palette, which has the `luminanceToAlpha()`
+    /// modifier applied, allows the background to show through in an amount
+    /// that corresponds inversely to the luminance of the input.
+    ///
+    /// ![A screenshot of a blue background with two wide rectangles on it,
+    /// arranged vertically, with one above the other. Each is composed of a
+    /// series of smaller rectangles arranged from left to right. The component
+    /// rectangles of the first large rectangle range from black to white as
+    /// you scan from left to right, with each successive component rectangle
+    /// slightly whiter than the previous. The component rectangles of the
+    /// second large rectangle range from fully transparent to fully opaque,
+    /// scanning in the same direction.](View-luminanceToAlpha-1-iOS)
+    ///
+    /// - Returns: A view with the luminance to alpha effect applied.
     @inlinable public func luminanceToAlpha() -> some View
 
 }
@@ -39196,7 +40572,7 @@ extension View {
     ///   - isPresented: A binding to a Boolean value that determines whether to
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
-    ///   - error: an optional localized Error that is used to generate the
+    ///   - error: An optional localized Error that is used to generate the
     ///     alert's title.  The system passes the contents to the modifier's
     ///     closures. You use this data to populate the fields of an alert that
     ///     you create that the system displays to the user.
@@ -39253,7 +40629,7 @@ extension View {
     ///   - isPresented: A binding to a Boolean value that determines whether to
     ///     present the alert. When the user presses or taps one of the alert's
     ///     actions, the system sets this value to `false` and dismisses.
-    ///   - error: an optional localized Error that is used to generate the
+    ///   - error: An optional localized Error that is used to generate the
     ///     alert's title.  The system passes the contents to the modifier's
     ///     closures. You use this data to populate the fields of an alert that
     ///     you create that the system displays to the user.
@@ -39269,37 +40645,48 @@ extension View {
 
     /// Sets the unique tag value of this view.
     ///
-    /// Use `tag(_:)` to differentiate between a number of views for the purpose
-    /// of selecting controls like pickers and lists. Tag values can be of any
-    /// type that conforms to the <doc://com.apple.documentation/documentation/Swift/Hashable>
-    /// protocol.
+    /// Use this modifier to differentiate among certain selectable views,
+    /// like the possible values of a ``Picker`` or the tabs of a ``TabView``.
+    /// Tag values can be of any type that conforms to the
+    /// <doc://com.apple.documentation/documentation/Swift/Hashable> protocol.
     ///
     /// In the example below, the ``ForEach`` loop in the ``Picker`` view
-    /// builder iterates over the `Flavor` enumeration. It extracts the text raw
-    /// value of each enumeration element for use as the row item label and uses
-    /// the enumeration item itself as input to the `tag(_:)` modifier.
-    /// The tag identifier can be any value that conforms to the
-    /// <doc://com.apple.documentation/documentation/Swift/Hashable> protocol:
+    /// builder iterates over the `Flavor` enumeration. It extracts the string
+    /// value of each enumeration element for use in constructing the row
+    /// label, and uses the enumeration value, cast as an optional, as input
+    /// to the `tag(_:)` modifier. The ``Picker`` requires the tags to have a
+    /// type that exactly matches the selection type, which in this case is an
+    /// optional `Flavor`.
     ///
     ///     struct FlavorPicker: View {
     ///         enum Flavor: String, CaseIterable, Identifiable {
-    ///             var id: String { self.rawValue }
-    ///             case vanilla, chocolate, strawberry
+    ///             case chocolate, vanilla, strawberry
+    ///             var id: Self { self }
     ///         }
     ///
     ///         @State private var selectedFlavor: Flavor? = nil
+    ///
     ///         var body: some View {
     ///             Picker("Flavor", selection: $selectedFlavor) {
-    ///                 ForEach(Flavor.allCases) {
-    ///                     Text($0.rawValue).tag($0)
+    ///                 ForEach(Flavor.allCases) { flavor in
+    ///                     Text(flavor.rawValue).tag(Optional(flavor))
     ///                 }
     ///             }
     ///         }
     ///     }
     ///
-    /// - SeeAlso: `List`, `Picker`, `Hashable`
-    /// - Parameter tag: A <doc://com.apple.documentation/documentation/Swift/Hashable> value
-    ///   to use as the view's tag.
+    /// If you change `selectedFlavor` to be non-optional, you need to
+    /// remove the <doc://com.apple.documentation/documentation/Swift/Optional>
+    /// cast from the tag input to match.
+    ///
+    /// A ``ForEach`` automatically applies a default tag to each enumerated
+    /// view using the `id` parameter of the corresponding element. If
+    /// the element's `id` parameter and the picker's `selection` input
+    /// have exactly the same type, you can omit the explicit tag modifier.
+    /// To see examples that don't require an explicit tag, see ``Picker``.
+    ///
+    /// - Parameter tag: A <doc://com.apple.documentation/documentation/Swift/Hashable>
+    ///   value to use as the view's tag.
     ///
     /// - Returns: A view with the specified tag set.
     @inlinable public func tag<V>(_ tag: V) -> some View where V : Hashable
@@ -39853,36 +41240,69 @@ extension View {
 
     /// Adds a shadow to this view.
     ///
-    /// The example below a series shows of boxes with increasing degrees of
-    /// shadow ranging from 0 (no shadow) to 5 points of shadow, offset down and
-    /// to the right of the views:
+    /// Use this modifier to add a shadow of a specified color behind a view.
+    /// You can offset the shadow from its view independently in the horizontal
+    /// and vertical dimensions using the `x` and `y` parameters. You can also
+    /// blur the edges of the shadow using the `radius` parameter. Use a
+    /// radius of zero to create a sharp shadow. Larger radius values produce
+    /// softer shadows.
+    ///
+    /// The example below creates a grid of boxes with varying offsets and blur.
+    /// Each box displays its radius and offset values for reference.
     ///
     ///     struct Shadow: View {
+    ///         let steps = [0, 5, 10]
+    ///
     ///         var body: some View {
-    ///             HStack {
-    ///                 ForEach(0..<6) {
-    ///                     Color.red.frame(width: 60, height: 60, alignment: .center)
-    ///                         .overlay(Text("\($0)"),
-    ///                                  alignment: .bottom)
-    ///                         .shadow(color: Color.gray,
-    ///                                 radius: 1.0,
-    ///                                 x: CGFloat($0),
-    ///                                 y: CGFloat($0))
+    ///             VStack(spacing: 50) {
+    ///                 ForEach(steps, id: \.self) { offset in
+    ///                     HStack(spacing: 50) {
+    ///                         ForEach(steps, id: \.self) { radius in
+    ///                             Color.blue
+    ///                                 .shadow(
+    ///                                     color: .primary,
+    ///                                     radius: CGFloat(radius),
+    ///                                     x: CGFloat(offset), y: CGFloat(offset))
+    ///                                 .overlay {
+    ///                                     VStack {
+    ///                                         Text("\(radius)")
+    ///                                         Text("(\(offset), \(offset))")
+    ///                                     }
+    ///                                 }
+    ///                         }
+    ///                     }
     ///                 }
     ///             }
     ///         }
     ///     }
     ///
-    /// ![A series of boxes showing the effect of increasing level of shadow
-    /// applied to each box.](SwiftUI-View-shadow.png)
+    /// ![A three by three grid of blue boxes with shadows.
+    /// All the boxes display an integer that indicates the shadow's radius and
+    /// an ordered pair that indicates the shadow's offset. The boxes in the
+    /// first row show zero offset and have shadows directly below the box;
+    /// the boxes in the second row show an offset of five in both directions
+    /// and have shadows with a small offset toward the right and down; the
+    /// boxes in the third row show an offset of ten in both directions and have
+    /// shadows with a large offset toward the right and down. The boxes in
+    /// the first column show a radius of zero have shadows with sharp edges;
+    /// the boxes in the second column show a radius of five and have shadows
+    /// with slightly blurry edges; the boxes in the third column show a radius
+    /// of ten and have very blurry edges. Because the shadow of the box in the
+    /// upper left is both completely sharp and directly below the box, it isn't
+    /// visible.](View-shadow-1-iOS)
+    ///
+    /// The example above uses ``Color/primary`` as the color to make the
+    /// shadow easy to see for the purpose of illustration. In practice,
+    /// you might prefer something more subtle, like ``Color/gray-8j2b``.
+    /// If you don't specify a color, the method uses a semi-transparent
+    /// black.
     ///
     /// - Parameters:
     ///   - color: The shadow's color.
-    ///   - radius: The shadow's size.
-    ///   - x: A horizontal offset you use to position the shadow relative to
-    ///     this view.
-    ///   - y: A vertical offset you use to position the shadow relative to this
-    ///     view.
+    ///   - radius: A measure of how much to blur the shadow. Larger values
+    ///     result in more blur.
+    ///   - x: An amount to offset the shadow horizontally from the view.
+    ///   - y: An amount to offset the shadow vertically from the view.
     ///
     /// - Returns: A view that adds a shadow to this view.
     @inlinable public func shadow(color: Color = Color(.sRGBLinear, white: 0, opacity: 0.33), radius: CGFloat, x: CGFloat = 0, y: CGFloat = 0) -> some View
@@ -40060,12 +41480,52 @@ extension View {
     @inlinable public func font(_ font: Font?) -> some View
 
 
-    /// Applies monospaced digits to the font for text in this view.
+    /// Modifies the fonts of all child views to use fixed-width digits, if
+    /// possible, while leaving other characters proportionally spaced.
     ///
-    /// If the base font doesn't support monospaced digits,
-    /// the font remains unchanged.
+    /// Using fixed-width digits allows you to easily align numbers of the
+    /// same size in a table-like arrangement. This feature is also known as
+    /// "tabular figures" or "tabular numbers."
     ///
-    /// - Returns: A view with the default font with monospaced digits.
+    /// This modifier only affects numeric characters, and leaves all other
+    /// characters unchanged.
+    ///
+    /// The following example shows the effect of `monospacedDigit()` on
+    /// multiple child views. The example consists of two ``VStack`` views
+    /// inside an ``HStack``. Each `VStack` contains two ``Button`` views, with
+    /// the second `VStack` applying the `monospacedDigit()` modifier to its
+    /// contents. As a result, the digits in the buttons in the trailing
+    /// `VStack` are the same width, which in turn gives the buttons equal widths.
+    ///
+    ///     var body: some View {
+    ///         HStack(alignment: .top) {
+    ///             VStack(alignment: .leading) {
+    ///                 Button("Delete 111 messages") {}
+    ///                 Button("Delete 222 messages") {}
+    ///             }
+    ///             VStack(alignment: .leading) {
+    ///                 Button("Delete 111 messages") {}
+    ///                 Button("Delete 222 messages") {}
+    ///             }
+    ///             .monospacedDigit()
+    ///         }
+    ///         .padding()
+    ///         .navigationTitle("monospacedDigit() Child Views")
+    ///     }
+    ///
+    /// ![A macOS window showing four buttons, arranged in two columns. Each
+    /// column's buttons contain the same text: Delete 111 messages and Delete
+    /// 222 messages. The right column's buttons have fixed width, or
+    /// monospaced, digits, which make the 1 characters wider than they would be
+    /// in a proportional font. Because the 1 and 2 characters are the same
+    /// width in the right column, the buttons are the same
+    /// width.](View-monospacedDigit-1)
+    ///
+    /// If a child view's base font doesn't support fixed-width digits, the font
+    /// remains unchanged.
+    ///
+    /// - Returns: A view whose child views' fonts use fixed-width numeric
+    /// characters, while leaving other characters proportionally spaced.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func monospacedDigit() -> some View
 
@@ -40120,9 +41580,9 @@ extension View {
     ///     the resulting view assumes this view's sizing behavior.
     ///   - height: A fixed height for the resulting view. If `height` is `nil`,
     ///     the resulting view assumes this view's sizing behavior.
-    ///   - alignment: The alignment of this view inside the resulting view.
-    ///     `alignment` applies if this view is smaller than the size given by
-    ///     the resulting frame.
+    ///   - alignment: The alignment of this view inside the resulting frame.
+    ///     Note that most alignment values have no apparent effect when the
+    ///     size of the frame happens to match that of this view.
     ///
     /// - Returns: A view with fixed dimensions of `width` and `height`, for the
     ///   parameters that are non-`nil`.
@@ -40251,40 +41711,31 @@ extension View {
     /// popover's content.
     ///
     /// Use this method when you need to present a popover with content
-    /// from a custom data source. The two examples below use data in
-    /// the `PopoverModel` structures to populate the views in the `content`
-    /// closures that the popovers display to the user:
+    /// from a custom data source. The example below uses data in
+    /// the `PopoverModel` structure to populate the view in the `content`
+    /// closure that the popover displays to the user:
     ///
-    ///     struct PopoverDemo: View {
+    ///     struct PopoverExample: View {
     ///         @State var popover: PopoverModel?
     ///
     ///         var body: some View {
-    ///             VStack(spacing: 150) {
-    ///                 Button("First Popover", action: {
-    ///                     popover = PopoverModel(body: "Custom message #1.")
-    ///                 })
-    ///                 .popover(item: $popover) { detail in
-    ///                     Text("\(detail.body)")
-    ///                 }
-    ///
-    ///                 Button("Second Popover", action: {
-    ///                     popover = PopoverModel(body: "Custom message #2.")
-    ///                 })
-    ///                 .popover(item: $popover) { detail in
-    ///                     Text("\(detail.body)")
-    ///                 }
+    ///             Button("Show Popover") {
+    ///                 popover = PopoverModel(message: "Custom Message")
     ///             }
-    ///         }
-    ///
-    ///         struct PopoverModel: Identifiable {
-    ///             var id: String { body }
-    ///             let body: String
+    ///             .popover(item: $popover) { detail in
+    ///                 Text("\(detail.message)")
+    ///                     .padding()
+    ///             }
     ///         }
     ///     }
     ///
-    /// ![A screenshot of a popover that says Custom Popover Detail
-    /// hovering over a Show Popover
-    /// button.](SwiftUI-View-PopoverItemContent.png)
+    ///     struct PopoverModel: Identifiable {
+    ///         var id: String { message }
+    ///         let message: String
+    ///     }
+    ///
+    /// ![A screenshot showing a popover that says Custom Message hovering
+    /// over a Show Popover button.](View-popover-2)
     ///
     /// - Parameters:
     ///   - item: A binding to an optional source of truth for the popover.
@@ -40313,28 +41764,22 @@ extension View {
     /// the `isShowingPopover` state variable by pressing the
     /// "Show Popover" button:
     ///
-    ///     struct PopoverView: View {
+    ///     struct PopoverExample: View {
     ///         @State private var isShowingPopover = false
+    ///
     ///         var body: some View {
-    ///             Button("Show Popover", action: {
+    ///             Button("Show Popover") {
     ///                 self.isShowingPopover = true
-    ///             })
+    ///             }
     ///             .popover(isPresented: $isShowingPopover) {
-    ///                 PopoverView()
+    ///                 Text("Popover Content")
+    ///                     .padding()
     ///             }
     ///         }
     ///     }
     ///
-    ///     struct PopoverView: View {
-    ///         var body: some View {
-    ///             Text("Popover Content")
-    ///                 .padding()
-    ///         }
-    ///     }
-    ///
     /// ![A screenshot showing a popover that says Popover Content hovering
-    /// over a Show Popover
-    /// button.](SwiftUI-View-PopverIspresentedContent.png)
+    /// over a Show Popover button.](View-popover-1)
     ///
     /// - Parameters:
     ///   - isPresented: A binding to a Boolean value that determines whether
@@ -40922,34 +42367,35 @@ extension View {
 
     /// Marks this view as refreshable.
     ///
-    /// When you apply this modifier to a view, you set the
-    /// ``EnvironmentValues/refresh`` value in the view's environment to the
-    /// specified `action`.
-    /// Controls that detect this action can change their appearance and provide
-    /// a way for the user to execute a refresh.
+    /// Apply this modifier to a view to set the ``EnvironmentValues/refresh``
+    /// value in the view's environment to a ``RefreshAction`` instance that
+    /// uses the specified `action` as its handler. Views that detect the
+    /// presence of the instance can change their appearance to provide a
+    /// way for the user to execute the handler.
     ///
-    /// When you apply this modifier on iOS and iPadOS to a ``List``, the list
-    /// provides a standard way for the user to refresh the content.
-    /// When the user drags the top of the scrollable
-    /// content area downward, the view reveals a refresh control and executes
-    /// the provided action. Use an `await` expression inside the action to
-    /// refresh your data. The refresh indicator remains visible for the
-    /// duration of the awaited operation.
+    /// For example, when you apply this modifier on iOS and iPadOS to a
+    /// ``List``, the list enables a standard pull-to-refresh gesture that
+    /// refreshes the list contents. When the user drags the top of the
+    /// scrollable area downward, the view reveals a progress indicator
+    /// and executes the specified handler. The indicator remains visible
+    /// for the duration of the refresh, which runs asynchronously:
     ///
-    ///     List(mailbox.conversations) {
-    ///         ConversationCell($0)
+    ///     List(mailbox.conversations) { conversation in
+    ///         ConversationCell(conversation)
     ///     }
     ///     .refreshable {
     ///         await mailbox.fetch()
     ///     }
     ///
+    /// You can add refresh capability to your own views as well. For
+    /// information on how to do that, see ``RefreshAction``.
+    ///
     /// - Parameters:
-    ///   - action: An async action that SwiftUI executes when the user performs
-    ///   a standard gesture.
-    ///   Use this action to initiate an update of model data that the
-    ///   modified view displays. Use an `await` expression
-    ///   inside the action. SwiftUI shows a refresh indicator, which stays
-    ///   visible for the duration of the awaited operation.
+    ///   - action: An asynchronous handler that SwiftUI executes when the
+    ///   user requests a refresh. Use this handler to initiate
+    ///   an update of model data displayed in the modified view. Use
+    ///   `await` in front of any asynchronous calls inside the handler.
+    /// - Returns: A view with a new refresh action in its environment.
     public func refreshable(action: @escaping @Sendable () async -> Void) -> some View
 
 }
@@ -41083,7 +42529,7 @@ extension View {
     /// you want VoiceOver to speak a verbatim transcription of the text you provide. For example,
     /// given the text:
     ///
-    ///     Text("All the world's a stage," +
+    ///     Text("All the world's a stage, " +
     ///          "And all the men and women merely players;")
     ///          .speechAlwaysIncludesPunctuation()
     ///
@@ -41377,6 +42823,28 @@ extension View {
     /// If multiple controls are associated with the same shortcut, the first
     /// one found is used.
     public func keyboardShortcut(_ shortcut: KeyboardShortcut) -> some View
+
+
+    /// Assigns an optional keyboard shortcut to the modified control.
+    ///
+    /// Pressing the control's shortcut while the control is anywhere in the
+    /// frontmost window or scene, or anywhere in the macOS main menu, is
+    /// equivalent to direct interaction with the control to perform its primary
+    /// action.
+    ///
+    /// The target of a keyboard shortcut is resolved in a leading-to-trailing
+    /// traversal of one or more view hierarchies. On macOS, the system looks in
+    /// the key window first, then the main window, and then the command groups;
+    /// on other platforms, the system looks in the active scene, and then the
+    /// command groups.
+    ///
+    /// If multiple controls are associated with the same shortcut, the first
+    /// one found is used. If the provided shortcut is `nil`, the modifier will
+    /// have no effect.
+    @available(iOS 15.4, macOS 12.3, *)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
+    public func keyboardShortcut(_ shortcut: KeyboardShortcut?) -> some View
 
 }
 
@@ -45863,27 +47331,10 @@ extension NSDirectionalEdgeInsets {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Never {
 
-    /// The type of view representing the body of this view.
-    ///
-    /// When you create a custom view, Swift infers this type from your
-    /// implementation of the required ``View/body-swift.property`` property.
+    /// The type for the internal content of this `AccessibilityRotorContent`.
     public typealias Body = Never
 
-    /// The content and behavior of the view.
-    ///
-    /// When you implement a custom view, you must implement a computed
-    /// `body` property to provide the content for your view. Return a view
-    /// that's composed of built-in views that SwiftUI provides, plus other
-    /// composite views that you've already defined:
-    ///
-    ///     struct MyView: View {
-    ///         var body: some View {
-    ///             Text("Hello, World!")
-    ///         }
-    ///     }
-    ///
-    /// For more information about composing views and a view hierarchy,
-    /// see <doc:Declaring-a-Custom-View>.
+    /// The internal content of this `AccessibilityRotorContent`.
     public var body: Never { get }
 }
 
@@ -46087,7 +47538,7 @@ extension UILegibilityWeight {
 
 extension UIUserInterfaceSizeClass {
 
-    /// Create a size class from its UserInterfaceSizeClass equivalent.
+    /// Creates a UIKit size class from the specified SwiftUI size class.
     @available(iOS 14.0, *)
     @available(macOS, unavailable)
     @available(tvOS, unavailable)
