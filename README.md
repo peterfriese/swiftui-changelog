@@ -39,6 +39,7 @@ Not all Xcode versions introduce SwiftUI changes, so I’ve marked in bold the o
 * **[Xcode 13.0b4 to 13.0b5](https://github.com/twostraws/swiftui-changelog/commit/d50a78020d1169a388623cfe647d0c5ad94a5533)**
 * **[Xcode 13.0b5 to 13.0](https://github.com/twostraws/swiftui-changelog/commit/b0f63dcce4b90ddfaadfda00ed836c5f46be5406)**
 * *[Xcode 13.0 to 13.1](https://github.com/twostraws/swiftui-changelog/commit/7165407fcbf97adb103744504b3df129f8cbf742)*
+* **[Xcode 13.1 to 13.2](https://github.com/twostraws/swiftui-changelog/commit/5b1a088873393019415df9297d0667bf536c720e)**
 
 
 ## Generated Swift interfaces
@@ -70,6 +71,7 @@ These are the raw generated Swift interfaces for each Xcode version, prefixed wi
 * [Xcode 13.0b5](https://github.com/twostraws/swiftui-changelog/blob/d50a78020d1169a388623cfe647d0c5ad94a5533/generated-interface.swift)
 * [Xcode 13.0](https://github.com/twostraws/swiftui-changelog/blob/b0f63dcce4b90ddfaadfda00ed836c5f46be5406/generated-interface.swift)
 * [Xcode 13.1](https://github.com/twostraws/swiftui-changelog/blob/7165407fcbf97adb103744504b3df129f8cbf742/generated-interface.swift)
+* [Xcode 13.2](https://github.com/twostraws/swiftui-changelog/blob/5b1a088873393019415df9297d0667bf536c720e/generated-interface.swift)
 
 
 ## About
