@@ -1,4 +1,4 @@
-// Xcode 14.0b1
+// Xcode 14.0b2
 
 import Accessibility
 import Combine
@@ -9,6 +9,7 @@ import CoreTransferable
 import Darwin
 import DeveloperToolsSupport
 import Foundation
+import OSLog
 import UIKit
 import UniformTypeIdentifiers
 import _Concurrency
@@ -660,63 +661,63 @@ public protocol AccessibilityRotorContent {
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1>(_ c0: C0, _ c1: C1) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2>(_ c0: C0, _ c1: C1, _ c2: C2) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4, C5>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent, C5 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4, C5, C6>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent, C5 : AccessibilityRotorContent, C6 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent, C5 : AccessibilityRotorContent, C6 : AccessibilityRotorContent, C7 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent, C5 : AccessibilityRotorContent, C6 : AccessibilityRotorContent, C7 : AccessibilityRotorContent, C8 : AccessibilityRotorContent
 
 }
 
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 extension AccessibilityRotorContentBuilder {
 
     public static func buildBlock<C0, C1, C2, C3, C4, C5, C6, C7, C8, C9>(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> some AccessibilityRotorContent where C0 : AccessibilityRotorContent, C1 : AccessibilityRotorContent, C2 : AccessibilityRotorContent, C3 : AccessibilityRotorContent, C4 : AccessibilityRotorContent, C5 : AccessibilityRotorContent, C6 : AccessibilityRotorContent, C7 : AccessibilityRotorContent, C8 : AccessibilityRotorContent, C9 : AccessibilityRotorContent
@@ -2019,7 +2020,7 @@ public struct Alert {
 /// reverses these in right-to-left language environments. For more
 /// information, see ``HorizontalAlignment``.
 ///
-/// ### Custom Alignment
+/// ### Custom alignment
 ///
 /// You can create custom alignments --- which you typically do to make use
 /// of custom horizontal or vertical guides --- by using the
@@ -2661,8 +2662,8 @@ extension Angle : Sendable {
 /// with the gradient.
 ///
 /// When using an angular gradient as a shape style, you can also use
-/// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)``,
-/// ``ShapeStyle/conicGradient(_:center:angle:)``, or similar methods.
+/// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)-378tu``,
+/// ``ShapeStyle/conicGradient(_:center:angle:)-e0rd``, or similar methods.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct AngularGradient : ShapeStyle, View {
 
@@ -3212,7 +3213,7 @@ extension AnyGradient {
     ///
     /// Only implement a cache if profiling shows that it improves performance.
     ///
-    /// ### Initialize a Cache
+    /// ### Initialize a cache
     ///
     /// Implement the `makeCache(subviews:)` method to create a cache.
     /// You can add computed values to the cache right away, using information
@@ -3232,7 +3233,7 @@ extension AnyGradient {
     /// parameters on your other ``Layout`` protocol methods match, or use
     /// a type alias to define the ``Cache`` associated type.
     ///
-    /// ### Update the Cache
+    /// ### Update the cache
     ///
     /// If the layout container or any of its subviews change, SwiftUI
     /// calls the ``updateCache(_:subviews:)-9hkj9`` method so you can
@@ -4452,6 +4453,7 @@ public struct AutomaticFormStyle : FormStyle {
 /// The default labeled content style.
 ///
 /// Use ``LabeledContentStyle/automatic`` to construct this style.
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
 public struct AutomaticLabeledContentStyle : LabeledContentStyle {
 
     /// Creates an automatic labeled content style.
@@ -5312,7 +5314,7 @@ public struct BorderlessButtonStyle : PrimitiveButtonStyle {
 /// The appearance of the button depends on factors like where you
 /// place it, whether you assign it a role, and how you style it.
 ///
-/// ### Adding Buttons to Containers
+/// ### Adding buttons to containers
 ///
 /// Use buttons for any user interface element that initiates an action.
 /// Buttons automatically adapt their visual style to match the expected style
@@ -5352,7 +5354,7 @@ public struct BorderlessButtonStyle : PrimitiveButtonStyle {
 /// This pattern extends to most other container views in SwiftUI that have
 /// customizable, interactive content, like ``Form`` instances.
 ///
-/// ### Assigning a Role
+/// ### Assigning a role
 ///
 /// You can optionally initialize a button with a ``ButtonRole`` that
 /// characterizes the button's purpose. For example, you can create a
@@ -5370,7 +5372,7 @@ public struct BorderlessButtonStyle : PrimitiveButtonStyle {
 /// If you don't specify a role for a button, the system applies an
 /// appropriate default appearance.
 ///
-/// ### Styling Buttons
+/// ### Styling buttons
 ///
 /// You can customize a button's appearance using one of the standard button
 /// styles, like ``PrimitiveButtonStyle/bordered``, and apply the style with the
@@ -5999,6 +6001,10 @@ extension Canvas : View {
 
     public var style: RoundedCornerStyle
 
+    /// Creates a new capsule shape.
+    ///
+    /// - Parameters:
+    ///   - style: the style of corners drawn by the shape.
     @inlinable public init(style: RoundedCornerStyle = .circular)
 
     /// Describes this shape as a path within a rectangular frame of reference.
@@ -6043,6 +6049,7 @@ extension Capsule : InsettableShape {
     /// - Returns: A path that describes this shape.
     public func path(in rect: CGRect) -> Path
 
+    /// Creates a new circle shape.
     @inlinable public init()
 
     /// The type defining the data to animate.
@@ -7580,6 +7587,7 @@ public struct CompactDatePickerStyle : DatePickerStyle {
     /// hierarchy where this style is the current date picker style.
     ///
     /// - Parameter configuration : The properties of the date picker.
+    @available(iOS 16.0, macOS 13.0, *)
     public func makeBody(configuration: CompactDatePickerStyle.Configuration) -> some View
 
 
@@ -7991,18 +7999,18 @@ public struct ContextMenu<MenuItems> where MenuItems : View {
 /// toolbar item, SwiftUI uses the label when the group is moved to the
 /// toolbar's overflow menu.
 ///
-///    ContentView()
-///        .toolbar(id: "items") {
-///            ToolbarItem(id: "media") {
-///                ControlGroup {
-///                    MediaButton()
-///                    ChartButton()
-///                    GraphButton()
-///                } label: {
-///                    Label("Plus", systemImage: "plus")
-///                }
-///            }
-///        }
+///     ContentView()
+///         .toolbar(id: "items") {
+///             ToolbarItem(id: "media") {
+///                 ControlGroup {
+///                     MediaButton()
+///                     ChartButton()
+///                     GraphButton()
+///                 } label: {
+///                     Label("Plus", systemImage: "plus")
+///                 }
+///             }
+///         }
 ///
 @available(iOS 15.0, macOS 12.0, *)
 @available(tvOS, unavailable)
@@ -8415,7 +8423,7 @@ public protocol CustomizableToolbarContent : ToolbarContent where Self.Body : Cu
 /// buttons for the time 5:15 PM and the date Jul 31,
 /// 2021.](SwiftUI-DatePicker-selectFromRange.png)
 ///
-/// ### Styling Date Pickers
+/// ### Styling date pickers
 ///
 /// To use a different style of date picker, use the
 /// ``View/datePickerStyle(_:)`` view modifier. The following example shows the
@@ -8707,12 +8715,11 @@ public protocol DatePickerStyle {
     /// hierarchy where this style is the current date picker style.
     ///
     /// - Parameter configuration : The properties of the date picker.
+    @available(iOS 16.0, macOS 13.0, *)
     @ViewBuilder func makeBody(configuration: Self.Configuration) -> Self.Body
 
     /// A type alias for the properties of a `DatePicker`.
     @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
     typealias Configuration = DatePickerStyleConfiguration
 }
 
@@ -8835,6 +8842,7 @@ public struct DefaultDatePickerStyle : DatePickerStyle {
     /// hierarchy where this style is the current date picker style.
     ///
     /// - Parameter configuration : The properties of the date picker.
+    @available(iOS 16.0, macOS 13.0, *)
     public func makeBody(configuration: DefaultDatePickerStyle.Configuration) -> some View
 
 
@@ -9075,7 +9083,7 @@ public struct DefaultShareLinkLabel : View {
 /// The default `TabView` style.
 ///
 /// You can also use ``TabViewStyle/automatic`` to construct this style.
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 public struct DefaultTabViewStyle : TabViewStyle {
 
     public init()
@@ -10859,6 +10867,7 @@ extension EditableCollectionContent : View where Content : View {
     /// - Returns: A path that describes this shape.
     public func path(in rect: CGRect) -> Path
 
+    /// Creates a new ellipse shape.
     @inlinable public init()
 
     /// The type defining the data to animate.
@@ -10899,7 +10908,7 @@ extension Ellipse : Sendable {
 ///     EllipticalGradient(gradient: .init(colors: [.red, .yellow]))
 ///
 /// When using an elliptical gradient as a shape style, you can also use
-/// ``ShapeStyle/ellipticalGradient(_:center:startRadiusFraction:endRadiusFraction:)``.
+/// ``ShapeStyle/ellipticalGradient(_:center:startRadiusFraction:endRadiusFraction:)-fmox``.
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
 @frozen public struct EllipticalGradient : ShapeStyle, View {
 
@@ -11458,7 +11467,7 @@ public protocol EnvironmentKey {
 /// SwiftUI provides dedicated view modifiers for setting some values, which
 /// typically makes your code easier to read. For example, rather than setting
 /// the ``EnvironmentValues/lineLimit`` value directly, as in the previous
-/// example, you should instead use the ``View/lineLimit(_:)`` modifier:
+/// example, you should instead use the ``View/lineLimit(_:)-513mb`` modifier:
 ///
 ///     MyView()
 ///         .lineLimit(2)
@@ -11559,7 +11568,7 @@ extension EnvironmentValues {
     ///
     /// The default value is `false`.
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 8.0, *)
-    public var autocorrectionDisabled: Bool { get }
+    public var autocorrectionDisabled: Bool
 }
 
 extension EnvironmentValues {
@@ -12188,7 +12197,7 @@ extension EnvironmentValues {
     /// handler. Because SwiftUI declares the handler as asynchronous, it can
     /// safely make long-running asynchronous calls, like fetching network data.
     ///
-    /// ### Refreshing Custom Views
+    /// ### Refreshing custom views
     ///
     /// You can also offer refresh capability in your custom views.
     /// Read the `refresh` environment value to get the ``RefreshAction``
@@ -13047,7 +13056,7 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// You access or bind to a request's configuration components through
     /// properties on the associated ``FetchedResults`` instance.
     ///
-    /// ### Configure Using a Binding
+    /// ### Configure using a binding
     ///
     /// Get a ``Binding`` to a fetch request's configuration structure
     /// by accessing the request's ``FetchRequest/projectedValue``, which you
@@ -13078,7 +13087,7 @@ public struct ExplicitTimelineSchedule<Entries> : TimelineSchedule where Entries
     /// 3. The reconfigured request fetches new results.
     /// 4. SwiftUI redraws the table in response to new results.
     ///
-    /// ### Set Configuration Directly
+    /// ### Set configuration directly
     ///
     /// If you need to access the fetch request's configuration elements
     /// directly, use the ``FetchedResults/nsPredicate`` and
@@ -13670,7 +13679,7 @@ extension FillStyle : Sendable {
 /// You can also use this to remove focus from a ``TextField`` and thereby
 /// dismiss the keyboard.
 ///
-/// ### Avoid Ambiguous Focus Bindings
+/// ### Avoid ambiguous focus bindings
 ///
 /// The same view can have multiple focus bindings. In the following example,
 /// setting `focusedField` to either `name` or `fullName` causes the field
@@ -16149,6 +16158,7 @@ public struct GraphicalDatePickerStyle : DatePickerStyle {
     /// hierarchy where this style is the current date picker style.
     ///
     /// - Parameter configuration : The properties of the date picker.
+    @available(iOS 16.0, macOS 13.0, *)
     public func makeBody(configuration: GraphicalDatePickerStyle.Configuration) -> some View
 
 
@@ -17753,7 +17763,7 @@ extension GraphicsContext.GradientOptions : Sendable {
 /// The lower-right contains the word world. The cells of the grid
 /// have minimal vertical or horizontal spacing.](Grid-1-iOS)
 ///
-/// ### Multicolumn Cells
+/// ### Multicolumn cells
 ///
 /// If you provide a view rather than a ``GridRow`` as an element in the
 /// grid's content, the grid uses the view to create a row that spans all of
@@ -17803,7 +17813,7 @@ extension GraphicsContext.GradientOptions : Sendable {
 /// grid, use the ``View/gridCellColumns(_:)`` modifier on a view that's
 /// contained inside a ``GridRow``.
 ///
-/// ### Column Count
+/// ### Column count
 ///
 /// The grid's column count grows to handle the row with the largest number of
 /// columns. If you create rows with different numbers of columns, the grid
@@ -17851,7 +17861,7 @@ extension GraphicsContext.GradientOptions : Sendable {
 /// the total height available to the grid. As a result, the color cells
 /// determine the row heights.
 ///
-/// ### Cell Spacing and Alignment
+/// ### Cell spacing and alignment
 ///
 /// You can control the spacing between cells in both the horizontal and
 /// vertical dimensions and set a default alignment for the content in all
@@ -17885,7 +17895,7 @@ extension GraphicsContext.GradientOptions : Sendable {
 /// ``GridRow/init(alignment:content:)`` initializer. You can also align
 /// a single cell with the ``View/gridCellAnchor(_:)`` modifier.
 ///
-/// ### Performance Considerations
+/// ### Performance considerations
 ///
 /// A grid can size its rows and columns correctly because
 /// it renders all of its child views immediately. If your app exhibits
@@ -18456,7 +18466,7 @@ public struct GroupBox<Label, Content> : View where Label : View, Content : View
     /// - Parameters:
     ///   - content: A ``SwiftUI/ViewBuilder`` that produces the content for the
     ///     group box.
-    ///   - label: A ``SwiftUI/ViewBuilder` that produces a label for the group
+    ///   - label: A ``SwiftUI/ViewBuilder`` that produces a label for the group
     ///     box.
     @available(iOS 14.0, macOS 10.15, *)
     @available(tvOS, unavailable)
@@ -18487,7 +18497,7 @@ public struct GroupBox<Label, Content> : View where Label : View, Content : View
     public typealias Body = some View
 }
 
-@available(iOS 14.0, macOS 10.15, *)
+@available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 extension GroupBox where Label == GroupBoxStyleConfiguration.Label, Content == GroupBoxStyleConfiguration.Content {
@@ -18825,7 +18835,7 @@ extension HierarchicalShapeStyle : Sendable {
 /// particular view using the ``View/alignmentGuide(_:computeValue:)-9mdoh``
 /// view modifier.
 ///
-/// ### Layout Direction
+/// ### Layout direction
 ///
 /// When a user configures their device to use a left-to-right language like
 /// English, the system places the leading alignment on the left and the
@@ -18852,7 +18862,7 @@ extension HierarchicalShapeStyle : Sendable {
 /// you ship into. For more information about the localization process, see
 /// <doc://com.apple.documentation/documentation/Xcode/localization>.
 ///
-/// ### Custom Alignment Guides
+/// ### Custom alignment guides
 ///
 /// You can create a custom horizontal alignment by creating a type that
 /// conforms to the ``AlignmentID`` protocol, and then using that type to
@@ -18882,7 +18892,7 @@ extension HierarchicalShapeStyle : Sendable {
 /// Custom alignment guides also automatically reverse in a right-to-left
 /// environment, just like built-in guides.
 ///
-/// ### Composite Alignment
+/// ### Composite alignment
 ///
 /// Combine a ``VerticalAlignment`` with a `HorizontalAlignment` to create a
 /// composite ``Alignment`` that indicates both vertical and horizontal
@@ -19385,7 +19395,7 @@ public struct IconOnlyLabelStyle : LabelStyle {
 /// An `Image` is a late-binding token; the system resolves its actual value
 /// only when it's about to use the image in an environment.
 ///
-/// ### Making Images Accessible
+/// ### Making images accessible
 ///
 /// To use an image as a control, use one of the initializers that takes a
 /// `label` parameter. This allows the system's accessibility frameworks to use
@@ -19407,6 +19417,7 @@ public struct IconOnlyLabelStyle : LabelStyle {
     public static func == (lhs: Image, rhs: Image) -> Bool
 }
 
+@available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
 extension Image : Transferable {
 
     /// The representation used to import and export the item.
@@ -20253,7 +20264,7 @@ extension Image.ResizingMode : Hashable {
 /// renderer to rasterize a new image each time the subscriber receives an
 /// update.
 ///
-/// ### Rendering to a PDF Context
+/// ### Rendering to a PDF context
 ///
 /// The ``render(rasterizationScale:renderer:)`` method renders the specified
 /// view to any
@@ -20290,7 +20301,7 @@ extension Image.ResizingMode : Hashable {
 ///         }
 ///     }
 ///
-/// ### Creating an Image from Drawing Instructions
+/// ### Creating an image from drawing instructions
 ///
 /// `ImageRenderer` makes it possible to create a custom image by drawing into a
 /// ``Canvas``, rendering a `CGImage` from it, and using that to initialize an
@@ -20867,6 +20878,9 @@ public struct KeyboardShortcut {
     public var modifiers: EventModifiers
 
     /// The localization strategy to apply to this shortcut.
+    @available(iOS 15.0, macOS 12.0, *)
+    @available(tvOS, unavailable)
+    @available(watchOS, unavailable)
     public var localization: KeyboardShortcut.Localization
 
     /// Creates a new keyboard shortcut with the given key equivalent and set of
@@ -21234,7 +21248,7 @@ extension LabelStyleConfiguration.Icon : View {
 ///         }
 ///     }
 ///
-/// ### Custom View Labels
+/// ### Custom view labels
 ///
 /// You can assemble labeled content with an explicit view for its label
 /// using the ``init(content:label:)`` initializer. For example, you can
@@ -21254,7 +21268,7 @@ extension LabelStyleConfiguration.Icon : View {
 ///         Label("Custom Value", systemImage: "hammer")
 ///     }
 ///
-/// ### Textual Labeled Content
+/// ### Textual labeled content
 ///
 /// You can construct labeled content with string values or formatted values
 /// to create read-only displays of textual values:
@@ -21277,7 +21291,7 @@ extension LabelStyleConfiguration.Icon : View {
 ///
 /// Wherever possible, SwiftUI makes this text selectable.
 ///
-/// ### Compositional Elements
+/// ### Compositional elements
 ///
 /// You can use labeled content as the label for other elements. For example,
 /// a ``NavigationLink`` can present a summary value for the destination it
@@ -21308,13 +21322,13 @@ extension LabelStyleConfiguration.Icon : View {
 ///         }
 ///     }
 ///
-/// ### Controlling Label Visibility
+/// ### Controlling label visibility
 ///
 /// A label communicates the identity or purpose of the value, which is
 /// important for accessibility. However, you might want to hide the label
 /// in the display, and some controls or contexts may visually hide their label
-/// by default. The ``labels(_:)`` modifier allows controlling that visibility.
-/// The following example hides both labels, producing only a
+/// by default. The ``View/labels(_:)`` modifier allows controlling that
+/// visibility. The following example hides both labels, producing only a
 /// group of the two value views:
 ///
 ///     Group {
@@ -21328,7 +21342,7 @@ extension LabelStyleConfiguration.Icon : View {
 ///     }
 ///     .labels(.hidden)
 ///
-/// ### Styling Labeled Content
+/// ### Styling labeled content
 ///
 /// You can set label styles using the ``View/labeledContentStyle(_:)``
 /// modifier. You can also build custom styles using ``LabeledContentStyle``.
@@ -21669,7 +21683,7 @@ public struct LabeledToolbarItemGroupContent<Content, Label> : View where Conten
 ///         Text("Another Subview")
 ///     }
 ///
-/// ### Support Additional Behaviors
+/// ### Support additional behaviors
 ///
 /// You can optionally implement other protocol methods and properties to
 /// provide more layout container features:
@@ -21688,7 +21702,7 @@ public struct LabeledToolbarItemGroupContent<Content, Label> : View where Conten
 /// The protocol provides default implementations for these symbols
 /// if you don't implement them. See each method or property for details.
 ///
-/// ### Add Input Parameters
+/// ### Add input parameters
 ///
 /// You can define parameters as inputs to the layout, like you might
 /// for a ``View``:
@@ -21740,7 +21754,7 @@ public struct LabeledToolbarItemGroupContent<Content, Label> : View where Conten
 /// [Initialization](https://docs.swift.org/swift-book/LanguageGuide/Initialization.html)
 /// in *The Swift Programming Language*.
 ///
-/// ### Interact with Subviews Through Their Proxies
+/// ### Interact with subviews through their proxies
 ///
 /// To perform layout, you need information about all of its subviews, which
 /// are the views that your container arranges. While your layout can't
@@ -21758,7 +21772,7 @@ public struct LabeledToolbarItemGroupContent<Content, Label> : View where Conten
 /// Call the method on each subview from within your implementation of the
 /// layout's ``placeSubviews(in:proposal:subviews:cache:)`` method.
 ///
-/// ### Access Layout Values
+/// ### Access layout values
 ///
 /// Views have layout values that you set with view modifiers.
 /// Layout containers can choose to condition their behavior accordingly.
@@ -21844,7 +21858,7 @@ public protocol Layout : Animatable {
     ///
     /// Only implement a cache if profiling shows that it improves performance.
     ///
-    /// ### Initialize a Cache
+    /// ### Initialize a cache
     ///
     /// Implement the `makeCache(subviews:)` method to create a cache.
     /// You can add computed values to the cache right away, using information
@@ -21864,7 +21878,7 @@ public protocol Layout : Animatable {
     /// parameters on your other ``Layout`` protocol methods match, or use
     /// a type alias to define the ``Cache`` associated type.
     ///
-    /// ### Update the Cache
+    /// ### Update the cache
     ///
     /// If the layout container or any of its subviews change, SwiftUI
     /// calls the ``updateCache(_:subviews:)-9hkj9`` method so you can
@@ -22748,7 +22762,7 @@ public struct LayoutSubviews : Equatable, RandomAccessCollection {
 /// optional <doc://com.apple.documentation/documentation/CoreGraphics/CGFloat>
 /// from this definition.
 ///
-/// ### Set a Value on a View
+/// ### Set a value on a view
 ///
 /// Set the value on a view by adding the ``View/layoutValue(key:value:)``
 /// view modifier to the view. To make your custom value easier to work
@@ -22773,7 +22787,7 @@ public struct LayoutSubviews : Equatable, RandomAccessCollection {
 /// Any view that you don't explicitly set a value for uses the default
 /// value, as with the first ``Text`` view, above.
 ///
-/// ### Retrieve a Value During Layout
+/// ### Retrieve a value during layout
 ///
 /// Access a custom layout value using the key as an index
 /// on subview's proxy (an instance of ``LayoutSubview``)
@@ -23058,7 +23072,8 @@ public struct LazyVStack<Content> : View where Content : View {
 
 /// The Accessibility Bold Text user setting options.
 ///
-/// The app can't override the user's choice.
+/// The app can't override the user's choice before iOS 16, tvOS 16 or
+/// watchOS 9.0.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public enum LegibilityWeight : Hashable {
 
@@ -23143,7 +23158,7 @@ public struct LinearCapacityGaugeStyle : GaugeStyle {
 /// bounding rectangle of each shape filled with the gradient.
 ///
 /// When using a linear gradient as a shape style, you can also use
-/// ``ShapeStyle/linearGradient(_:startPoint:endPoint:)``.
+/// ``ShapeStyle/linearGradient(_:startPoint:endPoint:)-753nc``.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct LinearGradient : ShapeStyle, View {
 
@@ -23343,7 +23358,7 @@ extension Link where Label == Text {
 /// ![A vertical list with five text views, each with the name of an
 /// ocean.](List-2-iOS)
 ///
-/// ### Supporting Selection in Lists
+/// ### Supporting selection in lists
 ///
 /// To make members of a list selectable, provide a binding to a selection
 /// variable. Binding to a single instance of the list data's `Identifiable.ID`
@@ -23395,7 +23410,7 @@ extension Link where Label == Text {
 /// People can make multiple selections without needing to enter edit mode on
 /// devices that have a keyboard and mouse or trackpad, like Mac and iPad.
 ///
-/// ### Refreshing the List Content
+/// ### Refreshing the list content
 ///
 /// To make the content of the list refreshable using the standard refresh
 /// control, use the ``View/refreshable(action:)`` modifier.
@@ -23434,7 +23449,7 @@ extension Link where Label == Text {
 ///          }
 ///      }
 ///
-/// ### Supporting Multidimensional Lists
+/// ### Supporting multidimensional lists
 ///
 /// To create two-dimensional lists, group items inside ``Section`` instances.
 /// The following example creates sections named after the world's oceans,
@@ -23501,7 +23516,7 @@ extension Link where Label == Text {
 /// > Note: In iOS 15, iPadOS 15, and tvOS 15 and earlier, lists support
 ///   selection only in edit mode, even for single selections.
 ///
-/// ### Creating Hierarchical Lists
+/// ### Creating hierarchical lists
 ///
 /// You can also create a hierarchical list of arbitrary depth by providing
 /// tree-structured data and a `children` parameter that provides a key path to
@@ -23560,7 +23575,7 @@ extension Link where Label == Text {
 /// right facing chevron and is aligned with user1234. The last row is titled
 /// private, has no chevron, and is aligned with users.](List-5-iOS)
 ///
-/// ### Styling Lists
+/// ### Styling lists
 ///
 /// SwiftUI chooses a display style for a list based on the platform and the
 /// view type in which it appears. Use the ``View/listStyle(_:)`` modifier to
@@ -23595,17 +23610,6 @@ extension Link where Label == Text {
     @available(watchOS, unavailable)
     @MainActor public init(selection: Binding<SelectionValue?>?, @ViewBuilder content: () -> Content)
 
-    /// Creates a list with the given content that supports selecting a single
-    /// row that cannot be deselcted.
-    ///
-    /// - Parameters:
-    ///   - selection: A binding to a selected row.
-    ///   - content: The content of the list.
-    @available(iOS 16.0, macOS 12.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content)
-
     /// The content of the list.
     @MainActor public var body: some View { get }
 
@@ -23631,20 +23635,6 @@ extension List {
     @available(watchOS, unavailable)
     @MainActor public init<Data, RowContent>(_ data: Data, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, RowContent>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
-    /// Creates a list that computes its rows on demand from an underlying
-    /// collection of identifiable data and allowing users to have exactly
-    /// one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The identifiable data for computing the list.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, RowContent>(_ data: Data, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, Data.Element.ID, RowContent>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
-
     /// Creates a hierarchical list that computes its rows on demand from an
     /// underlying collection of identifiable data, optionally allowing users to
     /// select multiple rows.
@@ -23665,26 +23655,6 @@ extension List {
     @available(watchOS, unavailable)
     @MainActor public init<Data, RowContent>(_ data: Data, children: KeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == OutlineGroup<Data, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
-    /// Creates a hierarchical list that computes its rows on demand from an
-    /// underlying collection of identifiable data and allowing users to have
-    /// exactly one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The identifiable data for computing the list.
-    ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes a node capable
-    ///     of having children that is currently childless, such as an empty
-    ///     directory in a file system. On the other hand, if the property at the
-    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
-    ///     like a regular file in a file system.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, RowContent>(_ data: Data, children: KeyPath<Data.Element, Data?>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == OutlineGroup<Data, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
-
     /// Creates a list that identifies its rows based on a key path to the
     /// identifier of the underlying data, optionally allowing users to select
     /// multiple rows.
@@ -23697,21 +23667,6 @@ extension List {
     ///     the list.
     @available(watchOS, unavailable)
     @MainActor public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, RowContent>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
-
-    /// Creates a list that identifies its rows based on a key path to the
-    /// identifier of the underlying data and allowing users to have
-    /// exactly one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The data for populating the list.
-    ///   - id: The key path to the data model's identifier.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == ForEach<Data, ID, RowContent>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
     /// Creates a hierarchical list that identifies its rows based on a key path
     /// to the identifier of the underlying data, optionally allowing users to
@@ -23734,27 +23689,6 @@ extension List {
     @available(watchOS, unavailable)
     @MainActor public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, children: KeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == OutlineGroup<Data, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
-    /// Creates a hierarchical list that identifies its rows based on a key path
-    /// to the identifier of the underlying data and allowing users to have
-    /// exactly one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The data for populating the list.
-    ///   - id: The key path to the data model's identifier.
-    ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes a node capable
-    ///     of having children that is currently childless, such as an empty
-    ///     directory in a file system. On the other hand, if the property at the
-    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
-    ///     like a regular file in a file system.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, ID, RowContent>(_ data: Data, id: KeyPath<Data.Element, ID>, children: KeyPath<Data.Element, Data?>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Data.Element) -> RowContent) where Content == OutlineGroup<Data, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : RandomAccessCollection, ID : Hashable, RowContent : View
-
     /// Creates a list that computes its views on demand over a constant range,
     /// optionally allowing users to select multiple rows.
     ///
@@ -23769,23 +23703,6 @@ extension List {
     ///     the list.
     @available(watchOS, unavailable)
     @MainActor public init<RowContent>(_ data: Range<Int>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, HStack<RowContent>>, RowContent : View
-
-    /// Creates a list that computes its views on demand over a constant range
-    /// and allowing users to have exactly one row always selected.
-    ///
-    /// This instance only reads the initial value of `data` and doesn't need to
-    /// identify views across updates. To compute views on demand over a dynamic
-    /// range, use ``List/init(_:id:selection:rowContent:)-2r2u9``.
-    ///
-    /// - Parameters:
-    ///   - data: A constant range of data to populate the list.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<RowContent>(_ data: Range<Int>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Int) -> RowContent) where Content == ForEach<Range<Int>, Int, HStack<RowContent>>, RowContent : View
 
     /// Creates a list that computes its rows on demand from an underlying
     /// collection of identifiable data, optionally allowing users to select a
@@ -24045,26 +23962,6 @@ extension List {
     ///     the list.
     @MainActor public init<Data, RowContent>(_ data: Binding<Data>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
 
-    /// Creates a hierarchical list that computes its rows on demand from a
-    /// binding to an underlying collection of identifiable data and
-    /// allowing users to have exactly one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The identifiable data for computing the list.
-    ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes a node capable
-    ///     of having children that is currently childless, such as an empty
-    ///     directory in a file system. On the other hand, if the property at the
-    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
-    ///     like a regular file in a file system.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, RowContent>(_ data: Binding<Data>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, Data.Element.ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable
-
     /// Creates a hierarchical list that identifies its rows based on a key path
     /// to the identifier of the underlying data, optionally allowing users to
     /// select multiple rows.
@@ -24082,27 +23979,6 @@ extension List {
     ///   - rowContent: A view builder that creates the view for a single row of
     ///     the list.
     @MainActor public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View
-
-    /// Creates a hierarchical list that identifies its rows based on a key path
-    /// to the identifier of the underlying data and allowing users to have
-    /// exactly one row always selected.
-    ///
-    /// - Parameters:
-    ///   - data: The data for populating the list.
-    ///   - id: The key path to the data model's identifier.
-    ///   - children: A key path to a property whose non-`nil` value gives the
-    ///     children of `data`. A non-`nil` but empty value denotes a node capable
-    ///     of having children that is currently childless, such as an empty
-    ///     directory in a file system. On the other hand, if the property at the
-    ///     key path is `nil`, then `data` is treated as a leaf node in the tree,
-    ///     like a regular file in a file system.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, children: WritableKeyPath<Data.Element, Data?>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == OutlineGroup<Binding<Data>, ID, RowContent, RowContent, DisclosureGroup<RowContent, OutlineSubgroupChildren>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View
 
     /// Creates a hierarchical list that computes its rows on demand from a
     /// binding to an underlying collection of identifiable data, optionally
@@ -24218,44 +24094,6 @@ extension List {
     @MainActor public init<Data, RowContent>(_ data: Binding<Data>, edits: EditOperations<Data>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<IndexedIdentifierCollection<Data, Data.Element.ID>, Data.Element.ID, EditableCollectionContent<RowContent, Data>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
 
     /// Creates a list that computes its rows on demand from an underlying
-    /// collection of identifiable data, allows to edit the collection,
-    /// and allowing users to have exactly one row always selected.
-    ///
-    /// The following example creates a list to display a collection of favorite
-    /// foods allowing the user to delete or move elements from the
-    /// collection, and select a single elements.
-    ///
-    ///     List(
-    ///         $foods,
-    ///         edits: [.delete, .move],
-    ///         selection: $selectedFood
-    ///     ) { $food in
-    ///        HStack {
-    ///            Text(food.name)
-    ///            Toggle("Favorite", isOn: $food.isFavorite)
-    ///        }
-    ///     }
-    ///
-    /// Use ``View/deleteDisabled(_:)`` and ``View/moveDisabled(_:)``
-    /// to disable respectively delete or move operations on a per-row basis.
-    ///
-    /// Explicit ``DynamicViewContent.onDelete(perform:)``,
-    /// ``DynamicViewContent.onMove(perform:)``, or
-    /// ``View.swipeActions(edge:allowsFullSwipe:content:)``
-    /// modifiers will override any synthesized operation
-    ///
-    /// - Parameters:
-    ///   - data: The identifiable data for computing the list.
-    ///   - edits: The edit operations that are synthesized on `data`.
-    ///   - selection: A binding to a non optional selected value.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///     the list.
-    @available(iOS 16.0, macOS 13.0, *)
-    @available(tvOS, unavailable)
-    @available(watchOS, unavailable)
-    @MainActor public init<Data, RowContent>(_ data: Binding<Data>, edits: EditOperations<Data>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<IndexedIdentifierCollection<Data, Data.Element.ID>, Data.Element.ID, EditableCollectionContent<RowContent, Data>>, Data : MutableCollection, Data : RandomAccessCollection, RowContent : View, Data.Element : Identifiable, Data.Index : Hashable
-
-    /// Creates a list that computes its rows on demand from an underlying
     /// collection of identifiable, allows to edit the collection, and
     /// optionally allows users to select multiple rows.
     ///
@@ -24292,45 +24130,6 @@ extension List {
     ///
     @available(watchOS, unavailable)
     @MainActor public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, edits: EditOperations<Data>, selection: Binding<Set<SelectionValue>>?, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<IndexedIdentifierCollection<Data, ID>, ID, EditableCollectionContent<RowContent, Data>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
-
-    /// Creates a list that computes its rows on demand from an underlying
-    /// collection of identifiable, allows to edit the collection, and
-    /// optionally allows users to select multiple rows.
-    ///
-    /// The following example creates a list to display a collection of favorite
-    /// foods allowing the user to delete or move elements from the
-    /// collection, and select multiple elements.
-    ///
-    ///     List(
-    ///         $foods,
-    ///         edits: [.delete, .move],
-    ///         selection: $selectedFoods
-    ///     ) { $food in
-    ///        HStack {
-    ///            Text(food.name)
-    ///            Toggle("Favorite", isOn: $food.isFavorite)
-    ///        }
-    ///     }
-    ///
-    /// Use ``View/deleteDisabled(_:)`` and ``View/moveDisabled(_:)``
-    /// to disable respectively delete or move operations on a per-row basis.
-    ///
-    /// Explicit ``DynamicViewContent.onDelete(perform:)``,
-    /// ``DynamicViewContent.onMove(perform:)``, or
-    /// ``View.swipeActions(edge:allowsFullSwipe:content:)``
-    /// modifiers will override any synthesized operation
-    ///
-    /// - Parameters:
-    ///   - data: The identifiable data for computing and to be edited by
-    ///     the list.
-    ///   - id: The key path to the data model's identifier.
-    ///   - edits: The edit operations that are synthesized on `data`.
-    ///   - selection: A binding to a set that identifies selected rows.
-    ///   - rowContent: A view builder that creates the view for a single row of
-    ///
-    @available(watchOS, unavailable)
-    @available(tvOS, unavailable)
-    @MainActor public init<Data, ID, RowContent>(_ data: Binding<Data>, id: KeyPath<Data.Element, ID>, edits: EditOperations<Data>, selection: Binding<SelectionValue>, @ViewBuilder rowContent: @escaping (Binding<Data.Element>) -> RowContent) where Content == ForEach<IndexedIdentifierCollection<Data, ID>, ID, EditableCollectionContent<RowContent, Data>>, Data : MutableCollection, Data : RandomAccessCollection, ID : Hashable, RowContent : View, Data.Index : Hashable
 }
 
 @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
@@ -25273,7 +25072,7 @@ extension Material : ShapeStyle {
 ///         Label("PDF", systemImage: "doc.fill")
 ///     }
 ///
-/// ### Primary Action
+/// ### Primary action
 ///
 /// Menus can be created with a custom primary action. The primary action will
 /// be performed when the user taps or clicks on the body of the control, and
@@ -25298,7 +25097,7 @@ extension Material : ShapeStyle {
 ///         addBookmark()
 ///     }
 ///
-/// ### Styling Menus
+/// ### Styling menus
 ///
 /// Use the ``View/menuStyle(_:)`` modifier to change the style of all menus
 /// in a view. The following example shows how to apply a custom style:
@@ -26400,13 +26199,13 @@ extension ModifiedContent where Modifier == AccessibilityAttachmentModifier {
 ///     @Environment(\.calendar) var calendar
 ///     @Environment(\.timeZone) var timeZone
 ///
-///     lazy var bounds: Range<Date> = {
+///     var bounds: Range<Date> {
 ///         let start = calendar.date(from: DateComponents(
-///             timeZone: timeZone, year: 2021, month: 12, day: 6))!
+///             timeZone: timeZone, year: 2022, month: 6, day: 6))!
 ///         let end = calendar.date(from: DateComponents(
-///             timeZone: timeZone, year: 2021, month: 12, day: 16))!
+///             timeZone: timeZone, year: 2022, month: 6, day: 16))!
 ///         return start ..< end
-///     }()
+///     }
 ///
 ///     @State var dates: Set<DateComponents> = []
 ///
@@ -26764,7 +26563,7 @@ public struct NavigationControlGroupStyle : ControlGroupStyle {
 ///         FolderDetail(id: workFolder.id)
 ///     }
 ///
-/// ### Link to a Destination View
+/// ### Link to a destination view
 ///
 /// You can perform navigation by initializing a link with a destination view
 /// that you provide in the `destination` closure. For example, consider a
@@ -26790,7 +26589,7 @@ public struct NavigationControlGroupStyle : ControlGroupStyle {
 ///         .navigationTitle("Colors")
 ///     }
 ///
-/// ### Create a Presentation Link
+/// ### Create a presentation link
 ///
 /// Alternatively, you can use a navigation link to perform navigation based
 /// on a presented data value. To support this, use the
@@ -26815,7 +26614,7 @@ public struct NavigationControlGroupStyle : ControlGroupStyle {
 /// Separating the view from the data facilitates programmatic navigation
 /// because you can manage navigation state by recording the presented data.
 ///
-/// ### Control a Presentation Link Programmatically
+/// ### Control a presentation link programmatically
 ///
 /// To navigate programmatically, introduce a state variable that tracks the
 /// items on a stack. For example, you can create an array of colors to
@@ -26839,7 +26638,7 @@ public struct NavigationControlGroupStyle : ControlGroupStyle {
 ///         colors.append(.blue)
 ///     }
 ///
-/// ### Coordinate with a List
+/// ### Coordinate with a list
 ///
 /// You can also use a navigation link to control ``List`` selection in a
 /// ``NavigationSplitView``:
@@ -27384,7 +27183,7 @@ extension NavigationLink {
 /// heterogeneous elements. The path also provides the usual collection
 /// controls for adding, counting, and removing data elements.
 ///
-/// ### Serialize the Path
+/// ### Serialize the path
 ///
 /// When the values you present on the navigation stack conform to
 /// the <doc://com.apple.documentation/documentation/Swift/Codable> protocol,
@@ -27636,7 +27435,7 @@ extension NavigationPath.CodableRepresentation : Equatable {
 /// list that have ``NavigationLink`` instances, the list draws disclosure
 /// chevrons while in the collapsed state.
 ///
-/// ### Control Column Visibility
+/// ### Control column visibility
 ///
 /// You can programmatically control the visibility of navigation split view
 /// columns by creating a ``State`` value of type
@@ -27665,7 +27464,7 @@ extension NavigationPath.CodableRepresentation : Equatable {
 /// The split view ignores the visibility control when it collapses its columns
 /// into a stack.
 ///
-/// ### Customize a Split View
+/// ### Customize a split view
 ///
 /// To specify a preferred column width in a navigation split view, use the
 /// ``View/navigationSplitViewColumnWidth(_:)`` modifier. To set minimum,
@@ -27899,7 +27698,7 @@ public struct NavigationSplitViewVisibility : Equatable, Codable {
 /// navigation controls when the stack is empty and the root view, namely
 /// the list, is visible.
 ///
-/// ### Manage Navigation State
+/// ### Manage navigation state
 ///
 /// By default, a navigation stack manages state to keep track of the views on
 /// the stack. However, your code can share control of the state by initializing
@@ -27941,7 +27740,7 @@ public struct NavigationSplitViewVisibility : Equatable, Codable {
 /// reveals a view that shows details for Yosemite. Use a path to support
 /// deep links, state restoration, or other kinds of programmatic navigation.
 ///
-/// ### Navigate to Different View Types
+/// ### Navigate to different view types
 ///
 /// To create a stack that can present more than one kind of view, you can add
 /// multiple ``View/navigationDestination(for:destination:)`` modifiers
@@ -28524,7 +28323,7 @@ public struct OpenURLAction {
 ///         Text("\(item.description)")
 ///     }
 ///
-/// ### Type Parameters
+/// ### Type parameters
 ///
 /// Five generic type constraints define a specific `OutlineGroup` instance:
 ///
@@ -28888,24 +28687,29 @@ public struct PageTabViewStyle : TabViewStyle {
 /// A system button that reads items from the pasteboard and delivers it to a
 /// closure.
 ///
-/// Use a `PasteButton` when you want to provide a button for pasting items from
+/// Use a paste button when you want to provide a button for pasting items from
 /// the system pasteboard into your app. The system provides a button
-/// appearance and label appropriate to the current environment. However, your app can customize
-/// its  ``buttonBorderShape``, ``labelStyle``  and ``tint`` in some contexts.
+/// appearance and label appropriate to the current environment. However, you
+/// can use view modifiers like ``View/buttonBorderShape(_:)``,
+/// ``View/labelStyle(_:)``, and ``View/tint(_:)-93mfq`` to customize the button
+/// in some contexts.
 ///
-/// You declare what type of items your app will accept; this type should conform to `Portable`.
-/// When the user clicks the button, your closure receives the pasteboard items in the specified type.
+/// You declare what type of items your app will accept; use a type that
+/// conforms to the
+/// <doc://com.apple.documentation/documentation/coretransferable/transferable>
+/// protocol. When the user taps or clicks the button, your closure receives the
+/// pasteboard items in the specified type.
 ///
-/// In the following example, a `PasteButton` declares that it accepts ``String``.
-/// When the user clicks the button, the sample's closure receives an array of strings
-/// and sets the first as the value of `pastedText`, which updates an adjoining ``Text`` view.
+/// In the following example, a paste button declares that it accepts a string.
+/// When the user taps or clicks the button, the sample's closure receives an
+/// array of strings and sets the first as the value of `pastedText`, which
+/// updates a nearby ``Text`` view.
 ///
 ///     @State private var pastedText: String = ""
 ///
 ///     var body: some View {
 ///         HStack {
-///             PasteButton(String.self) {
-///                 strings in
+///             PasteButton(String.self) { strings in
 ///                 pastedText = strings[0]
 ///             }
 ///             Divider()
@@ -28918,8 +28722,8 @@ public struct PageTabViewStyle : TabViewStyle {
 /// labeled Paste, a vertical divider, and some pasted
 /// text.](SwiftUI-PasteButton-pastedText.png)
 ///
-/// Keep in mind that `PasteButton` automatically validates and
-/// invalidates based on changes to the pasteboard on iOS, but not on macOS.
+/// A paste button automatically validates and invalidates based on changes to
+/// the pasteboard on iOS, but not on macOS.
 @available(iOS 16.0, macOS 10.15, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -29309,7 +29113,7 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 /// prominent color than the word Flavor. A right facing chevron appears to the
 /// right of the word Chocolate.](Picker-1-iOS)
 ///
-/// ### Iterating over a Picker’s Options
+/// ### Iterating over a picker’s options
 ///
 /// To provide selection values for the `Picker` without explicitly listing
 /// each option, you can create the picker with a ``ForEach``:
@@ -29388,7 +29192,7 @@ public struct PeriodicTimelineSchedule : TimelineSchedule {
 ///   <doc://com.apple.documentation/documentation/Swift/Optional> to match.
 ///   For an example of this, see ``View/tag(_:)``.
 ///
-/// ### Styling Pickers
+/// ### Styling pickers
 ///
 /// You can customize the appearance and interaction of pickers using
 /// styles that conform to the ``PickerStyle`` protocol, like
@@ -29445,17 +29249,17 @@ public struct Picker<Label, SelectionValue, Content> : View where Label : View, 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Picker {
 
-    @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-    @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-    @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-    @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
+    /// Creates a picker that displays a custom label.
+    ///
+    /// - Parameters:
+    ///     - selection: A binding to a property that determines the
+    ///       currently-selected option.
+    ///     - content: A view that contains the set of options.
+    ///     - label: A view that describes the purpose of selecting an option.
     public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label)
 }
 
-@available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-@available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-@available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
-@available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Use PickerBuilder based Picker initalizers instead")
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Picker where Label == Text {
 
     /// Creates a picker that generates its label from a localized string key.
@@ -30517,7 +30321,7 @@ public struct PrimitiveButtonStyleConfiguration {
 ///         ProgressView()
 ///     }
 ///
-/// ### Styling Progress Views
+/// ### Styling progress views
 ///
 /// You can customize the appearance and interaction of progress views by
 /// creating styles that conform to the ``ProgressViewStyle`` protocol. To set a
@@ -30606,8 +30410,8 @@ extension ProgressView {
     ///         }
     ///     }
     ///
-    /// By default, the progress view will be labeled with text that automatically
-    /// updates to describe the current time remaining.
+    /// By default, the progress view will be labeled with text that
+    /// automatically updates to describe the current time remaining.
     ///
     /// - Parameters:
     ///     - interval: The date range over which the view should progress.
@@ -30654,8 +30458,8 @@ extension ProgressView where CurrentValueLabel == DefaultDateProgressLabel {
     ///         }
     ///     }
     ///
-    /// By default, the progress view will be labeled with text that automatically
-    /// updates to describe the current time remaining.
+    /// By default, the progress view will be labeled with text that
+    /// automatically updates to describe the current time remaining.
     ///
     /// - Parameters:
     ///     - interval: The date range over which the view should progress.
@@ -30700,8 +30504,8 @@ extension ProgressView where Label == EmptyView, CurrentValueLabel == DefaultDat
     ///         }
     ///     }
     ///
-    /// By default, the progress view will be labeled with text that automatically
-    /// updates to describe the current time remaining.
+    /// By default, the progress view will be labeled with text that
+    /// automatically updates to describe the current time remaining.
     ///
     /// - Parameters:
     ///     - interval: The date range over which the view should progress.
@@ -30977,7 +30781,7 @@ public struct ProgressViewStyleConfiguration {
 
     /// The completed fraction of the task represented by the progress view,
     /// from `0.0` (not yet started) to `1.0` (fully complete), or `nil` if the
-    /// progress is indeterminate.
+    /// progress is indeterminate or relative to a date interval.
     public let fractionCompleted: Double?
 
     /// A view that describes the task represented by the progress view.
@@ -31261,7 +31065,7 @@ extension ProposedViewSize : Sendable {
 /// each shape filled with the gradient.
 ///
 /// When using a radial gradient as a shape style, you can also use
-/// ``ShapeStyle/radialGradient(_:center:startRadius:endRadius:)``.
+/// ``ShapeStyle/radialGradient(_:center:startRadius:endRadius:)-49kel``.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct RadialGradient : ShapeStyle, View {
 
@@ -31292,6 +31096,7 @@ extension ProposedViewSize : Sendable {
     /// - Returns: A path that describes this shape.
     public func path(in rect: CGRect) -> Path
 
+    /// Creates a new rectangle shape.
     @inlinable public init()
 
     /// The type defining the data to animate.
@@ -31495,7 +31300,7 @@ extension ReferenceFileDocument {
 /// handler. Because SwiftUI declares the handler as asynchronous, it can
 /// safely make long-running asynchronous calls, like fetching network data.
 ///
-/// ### Refreshing Custom Views
+/// ### Refreshing custom views
 ///
 /// You can also offer refresh capability in your custom views.
 /// Read the ``EnvironmentValues/refresh`` environment value to get the
@@ -31809,12 +31614,24 @@ extension RoundedCornerStyle : Hashable {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @frozen public struct RoundedRectangle : Shape {
 
+    /// The width and height of the rounded rectangle's corners.
     public var cornerSize: CGSize
 
+    /// The style of corners drawn by the rounded rectangle.
     public var style: RoundedCornerStyle
 
+    /// Creates a new rounded rectangle shape.
+    ///
+    /// - Parameters:
+    ///   - cornerSize: the width and height of the rounded corners.
+    ///   - style: the style of corners drawn by the shape.
     @inlinable public init(cornerSize: CGSize, style: RoundedCornerStyle = .circular)
 
+    /// Creates a new rounded rectangle shape.
+    ///
+    /// - Parameters:
+    ///   - cornerRadius: the radius of the rounded corners.
+    ///   - style: the style of corners drawn by the shape.
     @inlinable public init(cornerRadius: CGFloat, style: RoundedCornerStyle = .circular)
 
     /// Describes this shape as a path within a rectangular frame of reference.
@@ -33044,11 +32861,11 @@ public struct ScrollViewProxy {
     public typealias Body = some View
 }
 
-/// A structure which defines the placement of a search field in a view
+/// A structure that defines the placement of a search field in a view
 /// hierarchy.
 ///
-/// A preferred placement may be given to ``View/searchable(text:placement:)``
-/// modifier.
+/// You can give a preferred placement to any of the searchable modifiers, like
+/// ``View/searchable(text:placement:prompt:)-co5e``:
 ///
 ///     var body: some View {
 ///         NavigationView {
@@ -34046,7 +33863,7 @@ extension SectionedFetchResults where Result : NSManagedObject {
 /// the characters entered by the user for their password
 /// password.](SwiftUI-SecureField-withTextField.png)
 ///
-/// ### SecureField Prompts
+/// ### SecureField prompts
 ///
 /// A secure field may be provided an explicit prompt to guide users on what
 /// text they should provide. The context in which a secure field appears
@@ -34742,7 +34559,7 @@ extension ShapeRole : Hashable {
 /// or pattern, you can use ``Color`` or the style returned by
 /// ``ShapeStyle/image(_:sourceRect:scale:)``, or one of the gradient
 /// types, like the one returned by
-/// ``ShapeStyle/radialGradient(_:center:startRadius:endRadius:)``.
+/// ``ShapeStyle/radialGradient(_:center:startRadius:endRadius:)-49kel``.
 /// To set a color that's appropriate for a given context on a given
 /// platform, use one of the semantic styles, like ``ShapeStyle/background`` or
 /// ``ShapeStyle/primary``.
@@ -35234,7 +35051,7 @@ extension ShapeStyle where Self == AngularGradient {
     /// An angular gradient defined by a collection of colors.
     ///
     /// For more information on how to use angular gradients, see
-    /// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)``.
+    /// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)-378tu``.
     ///
     /// - Parameters:
     ///   - colors: The colors of the gradient, evenly spaced along its full
@@ -35248,7 +35065,7 @@ extension ShapeStyle where Self == AngularGradient {
     /// An angular gradient defined by a collection of color stops.
     ///
     /// For more information on how to use angular gradients, see
-    /// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)``.
+    /// ``ShapeStyle/angularGradient(_:center:startAngle:endAngle:)-378tu``.
     ///
     /// - Parameters:
     ///   - stops: The color stops of the gradient, defining each component
@@ -35288,8 +35105,8 @@ extension ShapeStyle where Self == AngularGradient {
     /// A conic gradient defined by a collection of colors that completes a full
     /// turn.
     ///
-    /// For more information on how to use angular gradients, see
-    /// ``ShapeStyle/conicGradient(_:center:angle:)``.
+    /// For more information on how to use conic gradients, see
+    /// ``ShapeStyle/conicGradient(_:center:angle:)-e0rd``.
     ///
     /// - Parameters:
     ///   - colors: The colors of the gradient, evenly spaced along its full
@@ -35303,8 +35120,8 @@ extension ShapeStyle where Self == AngularGradient {
     /// A conic gradient defined by a collection of color stops that completes a
     /// full turn.
     ///
-    /// For more information on how to use angular gradients, see
-    /// ``ShapeStyle/conicGradient(_:center:angle:)``.
+    /// For more information on how to use conic gradients, see
+    /// ``ShapeStyle/conicGradient(_:center:angle:)-e0rd``.
     ///
     /// - Parameters:
     ///   - stops: The color stops of the gradient, defining each component
@@ -35316,7 +35133,7 @@ extension ShapeStyle where Self == AngularGradient {
     public static func conicGradient(stops: [Gradient.Stop], center: UnitPoint, angle: Angle = .zero) -> AngularGradient
 }
 
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension ShapeStyle where Self == BackgroundStyle {
 
     /// The background style in the current context.
@@ -35536,7 +35353,7 @@ extension ShapeStyle where Self == Material {
     public static var bar: Material { get }
 }
 
-@available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension ShapeStyle where Self == ForegroundStyle {
 
     /// The foreground style in the current context.
@@ -35581,11 +35398,14 @@ extension ShapeStyle where Self == TintShapeStyle {
 ///
 ///     ShareLink("Share URL", item: URL(string: "https://developer.apple.com/xcode/swiftui/")!)
 ///
-/// The link can share any content that is <doc://com.apple.documentation/documentation/coretransferable/transferable>.
-/// Many framework types,
-/// such as `URL`, are `Transferable` already. You can conform your own types to
-/// `Transferable`, for instance using ``ProxyRepresentation`` to resolve your own
-/// type to a framework type:
+/// The link can share any content that is
+/// <doc://com.apple.documentation/documentation/coretransferable/transferable>.
+/// Many framework types, like
+/// <doc://com.apple.documentation/documentation/Foundation/URL>,
+/// already conform to this protocol. You can also make your own types
+/// transferable; for example, you can use
+/// <doc://com.apple.documentation/documentation/coretransferable/proxyrepresentation>
+/// to resolve your own type to a framework type:
 ///
 ///     struct Photo: Transferable {
 ///         static var transferRepresentation: some TransferRepresentation {
@@ -36287,7 +36107,7 @@ extension SharePreview where Image == Never, Icon == Never {
 /// A built-in set of commands for manipulating window sidebars.
 ///
 /// These commands are optional and can be explicitly requested by passing a
-/// value of this type to the `Scene/commands(content:)`` modifier.
+/// value of this type to the ``Scene/commands(content:)`` modifier.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -38114,6 +37934,7 @@ extension Stepper {
     ///     - label: A view describing the purpose of this stepper.
     @available(iOS, deprecated: 100000.0, renamed: "Stepper(label:onIncrement:onDecrement:onEditingChanged:)")
     @available(macOS, deprecated: 100000.0, renamed: "Stepper(label:onIncrement:onDecrement:onEditingChanged:)")
+    @available(watchOS, deprecated: 100000.0, renamed: "Stepper(label:onIncrement:onDecrement:onEditingChanged:)")
     public init(onIncrement: (() -> Void)?, onDecrement: (() -> Void)?, onEditingChanged: @escaping (Bool) -> Void = { _ in }, @ViewBuilder label: () -> Label)
 
     /// Creates a stepper configured to increment or decrement a binding to a
@@ -38154,10 +37975,9 @@ extension Stepper {
     ///     of the `onEditingChanged` closure at the start and end of
     ///     the gesture.
     ///   - label: A view describing the purpose of this stepper.
-    @available(watchOS 9.0, *)
     @available(iOS, deprecated: 100000.0, renamed: "Stepper(value:step:label:onEditingChanged:)")
     @available(macOS, deprecated: 100000.0, renamed: "Stepper(value:step:label:onEditingChanged:)")
-    @available(tvOS, unavailable)
+    @available(watchOS, deprecated: 100000.0, renamed: "Stepper(value:step:label:onEditingChanged:)")
     public init<V>(value: Binding<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, @ViewBuilder label: () -> Label) where V : Strideable
 
     /// Creates a stepper configured to increment or decrement a binding to a
@@ -38204,10 +38024,9 @@ extension Stepper {
     ///     of the `onEditingChanged` closure at the start and end of
     ///     the gesture.
     ///   - label: A view describing the purpose of this stepper.
-    @available(watchOS 9.0, *)
     @available(iOS, deprecated: 100000.0, renamed: "Stepper(value:in:step:label:onEditingChanged:)")
     @available(macOS, deprecated: 100000.0, renamed: "Stepper(value:in:step:label:onEditingChanged:)")
-    @available(tvOS, unavailable)
+    @available(watchOS, deprecated: 100000.0, renamed: "Stepper(value:in:step:label:onEditingChanged:)")
     public init<V>(value: Binding<V>, in bounds: ClosedRange<V>, step: V.Stride = 1, onEditingChanged: @escaping (Bool) -> Void = { _ in }, @ViewBuilder label: () -> Label) where V : Strideable
 }
 
@@ -38872,10 +38691,8 @@ public struct SymbolVariants : Hashable {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
 public struct TabView<SelectionValue, Content> : View where SelectionValue : Hashable, Content : View {
 
-    @available(iOS, deprecated: 100000.0, message: "Use SelectableTabsBuilder based TabView initializers instead")
-    @available(macOS, deprecated: 100000.0, message: "Use SelectableTabsBuilder based TabView initializers instead")
-    @available(tvOS, deprecated: 100000.0, message: "Use SelectableTabsBuilder based TabView initializers instead")
-    @available(watchOS, deprecated: 100000.0, message: "Use SelectableTabsBuilder based TabView initializers instead")
+    /// Creates an instance that selects from content associated with
+    /// `Selection` values.
     public init(selection: Binding<SelectionValue>?, @ViewBuilder content: () -> Content)
 
     /// The content and behavior of the view.
@@ -38925,7 +38742,7 @@ extension TabViewStyle where Self == PageTabViewStyle {
     public static func page(indexDisplayMode: PageTabViewStyle.IndexDisplayMode) -> PageTabViewStyle
 }
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 7.0, *)
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension TabViewStyle where Self == DefaultTabViewStyle {
 
     /// The default `TabView` style.
@@ -39009,7 +38826,7 @@ extension TabViewStyle where Self == DefaultTabViewStyle {
 /// ### Supporting sorting in tables
 ///
 /// To make the columns of a table sortable, provide a binding to an array
-/// of <doc://com.apple.documentation/documentation/Swift/SortComparator>
+/// of <doc://com.apple.documentation/documentation/Foundation/SortComparator>
 /// instances. The table reflects the sorted state through its column
 /// headers, allowing sorting for any columns with key paths.
 ///
@@ -39491,17 +39308,16 @@ extension TableColumn {
     /// instead.
     ///
     /// - Parameters:
-    ///   - min: The minimum width of a resizable column. If non-`nil`, the value must be
-    ///     greater than or equal to `0`.
+    ///   - min: The minimum width of a resizable column. If non-`nil`, the
+    ///     value must be greater than or equal to `0`.
     ///   - ideal: The ideal width of the column, used to determine the initial
     ///     width of the table column. The column always starts at least as
     ///     large as the set ideal size, but may be larger if table was sized
     ///     larger than the ideal of all of its columns.
-    ///   - max: The maximum width of a resizable column. If non-`nil`, the value must be
-    ///     greater than `0`. Pass
+    ///   - max: The maximum width of a resizable column. If non-`nil`, the
+    ///     value must be greater than `0`. Pass
     ///     <doc://com.apple.documentation/documentation/CoreGraphics/CGFloat/1454161-infinity>
-    ///     to indicate unconstrained
-    ///     maximum width.
+    ///     to indicate unconstrained maximum width.
     public func width(min: CGFloat? = nil, ideal: CGFloat? = nil, max: CGFloat? = nil) -> TableColumn<RowValue, Sort, Content, Label>
 
     /// Does not change the table column's width.
@@ -41082,7 +40898,7 @@ public struct TapGesture : Gesture {
 /// ![A text view showing a quote from Hamlet split over three
 /// lines.](SwiftUI-Text-split.png)
 ///
-/// Use modifiers like ``View/lineLimit(_:)``, ``View/allowsTightening(_:)``,
+/// Use modifiers like ``View/lineLimit(_:)-513mb``, ``View/allowsTightening(_:)``,
 /// ``View/minimumScaleFactor(_:)``, and ``View/truncationMode(_:)`` to
 /// configure how the view handles space constraints. For example, combining a
 /// fixed width and a line limit of `1` results in truncation for text that
@@ -41095,7 +40911,7 @@ public struct TapGesture : Gesture {
 /// ![A text view showing a truncated quote from Hamlet starting Brevity is t
 /// and ending with three dots.](SwiftUI-Text-truncated.png)
 ///
-/// ### Localizing Strings
+/// ### Localizing strings
 ///
 /// If you initialize a text view with a string literal, the view uses the
 /// ``Text/init(_:tableName:bundle:comment:)`` initializer, which interprets the
@@ -41366,7 +41182,7 @@ extension Text {
     /// If you have a string literal that you don't want to localize, use the
     /// ``Text/init(verbatim:)`` initializer instead.
     ///
-    /// ### Styling Localized Strings with Markdown
+    /// ### Styling localized strings with markdown
     ///
     /// If the localized string or the fallback key contains Markdown, the
     /// view displays the text with appropriate styling. For example, consider
@@ -42385,7 +42201,7 @@ public struct TextEditingCommands : Commands {
 ///     }
 ///
 /// If you want to change the spacing or font scaling aspects of the text, you
-/// can use modifiers like ``View/lineLimit(_:)``,
+/// can use modifiers like ``View/lineLimit(_:)-513mb``,
 /// ``View/lineSpacing(_:)``, and ``View/minimumScaleFactor(_:)`` to configure
 /// how the view displays text depending on the space constraints. For example,
 /// here the ``View/lineSpacing(_:)`` modifier sets the spacing between lines
@@ -42530,7 +42346,7 @@ public struct TextEditor : View {
 ///  it showing the string givenName:Maria
 ///  familyName:Ruiz.](SwiftUI-TextField-nameComponents.png)
 ///
-/// ### Text Field Prompts
+/// ### Text field prompts
 ///
 /// You can set an explicit prompt on the text field to guide users on what
 /// text they should provide. Each text field style determines where and
@@ -42560,7 +42376,7 @@ public struct TextEditor : View {
 /// ![An iOS form, showing two text fields, arranged vertically, with prompt
 /// text that says Required.](TextField-prompt-2)
 ///
-/// ### Styling Text Fields
+/// ### Styling text fields
 ///
 /// SwiftUI provides a default text field style that reflects an appearance and
 /// behavior appropriate to the platform. The default style also takes the
@@ -43727,7 +43543,7 @@ public struct TextFormattingCommands : Commands {
 /// The kind of autocapitalization behavior applied during text input.
 ///
 /// Pass an instance of `TextInputAutocapitalization` to the
-/// ``textInputAutocapitalization(_:)`` view modifier.
+/// ``View/textInputAutocapitalization(_:)`` view modifier.
 @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 @available(macOS, unavailable)
 public struct TextInputAutocapitalization {
@@ -44346,7 +44162,7 @@ public struct TitleOnlyLabelStyle : LabelStyle {
 ///         Toggle("Vibrate on Ring", isOn: $vibrateOnRing)
 ///     }
 ///
-/// ### Styling Toggles
+/// ### Styling toggles
 ///
 /// Toggles use a default style that varies based on both the platform and
 /// the context. For more information, read about the ``ToggleStyle/automatic``
@@ -44571,7 +44387,7 @@ extension Toggle where Label == Text {
 ///
 /// Alternatively, you can create and apply a custom style.
 ///
-/// ### Custom Styles
+/// ### Custom styles
 ///
 /// To create a custom style, declare a type that conforms to the `ToggleStyle`
 /// protocol and implement the required ``ToggleStyle/makeBody(configuration:)``
@@ -44656,7 +44472,7 @@ public protocol ToggleStyle {
     /// of the `makeBody(configuration:)` method for each ``Toggle`` instance
     /// that uses the associated style.
     ///
-    /// ### Modify the Current Style
+    /// ### Modify the current style
     ///
     /// Rather than create an entirely new style, you can alternatively
     /// modify a toggle's current style. Use the ``Toggle/init(_:)``
@@ -44816,7 +44632,7 @@ extension ToggleStyle where Self == DefaultToggleStyle {
     ///     }
     ///     .toggleStyle(.button) // Use button style for toggles in the stack.
     ///
-    /// ### Platform Defaults
+    /// ### Platform defaults
     ///
     /// The `automatic` style produces an appearance that varies by platform,
     /// using the following styles in most contexts:
@@ -44845,7 +44661,7 @@ extension ToggleStyle where Self == DefaultToggleStyle {
     /// Repeat, stacked vertically. The first is highlighted. The second is
     /// on, while the others are off.](ToggleStyle-automatic-2-tvOS)
     ///
-    /// ### Contextual Defaults
+    /// ### Contextual defaults
     ///
     /// A toggle's automatic appearance varies in certain contexts:
     ///
@@ -44881,7 +44697,7 @@ extension ToggleStyle where Self == DefaultToggleStyle {
 ///
 /// The configuration structure's ``label-swift.property`` reflects the
 /// toggle's content, which might be the value that you supply to the
-/// `label` parameter of the ``Toggle/init(isOn:label:)`` initializer.
+/// `label` parameter of the ``Toggle/init(isOn:label:)-8sj6j`` initializer.
 /// Alternatively, it could be another view that SwiftUI builds from an
 /// initializer that takes a string input, like ``Toggle/init(_:isOn:)-8qx3l``.
 /// In either case, incorporate the label into the toggle's view to help
@@ -44993,7 +44809,7 @@ public struct ToggleStyleConfiguration {
 /// A built-in set of commands for manipulating window toolbars.
 ///
 /// These commands are optional and can be explicitly requested by passing a
-/// value of this type to the `Scene/commands(content:)`` modifier.
+/// value of this type to the ``Scene/commands(content:)`` modifier.
 @available(iOS 14.0, macOS 11.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -45588,6 +45404,47 @@ public struct ToolbarRole {
     public static var editor: ToolbarRole { get }
 }
 
+/// The title actions of a toolbar.
+///
+/// Title actions represent common functionality that can be done on the
+/// content represented by your app's toolbar or navigation title. These
+/// actions may be populated from your app's commands like
+/// ``CommandGroupPlacement/saveItem`` or
+/// ``CommandGroupPlacement/printItem``.
+///
+///     ContentView()
+///         .toolbar {
+///             ToolbarTitleActions()
+///         }
+///
+/// You can provide your own set of actions to override this behavior.
+///
+///     ContentView()
+///         .toolbar {
+///             ToolbarTitleActions {
+///                 DuplicateButton()
+///                 PrintButton()
+///             }
+///         }
+///
+/// In iOS and iPadOS, this will construct a menu that can be presented by
+/// tapping the navigation title in the app's navigation bar.
+@available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
+public struct ToolbarTitleActions<Actions> : ToolbarContent, CustomizableToolbarContent where Actions : View {
+
+    /// Creates title actions for the toolbar where the actions are inferred
+    /// from your apps commands.
+    public init() where Actions == EmptyView
+
+    /// Creates title actions for the toolbar.
+    ///
+    /// - Parameter actions: The actions of the toolbar title.
+    public init(@ViewBuilder actions: () -> Actions)
+
+    /// The type of content representing the body of this toolbar content.
+    public typealias Body = Never
+}
+
 /// The context of the current state-processing update.
 ///
 /// Use a transaction to pass an animation between views in a view hierarchy.
@@ -45788,7 +45645,7 @@ extension Transaction {
 /// in ``ScenePhase`` instead of relying on delegate callbacks, like
 /// <doc://com.apple.documentation/documentation/UIKit/UIApplicationDelegate/1622921-application>.
 ///
-/// ### Scene Delegates
+/// ### Scene delegates
 ///
 /// Some iOS apps define a
 /// <doc://com.apple.documentation/documentation/UIKit/UIWindowSceneDelegate>
@@ -46022,7 +45879,7 @@ public struct UIHostingConfiguration<Content, Background> : UIContentConfigurati
     ///
     /// - Parameter background: The contents of the SwiftUI hierarchy to be
     ///   shown inside the background of the cell.
-    public func background<B>(@ViewBuilder background: () -> B) -> UIHostingConfiguration<Content, B> where B : View
+    public func background<B>(@ViewBuilder content: () -> B) -> UIHostingConfiguration<Content, B> where B : View
 
     /// Sets the background contents for the hosting configuration's enclosing
     /// cell.
@@ -46034,8 +45891,8 @@ public struct UIHostingConfiguration<Content, Background> : UIContentConfigurati
     ///     }
     ///     .background(Color.blue)
     ///
-    /// - Parameter background: The shape style to be used as the background of
-    ///   the cell.
+    /// - Parameter style: The shape style to be used as the background of the
+    ///   cell.
     public func background<S>(_ style: S) -> UIHostingConfiguration<Content, _UIHostingConfigurationBackgroundView<S>> where S : ShapeStyle
 
     /// Sets the margins around the content of the configuration.
@@ -46814,7 +46671,7 @@ extension UIViewRepresentableContext : Sendable {
 /// > Note: A unit point with one or more components outside the range `[0, 1]`
 /// projects to a point outside of the view.
 ///
-/// ### Layout Direction
+/// ### Layout direction
 ///
 /// When a user configures their device to use a left-to-right language like
 /// English, the system places the view's origin in its top-left corner,
@@ -47221,7 +47078,7 @@ public protocol VectorArithmetic : AdditiveArithmetic {
 /// particular view using the ``View/alignmentGuide(_:computeValue:)-6y3u2``
 /// view modifier.
 ///
-/// ### Text Baseline Alignment
+/// ### Text baseline alignment
 ///
 /// Use the ``VerticalAlignment/firstTextBaseline`` or
 /// ``VerticalAlignment/lastTextBaseline`` guide to match the bottom of either
@@ -47248,7 +47105,7 @@ public protocol VectorArithmetic : AdditiveArithmetic {
 /// one ``GridRow`` cell with the baseline of a text field, or the label
 /// of a checkbox, in another cell in the same row.
 ///
-/// ### Custom Alignment Guides
+/// ### Custom alignment guides
 ///
 /// You can create a custom vertical alignment guide by first creating a type
 /// that conforms to the ``AlignmentID`` protocol, and then using that type to
@@ -47276,7 +47133,7 @@ public protocol VectorArithmetic : AdditiveArithmetic {
 /// or to alter the guide calculation for a specific view using the
 /// ``View/alignmentGuide(_:computeValue:)-6y3u2`` view modifier.
 ///
-/// ### Composite Alignment
+/// ### Composite alignment
 ///
 /// Combine a `VerticalAlignment` with a ``HorizontalAlignment`` to create a
 /// composite ``Alignment`` that indicates both vertical and horizontal
@@ -48526,7 +48383,7 @@ extension View {
     /// Applying the anchor-based alignment strategy to a single cell
     /// doesn't affect the alignment strategy that the grid uses on other cells.
     ///
-    /// ### Anchor Alignment for Merged Cells
+    /// ### Anchor alignment for merged cells
     ///
     /// If you use the ``View/gridCellColumns(_:)`` modifier to cause
     /// a cell to span more than one column, or if you place a view in a grid
@@ -50064,6 +49921,38 @@ extension View {
 
 }
 
+extension View {
+
+    /// Configure the title actions of a toolbar.
+    ///
+    /// Title actions represent common functionality that can be done on the
+    /// content represented by your app's toolbar or navigation title. These
+    /// actions may be populated from your app's commands like
+    /// ``CommandGroupPlacement/saveItem`` or
+    /// ``CommandGroupPlacement/printItem``.
+    ///
+    ///     ContentView()
+    ///         .toolbar {
+    ///             ToolbarTitleActions()
+    ///         }
+    ///
+    /// You can provide your own set of actions to override this behavior.
+    ///
+    ///     ContentView()
+    ///         .toolbarTitleActions {
+    ///             DuplicateButton()
+    ///             PrintButton()
+    ///         }
+    ///
+    /// In iOS and iPadOS, this will construct a menu that can be presented by
+    /// tapping the navigation title in the app's navigation bar.
+    ///
+    /// - Parameter actions: The actions associated to the navigation title.
+    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    public func toolbarTitleActions<A>(@ViewBuilder actions: () -> A) -> some View where A : View
+
+}
+
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension View {
 
@@ -51230,7 +51119,7 @@ extension View {
     /// frame.](SwiftUI-View-scaledToFit-1.png)
     ///
     /// This method is equivalent to calling
-    /// ``View/aspectRatio(_:contentMode:)-5ehx6`` with a `nil` aspectRatio and
+    /// ``View/aspectRatio(_:contentMode:)-6j7xz`` with a `nil` aspectRatio and
     /// a content mode of ``ContentMode/fit``.
     ///
     /// - Returns: A view that scales this view to fit its parent, maintaining
@@ -51253,7 +51142,7 @@ extension View {
     /// frame.](SwiftUI-View-scaledToFill-1.png)
     ///
     /// This method is equivalent to calling
-    /// ``View/aspectRatio(_:contentMode:)-5ehx6`` with a `nil` aspectRatio and
+    /// ``View/aspectRatio(_:contentMode:)-6j7xz`` with a `nil` aspectRatio and
     /// a content mode of ``ContentMode/fill``.
     ///
     /// - Returns: A view that scales this view to fill its parent, maintaining
@@ -51676,7 +51565,7 @@ extension View {
 
     /// Sets the maximum number of lines that text can occupy in this view.
     ///
-    /// Use `lineLimit(_:)` to cap the number of lines that an individual text
+    /// Use this modifier to cap the number of lines that an individual text
     /// element can display.
     ///
     /// The line limit applies to all ``Text`` instances within a hierarchy. For
@@ -51684,13 +51573,13 @@ extension View {
     /// lines caps each piece of text to three lines rather than capping the
     /// total number of lines across the ``HStack``.
     ///
-    /// In the example below, the `lineLimit(_:)` operator limits the very long
+    /// In the example below, the modifier limits the very long
     /// line in the ``Text`` element to the 2 lines that fit within the view's
     /// bounds:
     ///
     ///     Text("This is a long string that demonstrates the effect of SwiftUI's lineLimit(:_) operator.")
-    ///      .frame(width: 200, height: 200, alignment: .leading)
-    ///      .lineLimit(2)
+    ///         .frame(width: 200, height: 200, alignment: .leading)
+    ///         .lineLimit(2)
     ///
     /// ![A screenshot showing showing the effect of the line limit operator on
     /// a very long string in a view.](SwiftUI-view-lineLimit.png)
@@ -51736,7 +51625,7 @@ extension View {
     ///             .lineLimit(...3)
     ///     }
     ///
-    /// > Note: This modifier is equivalent to the ``View/lineLimit(_:)-7ufty``
+    /// > Note: This modifier is equivalent to the ``View/lineLimit(_:)-513mb``
     /// modifier taking just an integer.
     ///
     /// - Parameter limit: The line limit.
@@ -51885,7 +51774,7 @@ extension View {
     ///
     /// To pad a view on specific edges with equal padding for all padded
     /// edges, use ``View/padding(_:_:)``. To pad all edges of a view
-    /// equally, use ``View/padding(_:)-9f33x``.
+    /// equally, use ``View/padding(_:)-68shk``.
     ///
     /// - Parameter insets: An ``EdgeInsets`` instance that contains
     ///   padding amounts for each edge.
@@ -51954,7 +51843,7 @@ extension View {
     ///
     /// To control the amount of padding independently for each edge, use
     /// ``View/padding(_:)-6pgqq``. To pad all outside edges of a view by a
-    /// specified amount, use ``View/padding(_:)-9f33x``.
+    /// specified amount, use ``View/padding(_:)-68shk``.
     ///
     /// - Parameters:
     ///   - edges: The set of edges to pad for this view. The default
@@ -52419,45 +52308,75 @@ extension View {
 @available(watchOS, unavailable)
 extension View {
 
-    /// Adds an item-based context menu to the view.
+    /// Adds an item-based context menu to a view.
     ///
-    /// Use an item-based context menu with a container that supports selection,
-    /// such as a `List` or `Table`. The modifier's closure will be invoked by
-    /// the container to construct a context menu for the current context.
+    /// You can add an item-based context menu to a container that supports
+    /// selection, like a ``List`` or a ``Table``. In the closure that you
+    /// use to define the menu, you receive a collection of items that
+    /// depends on the selection state of the container and the location where
+    /// the person clicks or taps to activate the menu. The collection contains:
     ///
-    /// The following example shows a `List` that supports an empty area menu, a
-    /// single-item menu, and a multi-item menu.
+    /// * The selected item or items, when people initiate the context menu
+    ///   from any selected item.
+    /// * Nothing, if people tap or click to activate the context menu from
+    ///   an empty part of the container. This is true even when one or more
+    ///   items is currently selected.
     ///
-    ///    List(selection: $selection) {
-    ///        // ...
-    ///    }
-    ///    .contextMenu(forSelectionType: ItemID.self) { items in
-    ///        if items.isEmpty {
-    ///            // Empty area menu
-    ///            Button("New Item") { ... }
-    ///        } else if items.count == 1 {
-    ///            // Single-item menu
-    ///            Button("Copy") { ... }
-    ///            Button("Delete", role: .destructive) { ... }
-    ///        } else {
-    ///            // Multi-item menu
-    ///            Button("Copy") { ... }
-    ///            Button("New Folder With Selection") { ... }
-    ///            Button("Delete Selected", role: .destructive) { ... }
-    ///        }
-    ///    }
+    /// You can vary the menu contents according to the number of selected
+    /// items. For example, the following code has a list that defines an
+    /// empty area menu, a single item menu, and a multi-item menu:
     ///
-    /// > Note: using this modifier without a selectable container as a
-    ///   descendant will result in no menu being shown when the menu gesture
-    ///   activates.
+    ///     struct ContextMenuItemExample: View {
+    ///         var items: [Item]
+    ///         @State private var selection = Set<Item.ID>()
     ///
-    /// - Parameter itemType: The identifier type of the items. This must match
-    ///   the selection type of the container that will present the menu.
-    /// - Parameter menu: A view that produces the menu. The parameter is a set
-    ///   of the items the menu should act on. If the set is empty, the menu was
-    ///   activated over the empty area of the selectable container.
-    /// - Returns: A view that sets the item-based contextual menu for this
-    ///   view.
+    ///         var body: some View {
+    ///             List(selection: $selection) {
+    ///                 ForEach(items) { item in
+    ///                     Text(item.name)
+    ///                 }
+    ///             }
+    ///             .contextMenu(forSelectionType: Item.ID.self) { items in
+    ///                 if items.isEmpty { // Empty area menu.
+    ///                     Button("New Item") { }
+    ///
+    ///                 } else if items.count == 1 { // Single item menu.
+    ///                     Button("Copy") { }
+    ///                     Button("Delete", role: .destructive) { }
+    ///
+    ///                 } else { // Multi-item menu.
+    ///                     Button("Copy") { }
+    ///                     Button("New Folder With Selection") { }
+    ///                     Button("Delete Selected", role: .destructive) { }
+    ///                 }
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// The above example assumes that the `Item` type conforms to the
+    /// <doc://com.apple.documentation/documentation/Swift/Identifiable>
+    /// protocol, and relies on the associated `ID` type for both selection
+    /// and context menu presentation.
+    ///
+    /// If you add the modifier to a view hierarchy that doesn't have a
+    /// container that supports selection, the context menu never activates.
+    /// To add a context menu that doesn't depend on selection behavior, use
+    /// ``View/contextMenu(menuItems:)``. To add a context menu to a specific
+    /// row in a table, use ``TableRowContent/contextMenu(menuItems:)``.
+    ///
+    /// - Parameters:
+    ///   - itemType: The identifier type of the items. Ensure that this
+    ///     matches the container's selection type.
+    ///   - menu: A closure that produces the menu. A single parameter to the
+    ///     closure contains the set of items to act on. An empty set indicates
+    ///     menu activation over the empty area of the selectable container,
+    ///     while a non-empty set indicates menu activation over selected items.
+    ///     Use controls like ``Button``, ``Picker``, and ``Toggle`` to define
+    ///     the menu items. You can also create submenus using ``Menu``, or
+    ///     group items with ``Section``. You can deactivate the context menu
+    ///     by returning nothing from the closure.
+    ///
+    /// - Returns: A view that can display an item-based context menu.
     public func contextMenu<I, M>(forSelectionType itemType: I.Type = I.self, @ViewBuilder menu: @escaping (Set<I>) -> M) -> some View where I : Hashable, M : View
 
 }
@@ -52466,23 +52385,45 @@ extension View {
 
     /// Adds an item-based context action to the view.
     ///
-    /// Use this modifier on a container that supports selection, such as
-    /// a `List` or `Table`. The modifier's closure will be invoked by
-    /// the container when a primary action is invoked on the container's
-    /// selection, such as a double click or a tap.
+    /// Use this modifier on a container that supports selection, like
+    /// a ``List`` or ``Table``. The container invokes the modifier's closure
+    /// when someone initiates a primary action, like a double click or a tap,
+    /// on the container's current selection. For example, the following list
+    /// prints the set of selected items to the console:
     ///
-    ///    List(selection: $selection) {
-    ///        // ...
-    ///    }
-    ///    .contextAction(forSelectionType: ItemID.self) { items in
-    ///        // ... do something with items
-    ///    }
+    ///     struct ContextActionExample: View {
+    ///         var items: [Item]
+    ///         @State private var selection = Set<Item.ID>()
+    ///
+    ///         var body: some View {
+    ///             List(selection: $selection) {
+    ///                 ForEach(items) { item in
+    ///                     Text(item.name)
+    ///                 }
+    ///             }
+    ///             .contextAction(forSelectionType: Item.ID.self) { items in
+    ///                 for item in items {
+    ///                     print(item.name)
+    ///                 }
+    ///             }
+    ///         }
+    ///     }
+    ///
+    /// The above example assumes that the `Item` type conforms to the
+    /// <doc://com.apple.documentation/documentation/Swift/Identifiable>
+    /// protocol, and relies on the associated `ID` type for both selection
+    /// and the context action.
+    ///
+    /// To add a context menu instead of an action, use
+    /// ``View/contextMenu(forSelectionType:menu:)`` instead.
     ///
     /// - Parameters:
-    ///   - itemType: The identifier type of the items. This must match
-    ///   the selection type of the container that will present the menu.
-    ///   - action: The closure that will be invoked when the
-    ///   collection's selection action is triggered by the user.
+    ///   - itemType: The identifier type of the items. Ensure this matches
+    ///     the selection type of the associated container.
+    ///   - action: The closure to invoke when someone initiates the
+    ///     collection's selection action.
+    ///
+    /// - Returns: A view that executes an action in response to an input event.
     @available(iOS 16.0, macOS 13.0, *)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
@@ -53657,7 +53598,7 @@ extension View {
     ///
     ///     var body: some View {
     ///         PlayButton(isPlaying: $isPlaying)
-    ///             .contentShape(.interaction, Circle())
+    ///             .contentShape(.focusEffect, Circle())
     ///             .accessibilityQuickAction(style: .outline) {
     ///                 Button(isPlaying ? "Pause" : "Play") {
     ///                     isPlaying.toggle()
@@ -53693,7 +53634,7 @@ extension View {
     ///
     ///     var body: some View {
     ///         PlayButton(isPlaying: $isPlaying)
-    ///             .contentShape(.interaction, Circle())
+    ///             .contentShape(.focusEffect, Circle())
     ///             .accessibilityQuickAction(style: .outline, isActive: $isQuickActionActive) {
     ///                 Button(isPlaying ? "Pause" : "Play") {
     ///                     isPlaying.toggle()
@@ -54474,7 +54415,10 @@ extension View {
     ///
     /// - Parameter title: The title to display.
     /// - Parameter actions: The actions associated to the navigation title.
-    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    @available(iOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(macOS, introduced: 13.0, deprecated: 13.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(tvOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(watchOS, introduced: 9.0, deprecated: 9.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
     public func navigationTitle<A>(_ title: Text, @ViewBuilder actions: () -> A) -> some View where A : View
 
 
@@ -54489,7 +54433,10 @@ extension View {
     ///
     /// - Parameter titleKey: The title to display.
     /// - Parameter actions: The actions associated to the navigation title.
-    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    @available(iOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(macOS, introduced: 13.0, deprecated: 13.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(tvOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(watchOS, introduced: 9.0, deprecated: 9.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
     public func navigationTitle<A>(_ titleKey: LocalizedStringKey, @ViewBuilder actions: () -> A) -> some View where A : View
 
 
@@ -54504,7 +54451,10 @@ extension View {
     ///
     /// - Parameter title: The title to display.
     /// - Parameter actions: The actions associated to the navigation title.
-    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    @available(iOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(macOS, introduced: 13.0, deprecated: 13.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(tvOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(watchOS, introduced: 9.0, deprecated: 9.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
     public func navigationTitle<A, S>(_ title: S, @ViewBuilder actions: () -> A) -> some View where A : View, S : StringProtocol
 
 }
@@ -54524,7 +54474,10 @@ extension View {
     /// - Parameter title: The editable title associated to the navigation
     ///   title.
     /// - Parameter actions: The actions associated to the navigation title.
-    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    @available(iOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(macOS, introduced: 13.0, deprecated: 13.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(tvOS, introduced: 16.0, deprecated: 16.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
+    @available(watchOS, introduced: 9.0, deprecated: 9.0, message: "Use ToolbarTitleActions in a toolbar modifier or the toolbarTitleActions modifier.")
     public func navigationTitle<A>(_ title: Binding<String>, @ViewBuilder actions: () -> A) -> some View where A : View
 
 }
@@ -56875,7 +56828,7 @@ extension View {
     /// | iOS, iPadOS | ![A screenshot of the text Vibrate on Ring appearing to the left of a toggle switch that's on. The toggle's tint color is green. The toggle and its text appear in a rounded rectangle.](View-toggleStyle-1-iOS) |
     /// | macOS       | ![A screenshot of the text Vibrate on Ring appearing to the left of a toggle switch that's on. The toggle's tint color is blue. The toggle and its text appear on a neutral background.](View-toggleStyle-1-macOS) |
     ///
-    /// ### Styling Toggles in a Hierarchy
+    /// ### Styling toggles in a hierarchy
     ///
     /// You can set a style for all toggle instances within a view hierarchy
     /// by applying the style modifier to a container view. For example, you
@@ -56899,7 +56852,7 @@ extension View {
     /// | iOS, iPadOS | ![A screenshot of two buttons arranged horizontally. The first has the image of a flag and is active with a blue tint. The second has an image of a speaker with a line through it and is inactive with a neutral tint.](View-toggleStyle-2-iOS) |
     /// | macOS       | ![A screenshot of two buttons arranged horizontally. The first has the image of a flag and is active with a blue tint. The second has an image of a speaker with a line through it and is inactive with a neutral tint.](View-toggleStyle-2-macOS) |
     ///
-    /// ### Automatic Styling
+    /// ### Automatic styling
     ///
     /// If you don't set a style, SwiftUI assumes a value of
     /// ``ToggleStyle/automatic``, which corresponds to a context-specific
@@ -57074,6 +57027,18 @@ extension View {
     /// characters, while leaving other characters proportionally spaced.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     public func monospacedDigit() -> some View
+
+
+    /// Modifies the fonts of all child views to use the fixed-width variant of
+    /// the current font, if possible.
+    ///
+    /// If a child view's base font doesn't support fixed-width, the font
+    /// remains unchanged.
+    ///
+    /// - Returns: A view whose child views' fonts use fixed-width characters,
+    /// while leaving other characters proportionally spaced.
+    @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+    public func monospaced(_ isActive: Bool = true) -> some View
 
 
     /// Sets the font weight of the text in this view.
@@ -58343,25 +58308,25 @@ extension View {
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension View {
 
-    /// Sets whether this view flips its contents horizontally when the layout
+    /// Sets whether this view mirrors its contents horizontally when the layout
     /// direction is right-to-left.
     ///
     /// Use `flipsForRightToLeftLayoutDirection(_:)` when you need the system to
-    /// horizontally flip the contents of the view to support right-to-left
-    /// layout.
+    /// horizontally mirror the contents of the view when presented in
+    /// a right-to-left layout.
     ///
-    /// In the example below, the text flips horizontally when the layout system
-    /// is right-to-left:
-    ///
-    ///     Text("שָׁלוֹם")
-    ///        .flipsForRightToLeftLayoutDirection(true)
+    /// To override the layout direction for a specific view, use the
+    /// ``View/environment(_:_:)`` view modifier to explicitly override
+    /// the ``EnvironmentValues/layoutDirection`` environment value for
+    /// the view.
     ///
     /// - Parameter enabled: A Boolean value that indicates whether this view
-    ///   flips its content horizontally when the layout direction is
-    ///   right-to-left.
+    ///   should have its content flipped horizontally when the layout
+    ///   direction is right-to-left. By default, views will adjust their layouts
+    ///   automatically in a right-to-left context and do not need to be mirrored.
     ///
-    /// - Returns: A view that conditionally flips its contents horizontally
-    ///   when the layout direction is right-to-left.
+    /// - Returns: A view that conditionally mirrors its contents
+    ///   horizontally when the layout direction is right-to-left.
     @inlinable public func flipsForRightToLeftLayoutDirection(_ enabled: Bool) -> some View
 
 }
@@ -62838,7 +62803,7 @@ extension ViewBuilder {
 /// * Ask for the dimensions of a subview of a custom view layout;
 ///   see ``LayoutSubview/dimensions(in:)``.
 ///
-/// ### Custom Alignment Guides
+/// ### Custom alignment guides
 ///
 /// You receive an instance of this structure as the `context` parameter to
 /// the ``AlignmentID/defaultValue(in:)`` method that you implement to produce
@@ -62885,7 +62850,7 @@ extension ViewBuilder {
 /// string appears horizontally offset to the right from the left side of the
 /// first string by about the width of one character.](ViewDimensions-1-iOS)
 ///
-/// ### Layout Direction
+/// ### Layout direction
 ///
 /// The discussion above describes a left-to-right language environment,
 /// but you don't change your guide calculation to operate in a right-to-left
@@ -63378,6 +63343,7 @@ public struct WheelDatePickerStyle : DatePickerStyle {
     /// hierarchy where this style is the current date picker style.
     ///
     /// - Parameter configuration : The properties of the date picker.
+    @available(iOS 16.0, *)
     public func makeBody(configuration: WheelDatePickerStyle.Configuration) -> some View
 
 
@@ -63669,7 +63635,9 @@ extension WidgetConfiguration {
 /// document-based. For document-based apps, use a ``DocumentGroup`` instead.
 ///
 /// A `WindowGroup` can optionally be defined to present data of a given type
-/// that conforms to both ``Hashable`` and ``Codable``.
+/// that conforms to both
+/// <doc://com.apple.documentation/documentation/Swift/Hashable>
+/// and <doc://com.apple.documentation/documentation/Swift/Codable>.
 ///
 /// When used in conjunction with the ``EnvironmentValues/openWindow`` action,
 /// a window for the group will be opened, and the root view passed a binding
@@ -63684,8 +63652,9 @@ extension WidgetConfiguration {
 /// process, the binding will be set to either the default value or `nil`.
 ///
 /// In general, consider using lightweight data for your presentation value.
-/// For structured model values that conform to ``Identifiable``, the value's
-/// identifier works well.
+/// For structured model values that conform to
+/// <doc://com.apple.documentation/documentation/Swift/Identifiable>,
+/// the value's identifier works well.
 ///
 /// For example, you can define a button which opens the specified note item
 /// in a new window.
@@ -63989,6 +63958,10 @@ extension Never : TableColumnContent {
     public var tableColumnBody: Never { get }
 }
 
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
+extension Never : ToolbarContent, CustomizableToolbarContent {
+}
+
 @available(iOS 16.0, macOS 12.0, *)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
@@ -64108,10 +64081,6 @@ extension NSUnderlineStyle {
     ///
     /// - Returns: A new ``NSUnderlineStyle``.
     public init(_ lineStyle: Text.LineStyle)
-}
-
-@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
-extension Never : ToolbarContent, CustomizableToolbarContent {
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
